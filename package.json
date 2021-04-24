@@ -1,0 +1,26 @@
+{
+  "name": "baosotrung-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WarBuggy/baosotrung-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WarBuggy/baosotrung-server/issues"
+  },
+  "homepage": "https://github.com/WarBuggy/baosotrung-server#readme",
+  "dependencies": {
+    "dayjs": "^1.10.4",
+    "node-schedule": "^2.0.0",
+    "nodemailer": "^6.5.0",
+    "rss-parser": "^3.12.0"
+  }
+}
