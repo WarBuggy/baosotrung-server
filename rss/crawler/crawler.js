@@ -21,7 +21,9 @@ const IN_PROGRESS = 2;
 module.exports = {
     start: function () {
         let crawlData = {
-            crawledTicketType: 0,
+            successCrawl: [],
+            failCrawl: [],
+            typeNum: 0,
         };
         addTicketData(crawlData);
         addPublisherData(crawlData);
@@ -43,7 +45,6 @@ module.exports = {
     },
 }
 
-//#region Common functions
 function addTicketData(crawlData) {
     crawlData.ticketType = {};
     let ticketTypeIds = Object.keys(ticketCoreData.type);
@@ -54,7 +55,11 @@ function addTicketData(crawlData) {
             let aTicketType = common.cloneObject(aType);
             aTicketType.publisher = {};
             aTicketType.createResultData = aType.createResultData;
+            aTicketType.successCrawl = [];
+            aTicketType.failCrawl = [];
+            aTicketType.publisherNum = 0;
             crawlData.ticketType[typeId] = aTicketType;
+            crawlData.typeNum++;
         };
     }
 };
@@ -65,19 +70,20 @@ function addPublisherData(crawlData) {
     let ticketTypeId = Object.keys(crawlData.ticketType);
     for (let i = 0; i < ticketTypeId.length; i++) {
         let typeId = ticketTypeId[i];
-        let aCrawlData = crawlData.ticketType[typeId];
+        let aTicketType = crawlData.ticketType[typeId];
         let publisherNameArray = [];
         for (let j = 0; j < publisherId.length; j++) {
             let aPublisherId = publisherId[j];
             let aPublisher = ticketCoreData.publisher[aPublisherId];
             if (aPublisher.type == typeId && aPublisher.callDay.includes(weekday)) {
                 let aClonePublisher = common.cloneObject(aPublisher);
-                aCrawlData.publisher[aPublisherId] = aClonePublisher;
+                aTicketType.publisher[aPublisherId] = aClonePublisher;
                 aClonePublisher.crawlStatus = IN_PROGRESS;
                 publisherNameArray.push(aClonePublisher.name);
+                aTicketType.publisherNum++;
             }
         }
-        aCrawlData.publisherName = publisherNameArray.join(', ');
+        aTicketType.publisherName = publisherNameArray.join(', ');
     }
 };
 
@@ -103,7 +109,7 @@ async function crawlATicketType(crawlData, ticketTypeData) {
         let aPublisherId = publisherId[i];
         let aPublisher = ticketTypeData.publisher[aPublisherId];
         preparePublisherAndProviderData(aPublisher, rssProviderId);
-        await crawlAPublisher(crawlData, ticketTypeData, aPublisher);
+        crawlAPublisher(crawlData, ticketTypeData, aPublisher);
     }
 };
 
@@ -119,9 +125,9 @@ function preparePublisherAndProviderData(publisher, rssProviderId) {
         let baseURL = providerData.baseURLFunction();
         let url = baseURL.replace(rssProvider.RSSIDKEYSTRING, keyURL);
         publisher.providerCrawlData[aRssProviderId] = {
-            crawlTime: 0,
             url,
         };
+        publisher.crawlTime = 0;
     }
 };
 
@@ -135,23 +141,80 @@ function scheduleToCrawlATicketType(crawlData, ticketTypeData, scheduleTime) {
 };
 
 async function crawlAPublisher(crawlData, ticketTypeData, publisher) {
+    common.consoleLog('Crawling for ' +
+        publisher.name + ' (cycle: ' + (publisher.crawlTime + 1) + ')', config.consoleColor);
     let rssProviderId = Object.keys(publisher.providerCrawlData);
     for (let i = 0; i < rssProviderId.length; i++) {
         let aRssProviderId = rssProviderId[i];
         let result = await crawlAProvider(ticketTypeData, publisher, aRssProviderId);
         if (result === false) {
-
             continue;
         }
         publisher.crawlStatus = SUCCESS;
     }
+    if (publisher.crawlStatus == SUCCESS) {
+        ticketTypeData.successCrawl.push(publisher);
+        checkCrawlingCompletion(crawlData, ticketTypeData);
+        return;
+    }
+    publisher.crawlTime++;
+    if (publisher.crawlTime < config.rssCrawler.crawlTimeEachRssProvider) {
+        await common.sleep(config.rssCrawler.crawlInterval);
+        crawlAPublisher(crawlData, ticketTypeData, publisher);
+        return;
+    }
+    publisher.crawlStatus == FAIL;
+    ticketTypeData.failCrawl.push(publisher);
+    checkCrawlingCompletion(crawlData, ticketTypeData);
+};
+
+function checkCrawlingCompletion(crawlData, ticketTypeData) {
+    checkPublisherCrawlingCompletion(crawlData, ticketTypeData);
+    let successNum = crawlData.successCrawl.length;
+    let failNum = crawlData.failCrawl.length;
+    if (successNum + failNum != crawlData.typeNum) {
+        return;
+    }
+    let string = 'ALL CRAWLING FINISHED. Success: ' + successNum + '. Fail: ' + failNum;
+    if (failNum > 0) {
+        let failType = [];
+        for (let i = 0; i < crawlData.failCrawl.length; i++) {
+            failType.push(crawlData.failCrawl[i].name);
+        }
+        string = string + ' (' + failType.join(', ') + ')';
+    }
+    common.consoleLog(string, config.consoleColor);
+};
+
+function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
+    let successNum = ticketTypeData.successCrawl.length;
+    let failNum = ticketTypeData.failCrawl.length;
+    if (successNum + failNum != ticketTypeData.publisherNum) {
+        return;
+    }
+    let string = 'Finish crawling for ' + ticketTypeData.name +
+        '. Success: ' + successNum + '. Fail: ' + failNum;
+    if (failNum > 0) {
+        let failType = [];
+        for (let i = 0; i < ticketTypeData.failCrawl.length; i++) {
+            failType.push(ticketTypeData.failCrawl[i].name);
+        }
+        string = string + ' (' + failType.join(', ') + ')';
+    }
+    common.consoleLog(string, config.consoleColor);
+    if (successNum > 0) {
+        crawlData.successCrawl.push(ticketTypeData);
+    } else {
+        crawlData.failCrawl.push(ticketTypeData);
+    }
+
 };
 
 async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
     let providerData = rssProvider.provider[rssProviderId];
     let providerCrawlData = publisher.providerCrawlData[rssProviderId];
     let startTime = common.getCurrentTime();
-    common.consoleLog('Retrieve rss for ' + publisher.name + ', ' +
+    common.consoleLog('Retrieve RSS for ' + publisher.name + ', ' +
         providerData.name, providerData.consoleColor, startTime);
     let feed = await parser.parseURL(providerCrawlData.url);
     let feededTime = common.getCurrentTime();
@@ -179,114 +242,3 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
     // write to db
     return result;
 };
-
-
-
-
-function parseAllRssDomain() {
-    let allDataArray = [];
-    let rssToBeParsed = findRssToParse();
-    let domainIds = Object.keys(rssDomainData);
-    for (let i = 0; i < domainIds.length; i++) {
-        let domainId = domainIds[i];
-        let aDomainData = rssDomainData[domainId];
-        parseRSSFromDomain(allDataArray, rssToBeParsed, aDomainData, domainId);
-    };
-};
-
-function parseRSSFromDomain(allDataArray, rssToBeParsed, domainData, domainId) {
-    let domain = domainData.name;
-    let consoleColor = domainData.consoleColor || '';
-    let rssDataArray = createRssDataArray(rssToBeParsed, domainId);
-    allDataArray.push(rssDataArray);
-    parseRSS(allDataArray, rssDataArray,
-        domainData.parseFunction, domain, consoleColor);
-};
-
-async function parseRSS(allDataArray, dataArray,
-    parseFunction, rssDomain, domainColor) {
-    let dataFound = 0;
-    for (let i = 0; i < dataArray.length; i++) {
-        let aDataObject = dataArray[i];
-        if (aDataObject.data == true) {
-            continue;
-        }
-        let rssName = aDataObject.name;
-        let startTime = getCurrentTime();
-        common.consoleLog('Retrieve rss for ' + rssName + ', ' + rssDomain, domainColor, startTime);
-        let feed = await parser.parseURL(aDataObject.url);
-        let feededTime = getCurrentTime();
-        let parseResult = parseFunction(feed);
-        if (parseResult == null) {
-            common.errorLog('Error while parsing ' + rssName + ', ' + rssDomain, domainColor);
-            return;
-        }
-
-        if (!parseResult.feedPubDay.isToday()) {
-            common.consoleLog('No new data for ' + rssName + ', ' + rssDomain + '. Last publish date is ' +
-                parseResult.feedPubDay.format(dateFormat), domainColor, feededTime);
-            continue;
-        }
-        common.consoleLog('New data found for ' + rssName + ', ' + rssDomain, domainColor + '\x1b[4m', feededTime);
-        aDataObject.data = true;
-        dataFound = dataFound + 1;
-        mailer.sendRssParsedEmail(transporter, rssDomain, rssName, startTime, feededTime, domainColor);
-    }
-    if (dataFound == dataArray.length) {
-        checkForCompletion(allDataArray);
-        return;
-    }
-    await sleep(60 * 1000);
-    parseRSS(allDataArray, dataArray, parseFunction, rssDomain, domainColor);
-};
-
-function checkForCompletion(allDataArray) {
-    for (let i = 0; i < allDataArray.length; i++) {
-        let aDataArray = allDataArray[i];
-        for (let j = 0; j < aDataArray.length; j++) {
-            if (aDataArray[j].data != true) {
-                return;
-            }
-        }
-    }
-    common.consoleLog('FINISH PARSING', config.consoleColor);
-};
-
-function createRssDataArray(rssToBeParsed, domainId) {
-    let baseURL = rssDomainData[domainId].baseURLFunction();
-    let result = [];
-    for (let i = 0; i < rssToBeParsed.length; i++) {
-        let aRssData = rssToBeParsed[i];
-        let rssDomainId = aRssData.rssId[domainId];
-        if (rssDomainId == null) {
-            continue;
-        }
-        let url = baseURL.replace(RSSIDKEYSTRING, rssDomainId);
-        let aResultObject = {
-            data: false,
-            name: aRssData.name,
-            url,
-        };
-        result.push(aResultObject);
-    }
-    return result;
-};
-
-function cancelSchedule() {
-    let scheduleIds = Object.keys(crawlSchedule);
-    for (let i = 0; i < scheduleIds.length; i++) {
-        let aScheduleId = scheduleIds[i];
-        let aSchedule = crawlSchedule[aScheduleId];
-        if (aSchedule == null) {
-            continue;
-        }
-        // common.consoleLog('Cancelled ' + crawlSchedule, length + ' crawl schedule(s)', config.consoleColor);
-        aSchedule.cancel();
-    }
-};
-//#endregion
-
-/*
-
-
-*/
