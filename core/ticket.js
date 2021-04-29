@@ -1,5 +1,4 @@
 let common = require('../common/common.js');
-const provider = require('../rss/crawler/provider.js');
 
 module.exports = {
     type: {
