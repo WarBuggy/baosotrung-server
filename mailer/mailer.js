@@ -1,4 +1,4 @@
-const mailerInfo = require('./mailerInfo.js');
+const mailerConfig = require('./config.js');
 const nodemailer = require('nodemailer');
 const common = require('../common/common.js');
 const dayjs = require('dayjs');
@@ -11,7 +11,7 @@ module.exports = {
     sendRssParsedEmail: function (domain, rssName, startTime, feededTime, domainColor) {
         let transporter = getTransporter();
         let mailInfo = {
-            from: mailerInfo.sender + '<' + mailerInfo.sendFrom + '>',
+            from: mailerConfig.sender + '<' + mailerConfig.sendFrom + '>',
             to: 'hovanbuu@gmail.com',
             subject: 'RSS from ' + domain + ', ' + rssName + ' received',
         };
@@ -43,8 +43,8 @@ function createTransporter() {
     let transporterInfo = {
         service: 'gmail',
         auth: {
-            user: mailerInfo.username,
-            pass: mailerInfo.password,
+            user: mailerConfig.username,
+            pass: mailerConfig.password,
         },
     };
     let transporter = nodemailer.createTransport(transporterInfo);

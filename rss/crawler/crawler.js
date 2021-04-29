@@ -1,9 +1,9 @@
 const ticketCoreData = require('../../core/ticket.js');
 const rssProvider = require('./provider.js');
-const config = require('../../config.js');
+const crawlerConfig = require('./config.js');
+const systemConfig = require('../../systemConfig.js');
 const common = require('../../common/common.js');
 const mailer = require('../../mailer/mailer.js');
-const scheduleTime = require('./schedule.js');
 
 const RssParser = require('rss-parser');
 const schedule = require('node-schedule');
@@ -35,7 +35,7 @@ module.exports = {
             if (publisherId.length < 1) {
                 continue;
             }
-            if (scheduleTime[aTypeId].schedule === false) {
+            if (crawlerConfig.ticketType[aTypeId].schedule === false) {
                 crawlATicketType(crawlData, aTicketTypeData);
                 continue;
             }
@@ -89,20 +89,20 @@ function addPublisherData(crawlData) {
 
 function createScheduleDate(ticketTypeData) {
     let today = dayjs();
-    let todayDatePart = today.format(config.dayjsFormatDateOnly);
+    let todayDatePart = today.format(systemConfig.dayjsFormatDateOnly);
     let crawlTime = dayjs(todayDatePart + ' ' + ticketTypeData.crawlTime);
     if (today.isAfter(crawlTime)) {
         let tomorrow = today.add(1, 'day');
-        let tomorrowDatePart = tomorrow.format(config.dayjsFormatDateOnly);
+        let tomorrowDatePart = tomorrow.format(systemConfig.dayjsFormatDateOnly);
         crawlTime = dayjs(tomorrowDatePart + ' ' + ticketTypeData.crawlTime);
     }
-    return new Date(crawlTime.format(config.dayjsFormatFull));
+    return new Date(crawlTime.format(systemConfig.dayjsFormatFull));
 };
 
 async function crawlATicketType(crawlData, ticketTypeData) {
     common.consoleLog('Begin to crawl ' + ticketTypeData.name +
         ' (' + ticketTypeData.publisherName + ')',
-        config.consoleColor);
+        systemConfig.consoleColor);
     let rssProviderId = ticketTypeData.rssProvider;
     let publisherId = Object.keys(ticketTypeData.publisher);
     for (let i = 0; i < publisherId.length; i++) {
@@ -134,7 +134,7 @@ function preparePublisherAndProviderData(publisher, rssProviderId) {
 function scheduleToCrawlATicketType(crawlData, ticketTypeData, scheduleTime) {
     common.consoleLog('Scheduled to crawl ' + ticketTypeData.name +
         ' (' + ticketTypeData.publisherName + ')' + ' at ' +
-        dayjs(scheduleTime).format(config.dayjsFormatFull), config.consoleColor);
+        dayjs(scheduleTime).format(systemConfig.dayjsFormatFull), systemConfig.consoleColor);
     schedule.scheduleJob(scheduleTime, function () {
         crawlATicketType(crawlData, ticketTypeData);
     });
@@ -142,7 +142,7 @@ function scheduleToCrawlATicketType(crawlData, ticketTypeData, scheduleTime) {
 
 async function crawlAPublisher(crawlData, ticketTypeData, publisher) {
     common.consoleLog('Crawling for ' +
-        publisher.name + ' (cycle: ' + (publisher.crawlTime + 1) + ')', config.consoleColor);
+        publisher.name + ' (cycle: ' + (publisher.crawlTime + 1) + ')', systemConfig.consoleColor);
     let rssProviderId = Object.keys(publisher.providerCrawlData);
     for (let i = 0; i < rssProviderId.length; i++) {
         let aRssProviderId = rssProviderId[i];
@@ -158,8 +158,8 @@ async function crawlAPublisher(crawlData, ticketTypeData, publisher) {
         return;
     }
     publisher.crawlTime++;
-    if (publisher.crawlTime < config.rssCrawler.crawlTimeEachRssProvider) {
-        await common.sleep(config.rssCrawler.crawlInterval);
+    if (publisher.crawlTime < crawlerConfig.crawlTimeEachRssProvider) {
+        await common.sleep(crawlerConfig.crawlInterval);
         crawlAPublisher(crawlData, ticketTypeData, publisher);
         return;
     }
@@ -183,7 +183,7 @@ function checkCrawlingCompletion(crawlData, ticketTypeData) {
         }
         string = string + ' (' + failType.join(', ') + ')';
     }
-    common.consoleLog(string, config.consoleColor);
+    common.consoleLog(string, systemConfig.consoleColor);
 };
 
 function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
@@ -201,7 +201,7 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
         }
         string = string + ' (' + failType.join(', ') + ')';
     }
-    common.consoleLog(string, config.consoleColor);
+    common.consoleLog(string, systemConfig.consoleColor);
     if (successNum > 0) {
         crawlData.successCrawl.push(ticketTypeData);
     } else {
@@ -227,7 +227,7 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
     }
     if (!feedPubDay.isToday()) {
         common.consoleLog('No new data for ' + publisher.name + ', ' + providerData.name +
-            '. Last publish date is ' + feedPubDay.format(config.dayjsFormatFull),
+            '. Last publish date is ' + feedPubDay.format(systemConfig.dayjsFormatFull),
             providerData.consoleColor, feededTime);
         return false;
     }

@@ -1,6 +1,7 @@
 .env
 rss/crawler/schedule.js
 mailer/mailerInfo.js
+config.js*
 
 # Logs
 logs
