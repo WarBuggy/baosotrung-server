@@ -1,4 +1,5 @@
 let common = require('../common/common.js');
+const provider = require('../rss/crawler/provider.js');
 
 module.exports = {
     type: {
@@ -283,14 +284,14 @@ function createConsolationSpecialSeries(specialSeries) {
 function parseDataType1(parseData, publisher, providerData) {
     let checkParseDataArrayLengthResult = checkParseDataArrayLengthType1(parseData);
     if (checkParseDataArrayLengthResult !== true) {
-        common.errorLog('Error while parsing feed for ' + publisher.name + ', ' + providerData.name + '.' +
+        common.consoleLogError('Error while parsing feed for ' + publisher.name + ', ' + providerData.name + '.' +
             'Invalid result array length.\n' + checkParseDataArrayLengthResult,
             providerData.consoleColor);
         return false;
     }
     let result = extractResultFromParseDataType1(parseData);
     if (result.error === true) {
-        common.errorLog('Error while parsing feed for ' + publisher.name + ', ' + providerData.name + '.' +
+        common.consoleLogError('Error while parsing feed for ' + publisher.name + ', ' + providerData.name + '.' +
             'Invalid numeric value or invalid length.\n' + result.invalidArray,
             providerData.consoleColor);
         return false;
@@ -349,17 +350,17 @@ function extractSeriesFromResultArrayType1(array, startIndex, times, expectedLen
 };
 
 function checkParseDataArrayLengthType1(parseData) {
-    if (parseData[2].length != 1 ||
-        parseData[3].length != 1 ||
-        parseData[4].length != 4 ||
-        parseData[5].length != 11 ||
-        parseData[6].length != 1) {
+    if ((parseData[2] || []).length != 1 ||
+        (parseData[3] || []).length != 1 ||
+        (parseData[4] || []).length != 4 ||
+        (parseData[5] || []).length != 11 ||
+        (parseData[6] || []).length != 1) {
         return {
-            2: parseData[2].length + '/1',
-            3: parseData[3].length + '/1',
-            4: parseData[4].length + '/4',
-            5: parseData[5].length + '/11',
-            6: parseData[6].length + '/1',
+            2: (parseData[2] || []).length + '/1',
+            3: (parseData[3] || []).length + '/1',
+            4: (parseData[4] || []).length + '/4',
+            5: (parseData[5] || []).length + '/11',
+            6: (parseData[6] || []).length + '/1',
         };
     }
     return true;

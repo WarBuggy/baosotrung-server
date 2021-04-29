@@ -1,4 +1,5 @@
 const mailerConfig = require('./config.js');
+const systemConfig = require('../systemConfig.js');
 const nodemailer = require('nodemailer');
 const common = require('../common/common.js');
 const dayjs = require('dayjs');
@@ -8,22 +9,22 @@ dayjs.extend(dayjsCustomParseFormat);
 let transporter = null;
 
 module.exports = {
-    sendRssParsedEmail: function (domain, rssName, startTime, feededTime, domainColor) {
+    sendMail: function (content, isHtml, receivers, subject, purpose) {
         let transporter = getTransporter();
         let mailInfo = {
             from: mailerConfig.sender + '<' + mailerConfig.sendFrom + '>',
-            to: 'hovanbuu@gmail.com',
-            subject: 'RSS from ' + domain + ', ' + rssName + ' received',
+            to: receivers,
+            subject: subject,
         };
-        mailInfo.text =
-            'Domain:' + domain + '\n' +
-            'Date: ' + dayjs().format(dateFormat) + '\n' +
-            'Start time: ' + startTime + '\n' +
-            'Feed time: ' + feededTime;
-        common.consoleLog('Sending email for ' + domain + ', ' + rssName + '..', domainColor);
+        if (isHtml === true) {
+            mailInfo.html = content;
+        } else {
+            mailInfo.text = content;
+        }
+        common.consoleLog('Sending ' + purpose + ' email..', systemConfig.consoleColor);
         transporter.sendMail(mailInfo)
             .then(function () {
-                common.consoleLog('Email sent', domainColor);
+                common.consoleLog('Email sent', systemConfig.consoleColor);
             })
             .catch(function (error) {
                 let errorMessage = 'Unknown error';
@@ -34,7 +35,8 @@ module.exports = {
                 } else if (error.message) {
                     errorMessage = error.message;
                 }
-                common.consoleLogError('Email could not be sent. Error: ' + errorMessage, domainColor);
+                common.consoleLogError('Email could not be sent. Error: ' + errorMessage,
+                    systemConfig.consoleColor);
             });
     },
 };

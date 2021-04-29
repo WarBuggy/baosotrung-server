@@ -14,9 +14,6 @@ dayjs.extend(dayjsCustomParseFormat);
 dayjs.extend(isToday);
 
 const parser = new RssParser();
-const SUCCESS = 0;
-const FAIL = 1;
-const IN_PROGRESS = 2;
 
 module.exports = {
     start: function () {
@@ -78,7 +75,6 @@ function addPublisherData(crawlData) {
             if (aPublisher.type == typeId && aPublisher.callDay.includes(weekday)) {
                 let aClonePublisher = common.cloneObject(aPublisher);
                 aTicketType.publisher[aPublisherId] = aClonePublisher;
-                aClonePublisher.crawlStatus = IN_PROGRESS;
                 publisherNameArray.push(aClonePublisher.name);
                 aTicketType.publisherNum++;
             }
@@ -150,9 +146,6 @@ async function crawlAPublisher(crawlData, ticketTypeData, publisher) {
         if (result === false) {
             continue;
         }
-        publisher.crawlStatus = SUCCESS;
-    }
-    if (publisher.crawlStatus == SUCCESS) {
         ticketTypeData.successCrawl.push(publisher);
         checkCrawlingCompletion(crawlData, ticketTypeData);
         return;
@@ -163,7 +156,6 @@ async function crawlAPublisher(crawlData, ticketTypeData, publisher) {
         crawlAPublisher(crawlData, ticketTypeData, publisher);
         return;
     }
-    publisher.crawlStatus == FAIL;
     ticketTypeData.failCrawl.push(publisher);
     checkCrawlingCompletion(crawlData, ticketTypeData);
 };
@@ -221,7 +213,7 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
     let feedPubDayString = providerData.parsePubDayFunction(feed);
     let feedPubDay = dayjs(feedPubDayString);
     if (!feedPubDay.isValid()) {
-        common.errorLog('Error while parsing ' + publisher.name + ', ' + providerData.name + '.' +
+        common.consoleLogError('Error while parsing ' + publisher.name + ', ' + providerData.name + '.' +
             'Invalid feed published date (' + feedPubDayString + ')', providerData.consoleColor);
         return false;
     }
@@ -235,7 +227,7 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
         'Begin to parse feed data..',
         providerData.consoleColor + '\x1b[4m', feededTime);
     let parseData = providerData.parseFunction(feed);
-    let result = ticketTypeData.createResultData(parseData);
+    let result = ticketTypeData.createResultData(parseData, publisher, providerData);
     if (result == null) {
         return false;
     }
