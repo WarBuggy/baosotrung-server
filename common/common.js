@@ -17,15 +17,24 @@ module.exports = {
 
     consoleLog: function (string, consoleColor, time) {
         if (time == null) {
-            time = getCurrentTime();
+            time = module.exports.getCurrentTime();
         }
         console.log(consoleColor + '%s\x1b[0m', time + ': ' + string + '.');
     },
 
-    errorLog: function (string, consoleColor, time) {
+    consoleLogError: function (string, consoleColor, time) {
         if (time == null) {
-            time = getCurrentTime();
+            time = module.exports.getCurrentTime();
         }
         console.log(consoleColor + '\x1b[31m%s\x1b[0m', time + ': ' + string + '.');
+    },
+
+    cloneObject(object) {
+        let string = JSON.stringify(object);
+        return JSON.parse(string);
+    },
+
+    isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
     },
 };

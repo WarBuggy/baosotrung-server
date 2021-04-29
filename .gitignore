@@ -1,5 +1,6 @@
-scheduleTime.js
 .env
+rss/crawler/schedule.js
+mailer/mailerInfo.js
 
 # Logs
 logs
