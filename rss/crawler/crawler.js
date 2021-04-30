@@ -17,29 +17,31 @@ const parser = new RssParser();
 
 module.exports = {
     start: function () {
-        let crawlData = {
-            successCrawl: [],
-            failCrawl: [],
-            typeNum: 0,
-            message: [],
-        };
-        addTicketData(crawlData);
-        addPublisherData(crawlData);
-        let typeId = Object.keys(crawlData.ticketType);
-        for (let i = 0; i < typeId.length; i++) {
-            let aTypeId = typeId[i];
-            let aTicketTypeData = crawlData.ticketType[aTypeId];
-            let publisherId = Object.keys(aTicketTypeData.publisher);
-            if (publisherId.length < 1) {
-                continue;
+        schedule.scheduleJob('30 16 * * *', function () {
+            let crawlData = {
+                successCrawl: [],
+                failCrawl: [],
+                typeNum: 0,
+                message: [],
+            };
+            addTicketData(crawlData);
+            addPublisherData(crawlData);
+            let typeId = Object.keys(crawlData.ticketType);
+            for (let i = 0; i < typeId.length; i++) {
+                let aTypeId = typeId[i];
+                let aTicketTypeData = crawlData.ticketType[aTypeId];
+                let publisherId = Object.keys(aTicketTypeData.publisher);
+                if (publisherId.length < 1) {
+                    continue;
+                }
+                if (crawlerConfig.ticketType[aTypeId].schedule === false) {
+                    crawlATicketType(crawlData, aTicketTypeData);
+                    continue;
+                }
+                let scheduleDate = createScheduleDate(aTicketTypeData);
+                scheduleToCrawlATicketType(crawlData, aTicketTypeData, scheduleDate);
             }
-            if (crawlerConfig.ticketType[aTypeId].schedule === false) {
-                crawlATicketType(crawlData, aTicketTypeData);
-                continue;
-            }
-            let scheduleDate = createScheduleDate(aTicketTypeData);
-            scheduleToCrawlATicketType(crawlData, aTicketTypeData, scheduleDate);
-        }
+        });
     },
 }
 
