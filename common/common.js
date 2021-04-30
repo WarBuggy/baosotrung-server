@@ -1,3 +1,4 @@
+const systemConfig = require('../systemConfig.js')
 const dayjs = require('dayjs');
 const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(dayjsCustomParseFormat);
@@ -5,6 +6,15 @@ dayjs.extend(dayjsCustomParseFormat);
 module.exports = {
     getCurrentTime: function () {
         return dayjs().format('YYYY-MM-DD HH:mm:ss');
+    },
+
+    getReadableIP: function (request) {
+        let ip = request.headers['x-real-ip'];
+        if (ip == null) {
+            let parts = (request.connection.remoteAddress + '').split(':');
+            return parts.pop();
+        }
+        return ip.toString();
     },
 
     sleep: function (ms) {
@@ -16,6 +26,9 @@ module.exports = {
     },
 
     consoleLog: function (string, consoleColor, time) {
+        if (consoleColor == null) {
+            consoleColor = systemConfig.consoleColor;
+        }
         if (time == null) {
             time = module.exports.getCurrentTime();
         }
@@ -23,6 +36,9 @@ module.exports = {
     },
 
     consoleLogError: function (string, consoleColor, time) {
+        if (consoleColor == null) {
+            consoleColor = systemConfig.consoleColor;
+        }
         if (time == null) {
             time = module.exports.getCurrentTime();
         }

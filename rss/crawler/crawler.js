@@ -21,6 +21,7 @@ module.exports = {
             successCrawl: [],
             failCrawl: [],
             typeNum: 0,
+            message: [],
         };
         addTicketData(crawlData);
         addPublisherData(crawlData);
@@ -96,9 +97,10 @@ function createScheduleDate(ticketTypeData) {
 };
 
 async function crawlATicketType(crawlData, ticketTypeData) {
-    common.consoleLog('Begin to crawl ' + ticketTypeData.name +
-        ' (' + ticketTypeData.publisherName + ')',
-        systemConfig.consoleColor);
+    let message = 'Begin to crawl ' + ticketTypeData.name +
+        ' (' + ticketTypeData.publisherName + ')';
+    common.consoleLog(message);
+    addToEmailMessage(crawlData, message);
     let rssProviderId = ticketTypeData.rssProvider;
     let publisherId = Object.keys(ticketTypeData.publisher);
     for (let i = 0; i < publisherId.length; i++) {
@@ -130,7 +132,7 @@ function preparePublisherAndProviderData(publisher, rssProviderId) {
 function scheduleToCrawlATicketType(crawlData, ticketTypeData, scheduleTime) {
     common.consoleLog('Scheduled to crawl ' + ticketTypeData.name +
         ' (' + ticketTypeData.publisherName + ')' + ' at ' +
-        dayjs(scheduleTime).format(systemConfig.dayjsFormatFull), systemConfig.consoleColor);
+        dayjs(scheduleTime).format(systemConfig.dayjsFormatFull));
     schedule.scheduleJob(scheduleTime, function () {
         crawlATicketType(crawlData, ticketTypeData);
     });
@@ -138,7 +140,7 @@ function scheduleToCrawlATicketType(crawlData, ticketTypeData, scheduleTime) {
 
 async function crawlAPublisher(crawlData, ticketTypeData, publisher) {
     common.consoleLog('Crawling for ' +
-        publisher.name + ' (cycle: ' + (publisher.crawlTime + 1) + ')', systemConfig.consoleColor);
+        publisher.name + ' (cycle: ' + (publisher.crawlTime + 1) + ')');
     let rssProviderId = Object.keys(publisher.providerCrawlData);
     for (let i = 0; i < rssProviderId.length; i++) {
         let aRssProviderId = rssProviderId[i];
@@ -175,7 +177,9 @@ function checkCrawlingCompletion(crawlData, ticketTypeData) {
         }
         string = string + ' (' + failType.join(', ') + ')';
     }
-    common.consoleLog(string, systemConfig.consoleColor);
+    common.consoleLog(string);
+    addToEmailMessage(crawlData, string);
+    sendCrawlResultEmail(crawlData);
 };
 
 function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
@@ -193,13 +197,13 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
         }
         string = string + ' (' + failType.join(', ') + ')';
     }
-    common.consoleLog(string, systemConfig.consoleColor);
+    common.consoleLog(string);
+    addToEmailMessage(crawlData, string);
     if (successNum > 0) {
         crawlData.successCrawl.push(ticketTypeData);
     } else {
         crawlData.failCrawl.push(ticketTypeData);
     }
-
 };
 
 async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
@@ -233,4 +237,15 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
     }
     // write to db
     return result;
+};
+
+function addToEmailMessage(crawlData, string) {
+    crawlData.message.push(common.getCurrentTime() + ': ' + string + '.');
+};
+
+function sendCrawlResultEmail(crawlData) {
+    let message = crawlData.message.join('\n');
+    let today = dayjs().format(systemConfig.dayjsFormatDateOnly);
+    mailer.sendMail(message, false, null,
+        today + ' Báo Trúng Số Crawl Result', 'crawl result');
 };
