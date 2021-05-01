@@ -3,6 +3,7 @@ const rssProvider = require('./provider.js');
 const crawlerConfig = require('./config.js');
 const systemConfig = require('../../systemConfig.js');
 const common = require('../../common/common.js');
+const db = require('../../db/db.js');
 const mailer = require('../../mailer/mailer.js');
 
 const RssParser = require('rss-parser');
@@ -17,33 +18,41 @@ const parser = new RssParser();
 
 module.exports = {
     start: function () {
+        if (crawlerConfig.setupSchedule === false) {
+            setupCrawlSchedule();
+            return;
+        }
         schedule.scheduleJob('30 16 * * *', function () {
-            let crawlData = {
-                successCrawl: [],
-                failCrawl: [],
-                typeNum: 0,
-                message: [],
-            };
-            addTicketData(crawlData);
-            addPublisherData(crawlData);
-            let typeId = Object.keys(crawlData.ticketType);
-            for (let i = 0; i < typeId.length; i++) {
-                let aTypeId = typeId[i];
-                let aTicketTypeData = crawlData.ticketType[aTypeId];
-                let publisherId = Object.keys(aTicketTypeData.publisher);
-                if (publisherId.length < 1) {
-                    continue;
-                }
-                if (crawlerConfig.ticketType[aTypeId].schedule === false) {
-                    crawlATicketType(crawlData, aTicketTypeData);
-                    continue;
-                }
-                let scheduleDate = createScheduleDate(aTicketTypeData);
-                scheduleToCrawlATicketType(crawlData, aTicketTypeData, scheduleDate);
-            }
+            setupCrawlSchedule();
         });
     },
 }
+
+function setupCrawlSchedule() {
+    let crawlData = {
+        successCrawl: [],
+        failCrawl: [],
+        typeNum: 0,
+        message: [],
+    };
+    addTicketData(crawlData);
+    addPublisherData(crawlData);
+    let typeId = Object.keys(crawlData.ticketType);
+    for (let i = 0; i < typeId.length; i++) {
+        let aTypeId = typeId[i];
+        let aTicketTypeData = crawlData.ticketType[aTypeId];
+        let publisherId = Object.keys(aTicketTypeData.publisher);
+        if (publisherId.length < 1) {
+            continue;
+        }
+        if (crawlerConfig.ticketType[aTypeId].schedule === false) {
+            crawlATicketType(crawlData, aTicketTypeData);
+            continue;
+        }
+        let scheduleDate = createScheduleDate(aTicketTypeData);
+        scheduleToCrawlATicketType(crawlData, aTicketTypeData, scheduleDate);
+    }
+};
 
 function addTicketData(crawlData) {
     crawlData.ticketType = {};
@@ -100,7 +109,7 @@ function createScheduleDate(ticketTypeData) {
 
 async function crawlATicketType(crawlData, ticketTypeData) {
     let message = 'Begin to crawl ' + ticketTypeData.name +
-        ' (' + ticketTypeData.publisherName + ')';
+        ' (' + ticketTypeData.publisherName + ').';
     common.consoleLog(message);
     addToEmailMessage(crawlData, message);
     let rssProviderId = ticketTypeData.rssProvider;
@@ -108,12 +117,14 @@ async function crawlATicketType(crawlData, ticketTypeData) {
     for (let i = 0; i < publisherId.length; i++) {
         let aPublisherId = publisherId[i];
         let aPublisher = ticketTypeData.publisher[aPublisherId];
-        preparePublisherAndProviderData(aPublisher, rssProviderId);
+        preparePublisherAndProviderData(aPublisher, aPublisherId, rssProviderId);
         crawlAPublisher(crawlData, ticketTypeData, aPublisher);
     }
 };
 
-function preparePublisherAndProviderData(publisher, rssProviderId) {
+function preparePublisherAndProviderData(publisher, publisherId, rssProviderId) {
+    publisher.crawlTime = 0;
+    publisher.id = publisherId;
     publisher.providerCrawlData = {};
     for (let i = 0; i < rssProviderId.length; i++) {
         let aRssProviderId = rssProviderId[i];
@@ -127,14 +138,13 @@ function preparePublisherAndProviderData(publisher, rssProviderId) {
         publisher.providerCrawlData[aRssProviderId] = {
             url,
         };
-        publisher.crawlTime = 0;
     }
 };
 
 function scheduleToCrawlATicketType(crawlData, ticketTypeData, scheduleTime) {
     common.consoleLog('Scheduled to crawl ' + ticketTypeData.name +
         ' (' + ticketTypeData.publisherName + ')' + ' at ' +
-        dayjs(scheduleTime).format(systemConfig.dayjsFormatFull));
+        dayjs(scheduleTime).format(systemConfig.dayjsFormatFull) + '.');
     schedule.scheduleJob(scheduleTime, function () {
         crawlATicketType(crawlData, ticketTypeData);
     });
@@ -142,7 +152,7 @@ function scheduleToCrawlATicketType(crawlData, ticketTypeData, scheduleTime) {
 
 async function crawlAPublisher(crawlData, ticketTypeData, publisher) {
     common.consoleLog('Crawling for ' +
-        publisher.name + ' (cycle: ' + (publisher.crawlTime + 1) + ')');
+        publisher.name + ' (cycle: ' + (publisher.crawlTime + 1) + ').');
     let rssProviderId = Object.keys(publisher.providerCrawlData);
     for (let i = 0; i < rssProviderId.length; i++) {
         let aRssProviderId = rssProviderId[i];
@@ -171,7 +181,7 @@ function checkCrawlingCompletion(crawlData, ticketTypeData) {
     if (successNum + failNum != crawlData.typeNum) {
         return;
     }
-    let string = 'ALL CRAWLING FINISHED. Success: ' + successNum + '. Fail: ' + failNum;
+    let string = 'ALL CRAWLING FINISHED. Success: ' + successNum + '. Fail: ' + failNum + '.';
     if (failNum > 0) {
         let failType = [];
         for (let i = 0; i < crawlData.failCrawl.length; i++) {
@@ -191,7 +201,7 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
         return;
     }
     let string = 'Finish crawling for ' + ticketTypeData.name +
-        '. Success: ' + successNum + '. Fail: ' + failNum;
+        '. Success: ' + successNum + '. Fail: ' + failNum + '.';
     if (failNum > 0) {
         let failType = [];
         for (let i = 0; i < ticketTypeData.failCrawl.length; i++) {
@@ -213,31 +223,31 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
     let providerCrawlData = publisher.providerCrawlData[rssProviderId];
     let startTime = common.getCurrentTime();
     common.consoleLog('Retrieve RSS for ' + publisher.name + ', ' +
-        providerData.name, providerData.consoleColor, startTime);
+        providerData.name + '...', providerData.consoleColor, startTime);
     let feed = await parser.parseURL(providerCrawlData.url);
     let feededTime = common.getCurrentTime();
     let feedPubDayString = providerData.parsePubDayFunction(feed);
     let feedPubDay = dayjs(feedPubDayString);
     if (!feedPubDay.isValid()) {
         common.consoleLogError('Error while parsing ' + publisher.name + ', ' + providerData.name + '.' +
-            'Invalid feed published date (' + feedPubDayString + ')', providerData.consoleColor);
+            'Invalid feed published date (' + feedPubDayString + ').', providerData.consoleColor);
         return false;
     }
     if (!feedPubDay.isToday()) {
         common.consoleLog('No new data for ' + publisher.name + ', ' + providerData.name +
-            '. Last publish date is ' + feedPubDay.format(systemConfig.dayjsFormatFull),
+            '. Last publish date is ' + feedPubDay.format(systemConfig.dayjsFormatFull) + '.',
             providerData.consoleColor, feededTime);
         return false;
     }
     common.consoleLog('New data found for ' + publisher.name + ', ' + providerData.name + '.' +
-        'Begin to parse feed data..',
+        'Begin to parse feed data...',
         providerData.consoleColor + '\x1b[4m', feededTime);
     let parseData = providerData.parseFunction(feed);
     let result = ticketTypeData.createResultData(parseData, publisher, providerData);
     if (result == null) {
         return false;
     }
-    // write to db
+    writeResultToDB(result, ticketTypeData, publisher, rssProviderId, feedPubDay);
     return result;
 };
 
@@ -250,4 +260,22 @@ function sendCrawlResultEmail(crawlData) {
     let today = dayjs().format(systemConfig.dayjsFormatDateOnly);
     mailer.sendMail(message, false, null,
         today + ' Báo Trúng Số Crawl Result', 'crawl result');
+};
+
+function findPublisherResult(publisherId, date) {
+    let param = [
+
+    ];
+    let logInfo = {
+
+    };
+};
+
+function writeResultToDB(result, ticketTypeData, publisher, rssProviderId, feedPubDay) {
+
+    let findPublisherResult = db.que
+    let ticketType = publisher.type;
+    let prizeFormat = ticketTypeData.defaultPrize;
+    let publisherId = publisher.id;
+    let date = feedPubDay.format(systemConfig.dayjsFormatDateOnly);
 };

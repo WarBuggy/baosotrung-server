@@ -23,10 +23,10 @@ module.exports = {
         } else {
             mailInfo.text = content;
         }
-        common.consoleLog('Sending ' + purpose + ' email..');
+        common.consoleLog('Sending ' + purpose + ' email...');
         transporter.sendMail(mailInfo)
             .then(function () {
-                common.consoleLog('Email for ' + purpose + ' sent');
+                common.consoleLog('Email for ' + purpose + ' sent.');
             })
             .catch(function (error) {
                 let errorMessage = 'Unknown error';
@@ -37,7 +37,7 @@ module.exports = {
                 } else if (error.message) {
                     errorMessage = error.message;
                 }
-                common.consoleLogError('Email for ' + purpose + ' could not be sent. Error: ' + errorMessage);
+                common.consoleLogError('Email for ' + purpose + ' could not be sent. Error: ' + errorMessage + '.');
             });
     },
 };

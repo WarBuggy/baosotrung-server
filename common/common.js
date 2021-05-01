@@ -32,7 +32,7 @@ module.exports = {
         if (time == null) {
             time = module.exports.getCurrentTime();
         }
-        console.log(consoleColor + '%s\x1b[0m', time + ': ' + string + '.');
+        console.log(consoleColor + '%s\x1b[0m', time + ': ' + string);
     },
 
     consoleLogError: function (string, consoleColor, time) {
@@ -42,7 +42,7 @@ module.exports = {
         if (time == null) {
             time = module.exports.getCurrentTime();
         }
-        console.log(consoleColor + '\x1b[31m%s\x1b[0m', time + ': ' + string + '.');
+        console.log(consoleColor + '\x1b[31m%s\x1b[0m', time + ': ' + string);
     },
 
     cloneObject(object) {

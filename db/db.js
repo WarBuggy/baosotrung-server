@@ -5,76 +5,112 @@ const mysql = require('mysql');
 let connection = null;
 
 module.exports = {
-    query: function (params, logInfo) {
-        let connection = getConnection();
+    query: async function (params, logInfo) {
+        return new Promise(function (resolve) {
+            module.exports.getConnection()
+                .then(function (connection) {
+                    let sql = 'CALL ' + logInfo.source + '(';
+                    if (params) {
+                        let questionMark = [];
+                        for (let i = 0; i < params.length; i++) {
+                            questionMark.push('?');
+                        }
+                        sql = sql + questionMark.join(',');
+                    }
+                    sql = sql + ')';
+                    let formatQuery = mysql.format(sql, params);
+                    connection.query(formatQuery, function (queryError, selectResult, fields) {
+                        if (queryError) {
+                            let consoleMessage = 'Result code 901. Error while executing a query from database:\n' + queryError;
+                            logErrorToDB(logInfo, consoleMessage);
+                            resolve({ resultCode: 901, });
+                            return;
+                        }
+                        let resultCode = selectResult[0][0].result;
+                        if (resultCode == null) {
+                            let errorMessage = 'Result code 902. No result code found in database response: ' + logInfo.source;
+                            logErrorToDB(logInfo, errorMessage);
+                            resolve({ resultCode: 902, });
+                            return;
+                        }
+                        let result = {
+                            sqlResults: selectResult,
+                            fields: fields,
+                            resultCode,
+                        };
+                        resolve(result);
+                    });
+                });
+        });
+    },
+
+
+    getConnection: function () {
+        return new Promise(function (resolve) {
+            if (connection == null) {
+                createConnection()
+                    .then(function (result) {
+                        resolve(result);
+                    });
+            } else {
+                resolve(connection);
+            }
+        });
+    },
+
+    closeConnection: function () {
         if (connection == null) {
-            return 900;
+            return;
         }
-        let sql = 'CALL ' + logInfo.source + '(';
-        if (params) {
-            let questionMark = [];
-            for (let i = 0; i < params.length; i++) {
-                questionMark.push('?');
+        return new Promise(function (resolve) {
+            try {
+                connection.end();
+                resolve();
+            } catch (closingError) {
+                common.consoleLogError('Error while closing database connection:\n' + closingError + '.');
+                connection.destroy();
+                resolve();
             }
-            sql = sql + questionMark.join(',');
-        }
-        sql = sql + ')';
-        let formatQuery = mysql.format(sql, params);
-        connection.query(formatQuery, function (selectErr, selectResult, fields) {
-            if (selectErr) {
-                let consoleMessage = 'Error while executing a query from database:\n' + selectErr;
-                common.consoleLogError(consoleMessage);
-                return 901;
-            }
-            let resultCode = selectResult[0][0].result;
-            if (resultCode == null) {
-                let errorMessage = 'No result code found in database response: ' + logInfo.source;
-                common.consoleLogError(errorMessage);
-                return 902;
-            }
-            let result = {
-                sqlResults: selectResult,
-                fields: fields,
-                result: resultCode,
-            };
-            return result;
         });
     },
 };
 
-function getConnection() {
-    if (connection == null) {
-        connection = createConnection();
-    }
-    return connection;
-};
-
 function createConnection() {
-    let aConnection = mysql.createConnection({
-        host: dbConfig.host,
-        user: dbConfig.user,
-        password: dbConfig.password,
-        database: dbConfig.initDB,
-        port: dbConfig.port,
-    });
-    aConnection.connect(function (connectionError) {
-        if (connectionError) {
-            common.consoleLogError('Error while connecting to database:\n' + connectionError);
-            return null;
-        }
-        common.consoleLog('Database connected with id ' + aConnection.threadId);
-        return aConnection;
+    return new Promise(function (resolve) {
+        let aConnection = mysql.createConnection({
+            host: dbConfig.host,
+            user: dbConfig.user,
+            password: dbConfig.password,
+            database: dbConfig.initDB,
+            port: dbConfig.port,
+        });
+        aConnection.connect(function (connectionError) {
+            if (connectionError) {
+                common.consoleLogError('Error while connecting to database:\n' + connectionError + '.');
+                resolve(null);
+                return;
+            }
+            common.consoleLog('Database connected with id ' + aConnection.threadId + '.');
+            resolve(aConnection);
+        });
     });
 };
 
-function closeConnection() {
-    if (connection == null) {
-        return;
-    }
-    try {
-        connection.end();
-    } catch (closingError) {
-        common.consoleLogError('Error while closing database connection:\n' + closingError);
-        connection.destroy();
-    }
+function logErrorToDB(logInfo, errorMessage) {
+    return new Promise(function (resolve) {
+        getConnection()
+            .then(function (connection) {
+                let logErrorParams = [logInfo.username, logInfo.source, logInfo.userIP, errorMessage];
+                let formatQuery = mysql.format('CALL `baosotrung_system`.`SYSTEM_LOG_ERROR`(?, ?, ?, ?)', logErrorParams);
+                connection.query(formatQuery, function (logError) {
+                    if (logError) {
+                        console.log(consoleMessage + '.\nFailed to log error to database.');
+                        resolve(false);
+                    }
+                    console.log(consoleMessage + '.\nError logged.');
+                    resolve(true);
+                });
+
+            });
+    });
 };
