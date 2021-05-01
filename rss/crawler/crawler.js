@@ -18,11 +18,15 @@ const parser = new RssParser();
 
 module.exports = {
     start: function () {
-        if (crawlerConfig.setupSchedule === false) {
+        if (crawlerConfig.setupCrawlSchedule.instant === true) {
             setupCrawlSchedule();
             return;
         }
-        schedule.scheduleJob('30 16 * * *', function () {
+        let hour = crawlerConfig.setupCrawlSchedule.hour;
+        let minute = crawlerConfig.setupCrawlSchedule.minute;
+        common.consoleLog('Crawl schedule will be setup daily at ' + hour + ':' + minute + '.');
+        let cronTime = minute + ' ' + hour + ' * * *';
+        schedule.scheduleJob(cronTime, function () {
             setupCrawlSchedule();
         });
     },
