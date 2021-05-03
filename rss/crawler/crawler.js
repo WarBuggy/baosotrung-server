@@ -32,10 +32,88 @@ module.exports = {
     },
 
     test: async function () {
-        let publisherId = 1;
-        let date = dayjs().format(systemConfig.dayjsFormatDateOnly);
-        let publisherResult = await findPublisherResult(publisherId, date);
-        console.log(publisherResult);
+        let rssProviderId = 3;
+        let publisher = {
+            type: 1,
+            id: 2,
+        };
+        let ticketTypeData = {
+            defaultPrize: 4,
+        };
+        let feedPubDay = dayjs();
+        let result = {
+            '0': ['971634'],
+            '1': ['79095'],
+            '2': ['91077'],
+            '3': ['05951', '27173'],
+            '4':
+                ['18068', '18835', '14969', '30502', '91466', '56585', '19296'],
+            '5': ['4272'],
+            '6': ['4692', '7245', '9191'],
+            '7': ['798'],
+            '8': ['32'],
+            '10':
+                ['071634',
+                    '171634',
+                    '271634',
+                    '371634',
+                    '471634',
+                    '571634',
+                    '671634',
+                    '771634',
+                    '871634'],
+            '11':
+                ['901634',
+                    '911634',
+                    '921634',
+                    '931634',
+                    '941634',
+                    '951634',
+                    '961634',
+                    '981634',
+                    '991634',
+                    '970634',
+                    '972634',
+                    '973634',
+                    '974634',
+                    '975634',
+                    '976634',
+                    '977634',
+                    '978634',
+                    '979634',
+                    '971034',
+                    '971134',
+                    '971234',
+                    '971334',
+                    '971434',
+                    '971534',
+                    '971734',
+                    '971834',
+                    '971934',
+                    '971604',
+                    '971614',
+                    '971624',
+                    '971644',
+                    '971654',
+                    '971664',
+                    '971674',
+                    '971684',
+                    '971694',
+                    '971630',
+                    '971631',
+                    '971632',
+                    '971633',
+                    '971635',
+                    '971636',
+                    '971637',
+                    '971638',
+                    '971639']
+        };
+        let result = await
+            writeResultToDB(result, ticketTypeData, publisher, rssProviderId, feedPubDay);
+        console.log(result);
+        // let publisherResult = await findPublisherResult(publisherId, date);
+        // console.log(publisherResult);
     }
 }
 
@@ -244,12 +322,12 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
             'Invalid feed published date (' + feedPubDayString + ').', providerData.consoleColor);
         return false;
     }
-    if (!feedPubDay.isToday()) {
-        common.consoleLog('No new data for ' + publisher.name + ', ' + providerData.name +
-            '. Last publish date is ' + feedPubDay.format(systemConfig.dayjsFormatFull) + '.',
-            providerData.consoleColor, feededTime);
-        return false;
-    }
+    // if (!feedPubDay.isToday()) {
+    //     common.consoleLog('No new data for ' + publisher.name + ', ' + providerData.name +
+    //         '. Last publish date is ' + feedPubDay.format(systemConfig.dayjsFormatFull) + '.',
+    //         providerData.consoleColor, feededTime);
+    //     return false;
+    // }
     common.consoleLog('New data found for ' + publisher.name + ', ' + providerData.name + '.' +
         'Begin to parse feed data...',
         providerData.consoleColor + '\x1b[4m', feededTime);
@@ -258,7 +336,10 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
     if (result == null) {
         return false;
     }
-    writeResultToDB(result, ticketTypeData, publisher, rssProviderId, feedPubDay);
+    let writeResult = await writeResultToDB(result, ticketTypeData, publisher, rssProviderId, feedPubDay);
+    if (writeResult == false) {
+        return false;
+    }
     return result;
 };
 
@@ -285,7 +366,6 @@ async function findPublisherResult(publisherId, date) {
         userIP: 'locahost',
     };
     let publisherResult = await db.query(params, logInfo);
-    console.log(publisherResult);
     if (publisherResult.resultCode != 0) {
         return null;
     }
@@ -296,12 +376,49 @@ async function findPublisherResult(publisherId, date) {
     return record.id;
 };
 
+function createInsertResultDetailQuery(result) {
+    let insertQuery = 'INSERT INTO `baosotrung_data`.`result_detail` ' +
+        '(`prize`, `series`, `result`) VALUES ';
+    let prizeId = Object.keys(result);
+    let queryParts = [];
+    for (let i = 0; i < prizeId.length; i++) {
+        let aPrizeId = prizeId[i];
+        let series = result[aPrizeId];
+        for (let j = 0; j < series.length; j++) {
+            let aSeries = series[j];
+            let aQueryPart = '(' + aPrizeId + ',' + aSeries + ',<resultId>)';
+            queryParts.push(aQueryPart);
+        }
+    }
+    insertQuery = insertQuery + queryParts.join(',');
+    return insertQuery;
+};
+
 async function writeResultToDB(result, ticketTypeData, publisher, rssProviderId, feedPubDay) {
     let ticketType = publisher.type;
     let prizeFormat = ticketTypeData.defaultPrize;
     let publisherId = publisher.id;
     let date = feedPubDay.format(systemConfig.dayjsFormatDateOnly);
-    let publisherResult = await findPublisherResult(publisherId, date);
-    console.log(publisherResult);
-
+    let resultId = await findPublisherResult(publisherId, date);
+    let insertQuery = createInsertResultDetailQuery(result);
+    let params = [
+        'localhost',
+        date,
+        publisherId,
+        rssProviderId,
+        ticketType,
+        prizeFormat,
+        resultId,
+        insertQuery,
+    ];
+    let logInfo = {
+        username: '',
+        source: '`baosotrung_data`.`WRITE_PUBLISHER_RESULT`',
+        userIP: 'locahost',
+    };
+    let writeResult = await db.query(params, logInfo);
+    if (writeResult.resultCode != 0) {
+        return false;
+    }
+    return true;
 };
