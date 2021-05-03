@@ -58,6 +58,7 @@ module.exports = {
             if (connection == null) {
                 createConnection()
                     .then(function (result) {
+                        connection = result;
                         resolve(result);
                     });
             } else {
@@ -112,10 +113,11 @@ function logErrorToDB(logInfo, errorMessage) {
                 let formatQuery = mysql.format('CALL `baosotrung_system`.`SYSTEM_LOG_ERROR`(?, ?, ?, ?)', logErrorParams);
                 connection.query(formatQuery, function (logError) {
                     if (logError) {
-                        console.log(consoleMessage + '.\nFailed to log error to database.');
+                        common.consoleLogError(errorMessage + '.\nFailed to log error to database. Log error:\n' +
+                            logError + '.');
                         resolve(false);
                     }
-                    console.log(consoleMessage + '.\nError logged.');
+                    common.consoleLogError(errorMessage + '.\nError logged.');
                     resolve(true);
                 });
 
