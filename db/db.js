@@ -6,6 +6,14 @@ let connection = null;
 
 module.exports = {
     query: async function (params, logInfo) {
+        if (dbConfig.logLogInfo === true) {
+            console.log('Log Info:');
+            console.log(logInfo);
+        }
+        if (dbConfig.logParams === true) {
+            console.log('Params:');
+            console.log(params);
+        }
         return new Promise(function (resolve) {
             module.exports.getConnection()
                 .then(function (connection) {

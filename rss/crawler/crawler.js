@@ -30,6 +30,13 @@ module.exports = {
             setupCrawlSchedule();
         });
     },
+
+    test: function () {
+        let publisherId = 1;
+        let date = dayjs().format(systemConfig.dayjsFormatDateOnly);
+        let findPublisherResult = await findPublisherResult(publisherId, date);
+        console.log(findPublisherResult);
+    }
 }
 
 function setupCrawlSchedule() {
@@ -266,20 +273,35 @@ function sendCrawlResultEmail(crawlData) {
         today + ' Báo Trúng Số Crawl Result', 'crawl result');
 };
 
-function findPublisherResult(publisherId, date) {
-    let param = [
-
+async function findPublisherResult(publisherId, date) {
+    let params = [
+        'localhost',
+        publisherId,
+        date,
     ];
     let logInfo = {
-
+        username: '',
+        source: '`baosotrung_data`.`FIND_PUBLISHER_RESULT`',
+        userIP: 'locahost',
     };
+    let publisherResult = await db.query(params, logInfo);
+    console.log(publisherResult);
+    if (publisherResult.resultCode != 0) {
+        return null;
+    }
+    let record = publisherResult.sqlResults[1][0];
+    if (record == null) {
+        return null;
+    }
+    return record.id;
 };
 
-function writeResultToDB(result, ticketTypeData, publisher, rssProviderId, feedPubDay) {
-
-    let findPublisherResult = db.que
+async function writeResultToDB(result, ticketTypeData, publisher, rssProviderId, feedPubDay) {
     let ticketType = publisher.type;
     let prizeFormat = ticketTypeData.defaultPrize;
     let publisherId = publisher.id;
     let date = feedPubDay.format(systemConfig.dayjsFormatDateOnly);
+    let findPublisherResult = await findPublisherResult(publisherId, date);
+    console.log(findPublisherResult);
+
 };
