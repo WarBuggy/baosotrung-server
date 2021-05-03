@@ -109,14 +109,15 @@ module.exports = {
                     '971638',
                     '971639']
         };
-        let result = await
+        let writeResult = await
             writeResultToDB(result, ticketTypeData, publisher, rssProviderId, feedPubDay);
-        console.log(result);
+        console.log(writeResult);
         // let publisherResult = await findPublisherResult(publisherId, date);
         // console.log(publisherResult);
     }
 }
 
+//#region Function to handle the craw schedule
 function setupCrawlSchedule() {
     let crawlData = {
         successCrawl: [],
@@ -195,7 +196,9 @@ function createScheduleDate(ticketTypeData) {
     }
     return new Date(crawlTime.format(systemConfig.dayjsFormatFull));
 };
+//#endregion
 
+//#region Functions to handle the actual crawling
 async function crawlATicketType(crawlData, ticketTypeData) {
     let message = 'Begin to crawl ' + ticketTypeData.name +
         ' (' + ticketTypeData.publisherName + ').';
@@ -342,7 +345,9 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
     }
     return result;
 };
+//#endregion
 
+//#region Functions to handle the task of emailing the crawl result summary
 function addToEmailMessage(crawlData, string) {
     crawlData.message.push(common.getCurrentTime() + ': ' + string + '.');
 };
@@ -353,7 +358,9 @@ function sendCrawlResultEmail(crawlData) {
     mailer.sendMail(message, false, null,
         today + ' Báo Trúng Số Crawl Result', 'crawl result');
 };
+//#endregion
 
+//#region Functions to handle database tasks 
 async function findPublisherResult(publisherId, date) {
     let params = [
         'localhost',
@@ -422,3 +429,4 @@ async function writeResultToDB(result, ticketTypeData, publisher, rssProviderId,
     }
     return true;
 };
+//#endregion
