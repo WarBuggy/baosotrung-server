@@ -34,8 +34,8 @@ module.exports = {
     test: async function () {
         let publisherId = 1;
         let date = dayjs().format(systemConfig.dayjsFormatDateOnly);
-        let findPublisherResult = await findPublisherResult(publisherId, date);
-        console.log(findPublisherResult);
+        let publisherResult = await findPublisherResult(publisherId, date);
+        console.log(publisherResult);
     }
 }
 
@@ -301,7 +301,7 @@ async function writeResultToDB(result, ticketTypeData, publisher, rssProviderId,
     let prizeFormat = ticketTypeData.defaultPrize;
     let publisherId = publisher.id;
     let date = feedPubDay.format(systemConfig.dayjsFormatDateOnly);
-    let findPublisherResult = await findPublisherResult(publisherId, date);
-    console.log(findPublisherResult);
+    let publisherResult = await findPublisherResult(publisherId, date);
+    console.log(publisherResult);
 
 };
