@@ -5,7 +5,7 @@ const mysql = require('mysql');
 let connection = null;
 
 module.exports = {
-    query: async function (params, logInfo) {
+    query: function (params, logInfo) {
         if (dbConfig.logLogInfo === true) {
             console.log('Log Info:');
             console.log(logInfo);
@@ -27,7 +27,7 @@ module.exports = {
                     }
                     sql = sql + ')';
                     let formatQuery = mysql.format(sql, params);
-                    connection.query(formatQuery, function (queryError, selectResult, fields) {
+                    connection.query(formatQuery, async function (queryError, selectResult, fields) {
                         if (queryError) {
                             let consoleMessage = 'Result code 901. Error while executing a query from database:\n' + queryError;
                             await logErrorToDB(logInfo, consoleMessage);
