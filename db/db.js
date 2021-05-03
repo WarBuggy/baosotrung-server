@@ -30,14 +30,14 @@ module.exports = {
                     connection.query(formatQuery, function (queryError, selectResult, fields) {
                         if (queryError) {
                             let consoleMessage = 'Result code 901. Error while executing a query from database:\n' + queryError;
-                            logErrorToDB(logInfo, consoleMessage);
+                            await logErrorToDB(logInfo, consoleMessage);
                             resolve({ resultCode: 901, });
                             return;
                         }
                         let resultCode = selectResult[0][0].result;
                         if (resultCode == null) {
                             let errorMessage = 'Result code 902. No result code found in database response: ' + logInfo.source;
-                            logErrorToDB(logInfo, errorMessage);
+                            await logErrorToDB(logInfo, errorMessage);
                             resolve({ resultCode: 902, });
                             return;
                         }
