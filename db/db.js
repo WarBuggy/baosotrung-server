@@ -106,7 +106,7 @@ function createConnection() {
 
 function logErrorToDB(logInfo, errorMessage) {
     return new Promise(function (resolve) {
-        getConnection()
+        module.exports.getConnection()
             .then(function (connection) {
                 let logErrorParams = [logInfo.username, logInfo.source, logInfo.userIP, errorMessage];
                 let formatQuery = mysql.format('CALL `baosotrung_system`.`SYSTEM_LOG_ERROR`(?, ?, ?, ?)', logErrorParams);
