@@ -31,7 +31,7 @@ module.exports = {
         });
     },
 
-    test: function () {
+    test: async function () {
         let publisherId = 1;
         let date = dayjs().format(systemConfig.dayjsFormatDateOnly);
         let findPublisherResult = await findPublisherResult(publisherId, date);
