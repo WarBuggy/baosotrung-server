@@ -325,12 +325,12 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
             'Invalid feed published date (' + feedPubDayString + ').', providerData.consoleColor);
         return false;
     }
-    // if (!feedPubDay.isToday()) {
-    //     common.consoleLog('No new data for ' + publisher.name + ', ' + providerData.name +
-    //         '. Last publish date is ' + feedPubDay.format(systemConfig.dayjsFormatFull) + '.',
-    //         providerData.consoleColor, feededTime);
-    //     return false;
-    // }
+    if (!feedPubDay.isToday()) {
+        common.consoleLog('No new data for ' + publisher.name + ', ' + providerData.name +
+            '. Last publish date is ' + feedPubDay.format(systemConfig.dayjsFormatFull) + '.',
+            providerData.consoleColor, feededTime);
+        return false;
+    }
     common.consoleLog('New data found for ' + publisher.name + ', ' + providerData.name + '.' +
         'Begin to parse feed data...',
         providerData.consoleColor + '\x1b[4m', feededTime);
