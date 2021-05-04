@@ -1,7 +1,13 @@
 .env
-rss/crawler/schedule.js
-mailer/mailerInfo.js
 config.js*
+
+# Ignore everything in public
+public/*
+
+# But track everything in public/image/required/
+!public/image/
+public/image/*
+!public/image/required/
 
 # Logs
 logs
