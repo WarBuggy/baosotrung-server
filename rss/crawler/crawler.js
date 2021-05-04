@@ -369,7 +369,7 @@ async function findPublisherResult(publisherId, date) {
     ];
     let logInfo = {
         username: '',
-        source: '`baosotrung_data`.`FIND_PUBLISHER_RESULT`',
+        source: '`baosotrung_data`.`SP_FIND_PUBLISHER_RESULT`',
         userIP: 'locahost',
     };
     let publisherResult = await db.query(params, logInfo);
@@ -420,7 +420,7 @@ async function writeResultToDB(result, ticketTypeData, publisher, rssProviderId,
     ];
     let logInfo = {
         username: '',
-        source: '`baosotrung_data`.`WRITE_PUBLISHER_RESULT`',
+        source: '`baosotrung_data`.`SP_WRITE_PUBLISHER_RESULT`',
         userIP: 'locahost',
     };
     let writeResult = await db.query(params, logInfo);

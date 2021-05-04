@@ -11,6 +11,7 @@ module.exports = {
             maxCrawlTime: '17:10:00',
             defaultPrize: 1,
             createResultData: createResultDataType1,
+            checkResult: checkResultType1,
         },
         2: {
             name: 'Miền Trung',
@@ -363,5 +364,9 @@ function checkParseDataArrayLengthType1(parseData) {
         };
     }
     return true;
+};
+
+function checkResultType1(result) {
+
 };
 //#endregion
