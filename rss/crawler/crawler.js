@@ -361,9 +361,10 @@ function sendCrawlResultEmail(crawlData) {
 //#endregion
 
 //#region Functions to handle database tasks 
-async function findPublisherResult(publisherId, date) {
+async function findPublisherResult(ticketType, publisherId, date) {
     let params = [
         'localhost',
+        ticketType,
         publisherId,
         date,
     ];
@@ -406,7 +407,7 @@ async function writeResultToDB(result, ticketTypeData, publisher, rssProviderId,
     let prizeFormat = ticketTypeData.defaultPrize;
     let publisherId = publisher.id;
     let date = feedPubDay.format(systemConfig.dayjsFormatDateOnly);
-    let resultId = await findPublisherResult(publisherId, date);
+    let resultId = await findPublisherResult(ticketType, publisherId, date);
     let insertQuery = createInsertResultDetailQuery(result);
     let params = [
         'localhost',
