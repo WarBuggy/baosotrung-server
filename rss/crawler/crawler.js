@@ -5,6 +5,7 @@ const systemConfig = require('../../systemConfig.js');
 const common = require('../../common/common.js');
 const db = require('../../db/db.js');
 const mailer = require('../../mailer/mailer.js');
+const series = require('../../core/series.js');
 
 const RssParser = require('rss-parser');
 const schedule = require('node-schedule');
@@ -119,11 +120,15 @@ module.exports = {
 
 //#region Function to handle the craw schedule
 function setupCrawlSchedule() {
+    let today = dayjs();
     let crawlData = {
         successCrawl: [],
         failCrawl: [],
         typeNum: 0,
         message: [],
+        crawlDate: today,
+        crawlDateFull: today.format(systemConfig.dayjsFormatFull),
+        crawlDatePartial: today.format(systemConfig.dayjsFormatDateOnly),
     };
     addTicketData(crawlData);
     addPublisherData(crawlData);
@@ -139,7 +144,7 @@ function setupCrawlSchedule() {
             crawlATicketType(crawlData, aTicketTypeData);
             continue;
         }
-        let scheduleDate = createScheduleDate(aTicketTypeData);
+        let scheduleDate = createScheduleDate(crawlData, aTicketTypeData);
         scheduleToCrawlATicketType(crawlData, aTicketTypeData, scheduleDate);
     }
 };
@@ -152,6 +157,7 @@ function addTicketData(crawlData) {
         let aType = ticketCoreData.type[typeId];
         if (aType.crawlRss == true) {
             let aTicketType = common.cloneObject(aType);
+            aTicketType.id = typeId;
             aTicketType.publisher = {};
             aTicketType.createResultData = aType.createResultData;
             aTicketType.successCrawl = [];
@@ -164,7 +170,7 @@ function addTicketData(crawlData) {
 };
 
 function addPublisherData(crawlData) {
-    let weekday = dayjs().day();
+    let weekday = crawlData.crawlDate.day();
     let publisherId = Object.keys(ticketCoreData.publisher);
     let ticketTypeId = Object.keys(crawlData.ticketType);
     for (let i = 0; i < ticketTypeId.length; i++) {
@@ -185,10 +191,9 @@ function addPublisherData(crawlData) {
     }
 };
 
-function createScheduleDate(ticketTypeData) {
-    let today = dayjs();
-    let todayDatePart = today.format(systemConfig.dayjsFormatDateOnly);
-    let crawlTime = dayjs(todayDatePart + ' ' + ticketTypeData.crawlTime);
+function createScheduleDate(crawlData, ticketTypeData) {
+    let today = crawlData.crawlDate;
+    let crawlTime = dayjs(crawlData.crawlDatePartial + ' ' + ticketTypeData.crawlTime);
     if (today.isAfter(crawlTime)) {
         let tomorrow = today.add(1, 'day');
         let tomorrowDatePart = tomorrow.format(systemConfig.dayjsFormatDateOnly);
@@ -292,6 +297,7 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
     if (successNum + failNum != ticketTypeData.publisherNum) {
         return;
     }
+    series.startCheckingProcess(ticketTypeData);
     let string = 'Finish crawling for ' + ticketTypeData.name +
         '. Success: ' + successNum + '. Fail: ' + failNum + '.';
     if (failNum > 0) {
@@ -307,7 +313,15 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
         crawlData.successCrawl.push(ticketTypeData);
     } else {
         crawlData.failCrawl.push(ticketTypeData);
+        let criticalEmailMessage =
+            'CRITICAL ERROR: All crawling fails for ' + ticketTypeData.name + ' ('
+            + ticketTypeData.publisherName + ').';
+        common.consoleLogError(criticalEmailMessage);
+        mailer.sendMail(common.getCurrentTime() + ': ' + criticalEmailMessage,
+            false, null,
+            crawlData.crawlDatePartial + ' Báo Trúng Số Critical Crawl Error', 'crawling critical error');
     }
+
 };
 
 async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
@@ -354,9 +368,8 @@ function addToEmailMessage(crawlData, string) {
 
 function sendCrawlResultEmail(crawlData) {
     let message = crawlData.message.join('\n');
-    let today = dayjs().format(systemConfig.dayjsFormatDateOnly);
     mailer.sendMail(message, false, null,
-        today + ' Báo Trúng Số Crawl Result', 'crawl result');
+        crawlData.crawlDatePartial + ' Báo Trúng Số Crawl Result', 'crawl result');
 };
 //#endregion
 
