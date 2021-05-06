@@ -1,3 +1,5 @@
+const db = require('../db/db.js');
+
 module.exports = {
     startCheckingProcess: async function (ticketTypeData, crawlDate) {
         let successPublisher = ticketTypeData.successCrawl;
