@@ -1,5 +1,5 @@
 module.exports = {
-    startCheckingProcess: function (ticketTypeData, crawlDate) {
+    startCheckingProcess: async function (ticketTypeData, crawlDate) {
         let successPublisher = ticketTypeData.successCrawl;
         if (successPublisher.length < 0) {
             return;
