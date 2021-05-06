@@ -35,6 +35,7 @@ function testSeries() {
             { id: 8, name: 'Cần Thơ', },
             { id: 9, name: 'Sóc Trăng', },
         ],
+        checkResultSP: 'SP_FIND_TYPE_1_WINNER',
     };
     let crawlDate = '2021-05-05';
     series.startCheckingProcess(ticketTypeData, crawlDate);
