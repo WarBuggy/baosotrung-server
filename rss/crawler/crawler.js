@@ -297,7 +297,7 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
     if (successNum + failNum != ticketTypeData.publisherNum) {
         return;
     }
-    series.startCheckingProcess(ticketTypeData);
+    series.startCheckingProcess(ticketTypeData, crawlData.crawlDatePartial);
     let string = 'Finish crawling for ' + ticketTypeData.name +
         '. Success: ' + successNum + '. Fail: ' + failNum + '.';
     if (failNum > 0) {
@@ -321,7 +321,6 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
             false, null,
             crawlData.crawlDatePartial + ' Báo Trúng Số Critical Crawl Error', 'crawling critical error');
     }
-
 };
 
 async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
