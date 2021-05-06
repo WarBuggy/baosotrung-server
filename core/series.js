@@ -18,12 +18,11 @@ module.exports = {
 
 
 async function checkResult(ticketTypeData, winning, publisherId, date) {
-    console
     let spName = '`baosotrung_data`.`' + ticketTypeData.checkResultSP + '`';
-    let ticketType = ticketTypeData.id;
+    let ticketTypeId = ticketTypeData.id;
     let params = [
         'localhost',
-        ticketType,
+        ticketTypeId,
         publisherId,
         date,
     ];
@@ -39,7 +38,7 @@ async function checkResult(ticketTypeData, winning, publisherId, date) {
     for (let i = 1; i < result.sqlResults.length; i++) {
         let record = result.sqlResults[i];
         if (record != null && record.length > 0) {
-            for (let j = 0; i < record.length; j++) {
+            for (let j = 0; j < record.length; j++) {
                 winning.push(record[j]);
             }
         }
