@@ -10,7 +10,7 @@ module.exports = {
         let winning = [];
         for (let i = 0; i < successPublisher.length; i++) {
             let publisherId = successPublisher[i].id;
-            await checkResult(typeId, winning, publisherId, crawlDate);
+            await checkResult(ticketTypeData, winning, publisherId, crawlDate);
         }
         let winnerData = consolidateWinner(winning);
     },
@@ -18,6 +18,7 @@ module.exports = {
 
 
 async function checkResult(ticketTypeData, winning, publisherId, date) {
+    console
     let spName = '`baosotrung_data`.`' + ticketTypeData.checkResultSP + '`';
     let ticketType = ticketTypeData.id;
     let params = [
