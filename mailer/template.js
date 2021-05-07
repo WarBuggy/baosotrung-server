@@ -1,7 +1,7 @@
 module.exports = {
     winner: {
         body: `
-        <html style='width: 100%;>
+        <html style='width: 100%;'>
             <head>
                 <meta charset="UTF-8" />
                 <meta name="viewport"
@@ -11,7 +11,7 @@ module.exports = {
                 <meta name="full-screen" content="yes" />
                 <meta name="screen-orientation" content="portrait" />
             </head> 
-            <body style='width: 100%;>
+            <body style='width: 100%;'>
                 <div style='margin-left: auto; margin-right: auto; width: 320px;'>
                     Xin chúc mừng quý khách!!!<br/>
                     Quý khách đã may mắn mua được vé trúng thưởng của kỳ xổ số 
