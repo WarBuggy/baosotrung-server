@@ -4,13 +4,15 @@ const winEmailTemplate = require('../mailer/template.js').winner;
 const systemConfig = require('../systemConfig.js');
 const common = require('../common/common.js');
 const db = require('../db/db.js');
-
+const dayjs = require('dayjs');
+const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(dayjsCustomParseFormat);
 
 module.exports = {
     startCheckingProcess: async function (ticketTypeData, crawlDate) {
         let successPublisher = ticketTypeData.successCrawl;
         if (successPublisher.length < 0) {
-            return;
+            return '';
         }
         let winning = [];
         for (let i = 0; i < successPublisher.length; i++) {
