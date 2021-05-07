@@ -1,7 +1,7 @@
 const series = require('../../core/series.js');
 
 module.exports = function (app) {
-    app.get('/api/test', function (request, response) {
+    app.get('/api/test', async function (request, response) {
         let ticketTypeData = {
             id: 1,
             successCrawl: [
@@ -13,7 +13,7 @@ module.exports = function (app) {
             prize: 1,
         };
         let crawlDate = '2021-05-05';
-        let string = series.startCheckingProcess(ticketTypeData, crawlDate);
+        let string = await series.startCheckingProcess(ticketTypeData, crawlDate);
 
 
         response.statusCode = 200;
