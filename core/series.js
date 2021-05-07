@@ -2,6 +2,7 @@ const db = require('../db/db.js');
 const prizeCoreData = require('../core/prize.js');
 const winEmailTemplate = require('../mailer/template.js').winner;
 const systemConfig = require('../systemConfig.js');
+const common = require('../common/common.js');
 
 
 module.exports = {
@@ -15,8 +16,8 @@ module.exports = {
             let publisherId = successPublisher[i].id;
             await checkResult(ticketTypeData, winning, publisherId, crawlDate);
         }
-        let winnerData = consolidateWinner(winning);
-        createWinningEmail(winnerData);
+        let winner = consolidateWinner(winning);
+        createWinningEmail(winner);
     },
 };
 
@@ -53,72 +54,121 @@ function consolidateWinner(winning) {
     for (let i = 0; i < winning.length; i++) {
         let aWinning = winning[i];
         let userId = aWinning.id;
-        let aWinnerData = winnerData[userId];
-        if (aWinnerData == null) {
-            aWinnerData = {
+        let aWinner = winnerData[userId];
+        if (aWinner == null) {
+            aWinner = {
+                id: userId,
                 email: aWinning.email,
                 phone: aWinning.phone,
                 publisher: {},
+                userWinningAmount: 0,
             };
-            winnerData[userId] = aWinnerData;
+            winnerData[userId] = aWinner;
         }
-        let publisherId = aWinning.publisher;
-        let aPublisher = aWinnerData.publisher[publisherId];
+        let aPublisherId = aWinning.publisher;
+        let aPublisher = aWinner.publisher[aPublisherId];
         if (aPublisher == null) {
             aPublisher = {
+                id: aPublisherId,
+                publisherWinningAmount: 0,
                 series: {},
             };
-            aWinnerData.publisher[publisherId] = aPublisher;
+            aWinner.publisher[aPublisherId] = aPublisher;
         }
-        aPublisher.prizeFormat = aWinning.prize_format;
-        let winningSeries = aWinning.series;
-        let prizes = aPublisher.series[winningSeries];
-        if (prizes == null) {
-            prizes = [];
-            aPublisher.series[winningSeries] = prizes;
+        let aPrize = prizeCoreData[aWinning.prize_format][aWinning.prize];
+        if (aPrize == null) {
+            common.consoleLogError('Cannot find prize info (prize id: ', + aWinning.prize +
+                ', prize format: ' + aWinning.prize_format + ').');
+            continue;
         }
-        prizes.push(aWinning.prize);
+        let aWinningSeries = aWinning.series;
+        let aSeries = aPublisher.series[aWinningSeries];
+        if (aSeries == null) {
+            aSeries = {
+                series: aWinningSeries,
+                prize: [],
+                seriesWinningAmount: 0,
+            }
+            aPublisher.series[aWinningSeries] = aSeries;
+        }
+        aSeries.prize.push(aPrize);
+        aWinner.userWinningAmount = aWinner.userWinningAmount + aPrize.prizeMoney;
+        aPublisher.publisherWinningAmount = aPublisher.publisherWinningAmount + aPrize.prizeMoney;
+        aSeries.seriesWinningAmount = aSeries.seriesWinningAmount + aPrize.prizeMoney;
     }
-    return winnerData;
+    let result = createWinnerDataArray(winnerData);
+    return result;
 };
 
-function createWinningEmail(winnerData) {
+function createWinnerDataArray(winnerData) {
+    let result = [];
     let winnerId = Object.keys(winnerData);
     for (let i = 0; i < winnerId.length; i++) {
         let aWinnerId = winnerId[i];
         let aWinner = winnerData[aWinnerId];
+        let publisherArray = [];
+        let publisherId = Object.keys(aWinner.publisher);
+        for (let j = 0; j < publisherId.length; j++) {
+            let aPublisherId = publisherId[j];
+            let aPublisher = aWinner.publisher[aPublisherId];
+            publisherArray.push(aPublisher);
+            let seriesArray = [];
+            let series = Object.keys(aPublisher.series);
+            for (let k = 0; k < series.length; k++) {
+                let aSeries = publisher.series[series[k]];
+                seriesArray.push(aSeries);
+            }
+            aPublisher.series = seriesArray;
+            aPublisher.series.sort(sortSeries);
+        }
+        aWinner.publisher = publisherArray;
+        aWinner.publisher.sort(sortPublisher);
+        result.push(aWinner);
+    }
+    result.sort(sortWinner);
+    return result;
+};
+
+function sortSeries(series1, series2) {
+    return series2.publisherWinningAmount - series1.publisherWinningAmount;
+};
+
+function sortPublisher(publisher1, publisher2) {
+    return publisher2.seriesWinningAmount - publisher1.seriesWinningAmount;
+};
+
+function sortWinner(winner1, winner2) {
+    return winner2.seriesWinningAmount - winner1.seriesWinningAmount;
+};
+
+function createWinningEmail(winner) {
+    for (let i = 0; i < winner.length; i++) {
+        let aWinner = winner[i];
         processAWinner(aWinner);
     }
 };
 
 function processAWinner(aWinner) {
-    let publisher = aWinner.publisher;
-    let publisherId = Object.keys(publisher);
-    for (let i = 0; i < publisherId.length; i++) {
-        let aPublisherId = publisherId[i];
-        let aPublisher = publisher[aPublisherId];
+    for (let i = 0; i < aWinner.publisher.length; i++) {
+        let aPublisher = aWinner.publisher[i];
         processAPublisher(aPublisher);
     }
 };
 
 function processAPublisher(aPublisher) {
-    let prizeData = prizeCoreData[aPublisher.prizeFormat];
-    let series = Object.keys(aPublisher.series);
-    for (let i = 0; i < series.length; i++) {
-        let aSeries = series[i];
-        let prizeId = aPublisher.series[aSeries];
-        for (let j = 0; j < prizeId.length; j++) {
-            let aPrizeId = prizeId[j];
-            let seriesResult = processASeries(prizeData, aPrizeId, aSeries, j);
-            console.log(seriesResult);
+    for (let i = 0; i < aPublisher.series.length; i++) {
+        let aSeries = aPublisher.series[i];
+        for (let j = 0; j < aSeries.prize.length; j++) {
+            let aPrize = aSeries.prize[j];
+            let seriesResult = processASeries(aPrize, aSeries.series, j);
+
         }
     }
 };
 
-function processASeries(prizeData, aPrizeId, aSeries, index) {
-    let aPrize = prizeData[aPrizeId];
+function processASeries(aPrize, aSeries, index) {
     let prizeLine = winEmailTemplate.seriesDetail;
-    let emailPrizeMoney = parseInt(aPrize.prizeMoney).toLocaleString('vi-VN') + ' VNĐ';
+    let emailPrizeMoney = aPrize.prizeMoney.toLocaleString('vi-VN') + ' VNĐ';
     prizeLine = prizeLine.replace('|<|prizeName|>|', aPrize.emailName);
     prizeLine = prizeLine.replace('|<|prizeMoney|>|', emailPrizeMoney);
     if (index > 0) {
@@ -126,17 +176,17 @@ function processASeries(prizeData, aPrizeId, aSeries, index) {
     } else {
         prizeLine = prizeLine.replace('|<|series|>|', aSeries);
     }
-    let prizeMoney = aPrize.prizeMoney;
     let taxLine = '';
     let taxAmount = 0;
-    if (prizeMoney > systemConfig.prizeMoneyTaxThreshold) {
+    if (aPrize.prizeMoney > systemConfig.prizeMoneyTaxThreshold) {
         taxLine = winEmailTemplate.taxDetail;
-        let taxableAmount = parseInt(aPrize.prizeMoney) - systemConfig.prizeMoneyTaxThreshold;
+        let taxableAmount = aPrize.prizeMoney - systemConfig.prizeMoneyTaxThreshold;
         taxAmount = Math.ceil(taxableAmount * 0.1);
         taxLine = taxLine.replace('|<|prizeMoney|>|', emailPrizeMoney);
         taxLine = taxLine.replace('|<|taxableAmount|>|',
-            parseInt(taxableAmount).toLocaleString('vi-VN') + ' VNĐ');
-        taxLine = taxLine.replace('|<|taxAmount|>|', taxAmount);
+            taxableAmount.toLocaleString('vi-VN') + ' VNĐ');
+        taxLine = taxLine.replace('|<|taxAmount|>|',
+            taxAmount.toLocaleString('vi-VN') + ' VNĐ');
         taxLine = taxLine.replace('|<|series|>|', aSeries);
     }
     return {
