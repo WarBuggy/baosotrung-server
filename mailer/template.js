@@ -17,14 +17,14 @@ module.exports = {
                     <p>Quý khách đã may mắn mua được vé trúng thưởng của kỳ xổ số 
                     ngày <strong>|<|callDate|>|</strong>. Chi tiết trúng thưởng của quý khách như sau:</p>
                     |<|publisherDetail|>|
-                    <p>Theo quy định của các công ty xổ số, quý khách có 30 ngày để 
+                    <p>Theo quy định của các công ty xổ số, quý khách có <strong>30 ngày</strong> để 
                     đổi vé lấy tiền trúng giải. Xin quý khách vui lòng đổi vé 
-                    trúng trước ngày |<|lastClaimDay|>|. Nếu quý khách dự định đổi 
+                    trúng <strong>trước ngày |<|lastClaimDay|>|</strong>. Nếu quý khách dự định đổi 
                     tại các đại lý gần nhà, xin quý khách lưu ý tránh đổi vé
                     cận ngày do cần có thời gian để  đem tờ vé trúng đến nơi 
                     phát hành (có thể bị từ chối do quá cận ngày và/hay chỉ đổi 
-                    vài tờ). Công ty xổ số luôn sẽ trao giải trong thời gian 
-                    quy định (trong vòng 30 ngày kể từ ngày xổ).</p>
+                    vài tờ). Công ty xổ số luôn sẽ trao giải trong vòng 30 ngày 
+                    kể từ ngày xổ.</p>
                     <p>Cũng theo quy định, người trúng xổ số sẽ cần phải đóng thuế 
                     thu nhập cá nhân, áp dụng đối với trường hợp  giải thưởng có 
                     giá trị từ 10 triệu đồng trở lên. Với giá trị giải thưởng trên,
