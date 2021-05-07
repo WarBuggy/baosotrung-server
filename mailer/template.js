@@ -48,9 +48,9 @@ module.exports = {
         <table>
     `,
         seriesDetail: `
-        <tr><td style='width: 70px;'>|<|series|>|</td></tr>
-        <tr><td style=''>|<|prizeName|>|</td></tr>
         <tr>
+            <td style='width: 70px;'>|<|series|>|</td>
+            <td style=''>|<|prizeName|>|</td>
             <td style='width: 150px; text-align: right;'>
                 |<|prizeMoney|>|
             </td>
