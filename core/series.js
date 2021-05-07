@@ -161,7 +161,7 @@ function processAPublisher(aPublisher) {
         for (let j = 0; j < aSeries.prize.length; j++) {
             let aPrize = aSeries.prize[j];
             let seriesResult = processASeries(aPrize, aSeries.series, j);
-
+            console.log(seriesResult);
         }
     }
 };
