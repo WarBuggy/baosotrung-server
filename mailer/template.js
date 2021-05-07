@@ -12,7 +12,7 @@ module.exports = {
                 <meta name="screen-orientation" content="portrait" />
             </head> 
             <body style='width: 100%;'>
-                <div style='margin-left: auto; margin-right: auto; width: 320px; font-size:12pt;'>
+                <div style='margin-left: auto; margin-right: auto; width: 500px; font-size:12pt;'>
                     <p><strong>Xin chúc mừng quý khách!!!</strong></p>
                     <p>Quý khách đã may mắn mua được vé trúng thưởng của kỳ xổ số 
                     ngày <strong>|<|callDate|>|</strong>. Chi tiết trúng thưởng của quý khách như sau:</p>
