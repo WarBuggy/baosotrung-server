@@ -143,5 +143,5 @@ function processASeries(prizeData, aPrizeId, aSeries, index) {
         prizeLine,
         taxLine,
         taxAmount,
-    }
+    };
 };

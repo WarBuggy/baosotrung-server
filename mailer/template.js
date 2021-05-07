@@ -28,18 +28,18 @@ module.exports = {
         thưởng tại baotrungso.com. Nếu không phải là người nhận mong 
         muốn của thư này, mong quý bạn vui lòng bỏ quả sự cố này!
         `,
-    },
-    publisherDetail: `Đài |<|publisherName|>|:
+        publisherDetail: `Đài |<|publisherName|>|:
         |<|seriesDetail|>|
         |<|totalAmount|>|
     `,
-    seriesDetail: `|<|series|>| |<|prizeName|>| |<|prizeMoney|>|`,
-    noTax: `không cần đóng thuế
+        seriesDetail: `|<|series|>| |<|prizeName|>| |<|prizeMoney|>|`,
+        noTax: `không cần đóng thuế
         thu nhập cá nhân và hưởng trọn số tiền trúng giải`,
-    taxSummary: `có trách nhiệm đóng 
+        taxSummary: `có trách nhiệm đóng 
     thuế thu nhập cá nhân như sau:
         |<|taxDetail|>|
         |<|totalTaxAmount|>|
     `,
-    taxDetail: `|<|series|>| |<|prizeMoney|>| |<|taxableAmount|>| |<|taxAmount|>|`,
+        taxDetail: `|<|series|>| |<|prizeMoney|>| |<|taxableAmount|>| |<|taxAmount|>|`,
+    },
 };
