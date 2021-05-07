@@ -1,8 +1,9 @@
-const db = require('../db/db.js');
+const ticketCoreData = require('../core/ticket.js');
 const prizeCoreData = require('../core/prize.js');
 const winEmailTemplate = require('../mailer/template.js').winner;
 const systemConfig = require('../systemConfig.js');
 const common = require('../common/common.js');
+const db = require('../db/db.js');
 
 
 module.exports = {
@@ -17,7 +18,7 @@ module.exports = {
             await checkResult(ticketTypeData, winning, publisherId, crawlDate);
         }
         let winner = consolidateWinner(winning);
-        createWinningEmail(winner);
+        return createWinningEmail(winner, crawlDate);
     },
 };
 
@@ -141,29 +142,71 @@ function sortWinner(winner1, winner2) {
     return winner2.seriesWinningAmount - winner1.seriesWinningAmount;
 };
 
-function createWinningEmail(winner) {
+function createWinningEmail(winner, crawlDate) {
+    let emailContentTemplate = winEmailTemplate.body;
+    let crawlDateJS = dayjs(crawlDate);
+    let expireDate = crawlDateJS.add(30, 'day');
+    emailContentTemplate = emailContentTemplate.replace('|<|callDate|>|',
+        crawlDateJS.format(systemConfig.dayjsVNFormatDateOnly));
+    emailContentTemplate = emailContentTemplate.replace('|<|lastClaimDay|>|',
+        expireDate.format(systemConfig.dayjsVNFormatDateOnly));
+    let allEmail = '';
     for (let i = 0; i < winner.length; i++) {
         let aWinner = winner[i];
-        processAWinner(aWinner);
+        let emailContent = processAWinner(aWinner, emailContentTemplate);
+        allEmail = allEmail + emailContent + '\n\n';
     }
+    return allEmail;
 };
 
-function processAWinner(aWinner) {
+function processAWinner(aWinner, emailContentTemplate) {
+    let publisherDetail = '';
+    let taxDetail = '';
+    let taxAmount = 0;
     for (let i = 0; i < aWinner.publisher.length; i++) {
         let aPublisher = aWinner.publisher[i];
-        processAPublisher(aPublisher);
+        let publisherResult = processAPublisher(aPublisher);
+        publisherDetail = publisherDetail + publisherResult.publisherLine;
+        taxDetail = taxDetail + publisherResult.taxDetail;
+        taxAmount = taxAmount + publisherResult.taxAmount;
     }
+    let taxSummary = winEmailTemplate.noTax;
+    if (taxAmount > 0) {
+        taxSummary = winEmailTemplate.withTax;
+        taxSummary = taxSummary.replace('|<|taxDetail|>|', taxDetail);
+        taxSummary = taxSummary.replace('|<|totalTaxAmount|>|', taxAmount);
+    }
+    let emailContent =
+        emailContentTemplate.replace('|<|publisherDetail|>|', publisherDetail);
+    emailContent = emailContent.replace('|<|taxSummary|>|', taxSummary);
+    return emailContent;
 };
 
 function processAPublisher(aPublisher) {
+    let publisherLine = winEmailTemplate.publisherDetail;
+    publisherLine.replace('|<|publisherName|>|',
+        ticketCoreData.publisher[aPublisher.id]);
+    let seriesDetail = '';
+    let taxDetail = '';
+    let taxAmount = 0;
     for (let i = 0; i < aPublisher.series.length; i++) {
         let aSeries = aPublisher.series[i];
         for (let j = 0; j < aSeries.prize.length; j++) {
             let aPrize = aSeries.prize[j];
             let seriesResult = processASeries(aPrize, aSeries.series, j);
-            console.log(seriesResult);
+            seriesDetail = seriesDetail + seriesResult.prizeLine;
+            taxDetail = taxDetail + seriesResult.taxLine;
+            taxAmount = taxAmount + seriesResult.taxAmount;
         }
     }
+    publisherLine.replace('|<|seriesDetail|>|', seriesDetail);
+    publisherLine.replace('|<|totalAmount|>|',
+        aPublisher.publisherWinningAmount.toLocaleString('vi-VN') + ' VNĐ');
+    return {
+        publisherLine,
+        taxDetail,
+        taxAmount,
+    };
 };
 
 function processASeries(aPrize, aSeries, index) {

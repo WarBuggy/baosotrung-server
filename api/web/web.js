@@ -13,11 +13,11 @@ module.exports = function (app) {
             prize: 1,
         };
         let crawlDate = '2021-05-05';
-        series.startCheckingProcess(ticketTypeData, crawlDate);
+        let string = series.startCheckingProcess(ticketTypeData, crawlDate);
 
 
         response.statusCode = 200;
         response.setHeader('Content-Type', 'text/plain');
-        response.end('Hello World 12345!\n');
+        response.end(string);
     });
 };

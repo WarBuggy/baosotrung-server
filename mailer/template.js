@@ -18,7 +18,7 @@ module.exports = {
         Cũng theo quy định, người trúng xổ số sẽ cần phải đóng thuế 
         thu nhập cá nhân, áp dụng đối với trường hợp  giải thưởng có 
         giá trị từ 10 triệu đồng trở lên. 
-        Với giá trị giải thưởng trên, quý khách sẽ |<|taxSummary|>|.
+        Với giá trị giải thưởng trên, quý khách sẽ |<|taxSummary|>|
 
         Một lần nữa xin chức mừng quý khách! Chúc quý khách luôn tìm
         được nhiều niềm vui trong cuộc sống!
@@ -32,14 +32,16 @@ module.exports = {
         |<|seriesDetail|>|
         |<|totalAmount|>|
     `,
-        seriesDetail: `|<|series|>| |<|prizeName|>| |<|prizeMoney|>|`,
+        seriesDetail: `|<|series|>| |<|prizeName|>| |<|prizeMoney|>|
+        `,
         noTax: `không cần đóng thuế
-        thu nhập cá nhân và hưởng trọn số tiền trúng giải`,
-        taxSummary: `có trách nhiệm đóng 
+        thu nhập cá nhân và hưởng trọn số tiền trúng giải.`,
+        withTax: `có trách nhiệm đóng 
     thuế thu nhập cá nhân như sau:
         |<|taxDetail|>|
         |<|totalTaxAmount|>|
     `,
-        taxDetail: `|<|series|>| |<|prizeMoney|>| |<|taxableAmount|>| |<|taxAmount|>|`,
+        taxDetail: `|<|series|>| |<|prizeMoney|>| |<|taxableAmount|>| |<|taxAmount|>|
+        `,
     },
 };
