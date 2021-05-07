@@ -186,7 +186,7 @@ function processAWinner(aWinner, emailContentTemplate) {
 
 function processAPublisher(aPublisher) {
     let publisherLine = winEmailTemplate.publisherDetail;
-    publisherLine.replace('|<|publisherName|>|',
+    publisherLine = publisherLine.replace('|<|publisherName|>|',
         ticketCoreData.publisher[aPublisher.id]);
     let seriesDetail = '';
     let taxDetail = '';
@@ -201,8 +201,8 @@ function processAPublisher(aPublisher) {
             taxAmount = taxAmount + seriesResult.taxAmount;
         }
     }
-    publisherLine.replace('|<|seriesDetail|>|', seriesDetail);
-    publisherLine.replace('|<|totalAmount|>|',
+    publisherLine = publisherLine.replace('|<|seriesDetail|>|', seriesDetail);
+    publisherLine = publisherLine.replace('|<|totalAmount|>|',
         aPublisher.publisherWinningAmount.toLocaleString('vi-VN') + ' VNĐ');
     return {
         publisherLine,
