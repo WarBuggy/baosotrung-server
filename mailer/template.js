@@ -13,33 +13,33 @@ module.exports = {
             </head> 
             <body style='width: 100%;'>
                 <div style='margin-left: auto; margin-right: auto; width: 320px;'>
-                    Xin chúc mừng quý khách!!!<br/>
-                    Quý khách đã may mắn mua được vé trúng thưởng của kỳ xổ số 
-                    ngày |<|callDate|>|. Chi tiết trúng thưởng của quý khách như sau:<br/>
+                    <p>Xin chúc mừng quý khách!!!</p>
+                    <p>Quý khách đã may mắn mua được vé trúng thưởng của kỳ xổ số 
+                    ngày |<|callDate|>|. Chi tiết trúng thưởng của quý khách như sau:</p>
                     <br/>
                     |<|publisherDetail|>|
                     <br/>
-                    Theo quy định của các công ty xổ số, quý khách có 30 ngày để 
+                    <p>Theo quy định của các công ty xổ số, quý khách có 30 ngày để 
                     đổi vé lấy tiền trúng giải. Xin quý khách vui lòng đổi vé 
                     trúng trước ngày |<|lastClaimDay|>|. Nếu quý khách dự định đổi 
                     tại các đại lý gần nhà, xin quý khách lưu ý tránh đổi vé
                     cận ngày do cần có thời gian để  đem tờ vé trúng đến nơi 
                     phát hành (có thể bị từ chối do quá cận ngày và/hay chỉ đổi 
                     vài tờ). Công ty xổ số luôn sẽ trao giải trong thời gian 
-                    quy định (trong vòng 30 ngày kể từ ngày xổ).<br/>
+                    quy định (trong vòng 30 ngày kể từ ngày xổ).</p>
                     <br/>
-                    Cũng theo quy định, người trúng xổ số sẽ cần phải đóng thuế 
+                    <p>Cũng theo quy định, người trúng xổ số sẽ cần phải đóng thuế 
                     thu nhập cá nhân, áp dụng đối với trường hợp  giải thưởng có 
                     giá trị từ 10 triệu đồng trở lên. Với giá trị giải thưởng trên,
-                    quý khách sẽ |<|taxSummary|>|<br/>
+                    quý khách sẽ |<|taxSummary|>|</p>
                     <br/>
-                    Một lần nữa xin chức mừng quý khách! Chúc quý khách luôn tìm
-                    được nhiều niềm vui trong cuộc sống!<br/>
-                    Trân trọng,<br/>
+                    <p>Một lần nữa xin chức mừng quý khách! Chúc quý khách luôn tìm
+                    được nhiều niềm vui trong cuộc sống!</p>
+                    <p>Trân trọng,</p>
                     <br/>
-                    Quý khách nhận được thư này vì đã sử dụng dịch vụ báo vé trúng
+                    <p>Quý khách nhận được thư này vì đã sử dụng dịch vụ báo vé trúng
                     thưởng tại baotrungso.com. Nếu không phải là người nhận mong 
-                    muốn của thư này, mong quý bạn vui lòng bỏ quả sự cố này!
+                    muốn của thư này, mong quý bạn vui lòng bỏ quả sự cố này!</p>
                 <div>
             </body>
         </html>
