@@ -63,19 +63,19 @@ function consolidateWinner(winning) {
             winnerData[userId] = aWinnerData;
         }
         let publisherId = aWinning.publisher;
-        let publisherWinning = aWinnerData.publisher[publisherId];
-        if (publisherWinning == null) {
-            publisherWinning = {
+        let aPublisher = aWinnerData.publisher[publisherId];
+        if (aPublisher == null) {
+            aPublisher = {
                 series: {},
             };
-            aWinnerData.publisher[publisherId] = publisherWinning;
+            aWinnerData.publisher[publisherId] = aPublisher;
         }
-        publisherWinning.prizeFormat = aWinnerData.prize_format;
+        aPublisher.prizeFormat = aWinning.prize_format;
         let winningSeries = aWinning.series;
-        let prizes = publisherWinning.series[winningSeries];
+        let prizes = aPublisher.series[winningSeries];
         if (prizes == null) {
             prizes = [];
-            publisherWinning.series[winningSeries] = prizes;
+            aPublisher.series[winningSeries] = prizes;
         }
         prizes.push(aWinning.prize);
     }
