@@ -13,9 +13,9 @@ module.exports = {
             </head> 
             <body style='width: 100%;'>
                 <div style='margin-left: auto; margin-right: auto; width: 320px;'>
-                    <p>Xin chúc mừng quý khách!!!</p>
+                    <p><strong>Xin chúc mừng quý khách!!!</strong></p>
                     <p>Quý khách đã may mắn mua được vé trúng thưởng của kỳ xổ số 
-                    ngày |<|callDate|>|. Chi tiết trúng thưởng của quý khách như sau:</p>
+                    ngày <strong>|<|callDate|>|</strong>. Chi tiết trúng thưởng của quý khách như sau:</p>
                     |<|publisherDetail|>|
                     <p>Theo quy định của các công ty xổ số, quý khách có 30 ngày để 
                     đổi vé lấy tiền trúng giải. Xin quý khách vui lòng đổi vé 
@@ -32,7 +32,7 @@ module.exports = {
                     <p>Một lần nữa xin chức mừng quý khách! Chúc quý khách luôn tìm
                     được nhiều niềm vui trong cuộc sống!<br>
                     Trân trọng,</p>
-                    <p style='font-style: italic; color: gray; font-size:8px;'>
+                    <p style='font-style: italic; color: gray; font-size:10px;'>
                     Quý khách nhận được thư này vì đã sử dụng dịch vụ báo vé trúng
                     thưởng tại baotrungso.com. Nếu không phải là người nhận mong 
                     muốn của thư này, mong quý bạn vui lòng bỏ quả sự cố này!</p>
