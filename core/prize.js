@@ -6,7 +6,6 @@ module.exports = {
             emailName: 'Giải 8',
             prizeMoney: '100000',
             smsPrizeMoney: '100K',
-            emailPrizeMoney: '100.000 VNĐ (một trăm ngàn đồng)',
         },
         7: {
             name: 'Giải 7',
@@ -14,7 +13,6 @@ module.exports = {
             emailName: 'Giải 7',
             prizeMoney: '200000',
             smsPrizeMoney: '200K',
-            prizeMoney: '200.000 VNĐ (hai trăm ngàn đồng)',
         },
         6: {
             name: 'Giải 6',
@@ -22,7 +20,6 @@ module.exports = {
             emailName: 'Giải 6',
             prizeMoney: '400000',
             smsPrizeMoney: '400K',
-            prizeMoney: '400.000 VNĐ (bốn trăm ngàn đồng)',
         },
         5: {
             name: 'Giải 5',
@@ -30,7 +27,6 @@ module.exports = {
             emailName: 'Giải 5',
             prizeMoney: '1000000',
             smsPrizeMoney: '1tr',
-            prizeMoney: '1.000.000 VNĐ (một triệu đồng)',
         },
         4: {
             name: 'Giải 4',
@@ -38,7 +34,6 @@ module.exports = {
             emailName: 'Giải 4',
             prizeMoney: '3000000',
             smsPrizeMoney: '3tr',
-            prizeMoney: '3.000.000 VNĐ (ba triệu đồng)',
         },
         3: {
             name: 'Giải 3',
@@ -46,15 +41,13 @@ module.exports = {
             emailName: 'Giải 3',
             prizeMoney: '10000000',
             smsPrizeMoney: '10tr',
-            prizeMoney: '10.000.000 VNĐ (mười triệu đồng)',
         },
         2: {
             name: 'Giải 2',
             smsName: 'G2',
             emailName: 'Giải 2',
-            prizeMoney: '15.000.000',
+            prizeMoney: '15000000',
             smsPrizeMoney: '15tr',
-            prizeMoney: '15.000.000 VNĐ (mười lăm triệu đồng)',
         },
         1: {
             name: 'Giải 1',
@@ -62,7 +55,6 @@ module.exports = {
             emailName: 'Giải 1',
             prizeMoney: '30000000',
             smsPrizeMoney: '30tr',
-            prizeMoney: '30.000.000 VNĐ (ba mươi triệu đồng)',
         },
         0: {
             name: 'Giải ĐB',
@@ -70,7 +62,6 @@ module.exports = {
             emailName: 'Giải Đặc Biệt',
             prizeMoney: '2000000000',
             smsPrizeMoney: '2 ty',
-            prizeMoney: '2.000.000.000 VNĐ (2 tỷ đồng)',
         },
         10: {
             name: 'Giải phụ đặc biệt',
@@ -78,7 +69,6 @@ module.exports = {
             emailName: 'Giải Phụ Đặc Biệt',
             prizeMoney: ' 50000000',
             smsPrizeMoney: '50tr',
-            prizeMoney: ' 50.000.000 VNĐ (năm mươi triệu đồng)',
         },
         11: {
             name: 'Giải khuyến khích',
@@ -86,7 +76,6 @@ module.exports = {
             emailName: 'Giải Khuyến Khích',
             prizeMoney: '6000000',
             smsPrizeMoney: '6tr',
-            prizeMoney: '6.000.000 VNĐ (sáu triệu đồng)',
         },
     },
 };
