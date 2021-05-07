@@ -115,7 +115,7 @@ function createWinnerDataArray(winnerData) {
             let seriesArray = [];
             let series = Object.keys(aPublisher.series);
             for (let k = 0; k < series.length; k++) {
-                let aSeries = publisher.series[series[k]];
+                let aSeries = aPublisher.series[series[k]];
                 seriesArray.push(aSeries);
             }
             aPublisher.series = seriesArray;
