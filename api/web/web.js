@@ -17,7 +17,7 @@ module.exports = function (app) {
 
 
         response.statusCode = 200;
-        response.setHeader('Content-Type', 'text/plain');
+        response.setHeader('Content-Type', 'text/html');
         response.end(string);
     });
 };

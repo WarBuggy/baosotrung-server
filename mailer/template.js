@@ -1,6 +1,9 @@
 module.exports = {
     winner: {
-        body: `        Xin trân trọng chúc mừng!!!
+        body: `
+        <html>
+        <head><meta charset="UTF-8"></head> 
+        <body>
         Quý khách đã may mắn mua được vé trúng thưởng của kỳ xổ số 
         ngày |<|callDate|>|. Chi tiết trúng thưởng của quý khách như sau:
     
@@ -27,6 +30,8 @@ module.exports = {
         Quý khách nhận được thư này vì đã sử dụng dịch vụ báo vé trúng
         thưởng tại baotrungso.com. Nếu không phải là người nhận mong 
         muốn của thư này, mong quý bạn vui lòng bỏ quả sự cố này!
+        </body>
+        </html>
         `,
         publisherDetail: `Đài |<|publisherName|>|:
         |<|seriesDetail|>|
