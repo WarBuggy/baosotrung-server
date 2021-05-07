@@ -145,6 +145,7 @@ function sortWinner(winner1, winner2) {
 };
 
 function createWinningEmail(winner, crawlDate) {
+    console.log(winner);
     let emailContentTemplate = winEmailTemplate.body;
     let crawlDateJS = dayjs(crawlDate);
     let expireDate = crawlDateJS.add(30, 'day');
@@ -187,7 +188,7 @@ function processAWinner(aWinner, emailContentTemplate) {
 function processAPublisher(aPublisher) {
     let publisherLine = winEmailTemplate.publisherDetail;
     publisherLine = publisherLine.replace('|<|publisherName|>|',
-        ticketCoreData.publisher[aPublisher.id]);
+        ticketCoreData.publisher[aPublisher.id].name);
     let seriesDetail = '';
     let taxDetail = '';
     let taxAmount = 0;
