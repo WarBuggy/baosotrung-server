@@ -12,7 +12,8 @@ async function start() {
     //     return;
     // }
     // rssCrawler.test();
-    testSeries();
+    // testSeries();
+    rssCrawler.crawlResultOfDate('2021-05-07');
 };
 
 async function prepareDbConnection() {
