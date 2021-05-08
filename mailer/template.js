@@ -43,8 +43,17 @@ module.exports = {
         publisherDetail: `
         <table style='width: 100%'>
             <tr><td colspan='3'><strong>Đài |<|publisherName|>|</strong></td></tr>
+            <tr>
+                <td style='text-align: center;'><strong>Vé số</strong></td>
+                <td style='text-align: center;'><strong>Giải</strong></td>
+                <td style='text-align: center;'><strong>Trị giá (VNĐ)</strong></td>
+            </tr>
             |<|seriesDetail|>|
-            |<|totalAmount|>|
+
+            <tr>
+                <td/><td/>
+                <td style='text-align: center;'><strong>|<|totalAmount|>|</strong></td>
+            </tr>
         <table>
     `,
         seriesDetail: `
