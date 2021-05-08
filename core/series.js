@@ -176,7 +176,8 @@ function processAWinner(aWinner, emailContentTemplate) {
     if (taxAmount > 0) {
         taxSummary = winEmailTemplate.withTax;
         taxSummary = taxSummary.replace('|<|taxDetail|>|', taxDetail);
-        taxSummary = taxSummary.replace('|<|totalTaxAmount|>|', taxAmount);
+        taxSummary = taxSummary.replace('|<|totalTaxAmount|>|',
+            taxAmount.toLocaleString('vi-VN'));
     }
     let emailContent =
         emailContentTemplate.replace('|<|publisherDetail|>|', publisherDetail);
@@ -227,7 +228,6 @@ function processASeries(aPrize, aSeries, index) {
         taxLine = winEmailTemplate.taxDetail;
         let taxableAmount = aPrize.prizeMoney - systemConfig.prizeMoneyTaxThreshold;
         taxAmount = Math.ceil(taxableAmount * 0.1);
-        taxLine = taxLine.replace('|<|prizeMoney|>|', emailPrizeMoney);
         taxLine = taxLine.replace('|<|taxableAmount|>|',
             taxableAmount.toLocaleString('vi-VN'));
         taxLine = taxLine.replace('|<|taxAmount|>|',
