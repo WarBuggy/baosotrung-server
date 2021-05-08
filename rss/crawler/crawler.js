@@ -31,6 +31,33 @@ module.exports = {
             setupCrawlSchedule();
         });
     },
+
+    crawlResultOfDate: function (dateString) {
+        let date = dayjs(dateString);
+        let crawlData = {
+            successCrawl: [],
+            failCrawl: [],
+            typeNum: 0,
+            message: [],
+            crawlDate: date,
+            crawlDateFull: date.format(systemConfig.dayjsFormatFull),
+            crawlDatePartial: date.format(systemConfig.dayjsFormatDateOnly),
+            sendResultEmail: false,
+            startCheckingProcess: false,
+        };
+        addTicketData(crawlData);
+        addPublisherData(crawlData);
+        let typeId = Object.keys(crawlData.ticketType);
+        for (let i = 0; i < typeId.length; i++) {
+            let aTypeId = typeId[i];
+            let aTicketTypeData = crawlData.ticketType[aTypeId];
+            let publisherId = Object.keys(aTicketTypeData.publisher);
+            if (publisherId.length < 1) {
+                continue;
+            }
+            crawlATicketType(crawlData, aTicketTypeData);
+        }
+    },
 }
 
 //#region Function to handle the craw schedule
@@ -202,8 +229,10 @@ function checkCrawlingCompletion(crawlData, ticketTypeData) {
         string = string + ' (' + failType.join(', ') + ')';
     }
     common.consoleLog(string);
-    addToEmailMessage(crawlData, string);
-    sendCrawlResultEmail(crawlData);
+    if (crawlData.sendCrawlResultEmail === true) {
+        addToEmailMessage(crawlData, string);
+        sendCrawlResultEmail(crawlData);
+    }
 };
 
 function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
@@ -212,7 +241,9 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
     if (successNum + failNum != ticketTypeData.publisherNum) {
         return;
     }
-    series.startCheckingProcess(ticketTypeData, crawlData.crawlDatePartial);
+    if (crawlData.startCheckingProcess === true) {
+        series.startCheckingProcess(ticketTypeData, crawlData.crawlDatePartial);
+    }
     let string = 'Finish crawling for ' + ticketTypeData.name +
         '. Success: ' + successNum + '. Fail: ' + failNum + '.';
     if (failNum > 0) {
@@ -223,7 +254,9 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
         string = string + ' (' + failType.join(', ') + ')';
     }
     common.consoleLog(string);
-    addToEmailMessage(crawlData, string);
+    if (crawlData.sendCrawlResultEmail === true) {
+        addToEmailMessage(crawlData, string);
+    }
     if (successNum > 0) {
         crawlData.successCrawl.push(ticketTypeData);
     } else {
@@ -232,9 +265,11 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
             'CRITICAL ERROR: All crawling fails for ' + ticketTypeData.name + ' ('
             + ticketTypeData.publisherName + ').';
         common.consoleLogError(criticalEmailMessage);
-        mailer.sendMail(common.getCurrentTime() + ': ' + criticalEmailMessage,
-            false, null,
-            crawlData.crawlDatePartial + ' Báo Trúng Số Critical Crawl Error', 'crawling critical error');
+        if (crawlData.sendCrawlResultEmail === true) {
+            mailer.sendMail(common.getCurrentTime() + ': ' + criticalEmailMessage,
+                false, null,
+                crawlData.crawlDatePartial + ' Báo Trúng Số Critical Crawl Error', 'crawling critical error');
+        }
     }
 };
 

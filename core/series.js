@@ -213,7 +213,7 @@ function processAPublisher(aPublisher) {
 
 function processASeries(aPrize, aSeries, index) {
     let prizeLine = winEmailTemplate.seriesDetail;
-    let emailPrizeMoney = aPrize.prizeMoney.toLocaleString('vi-VN') + ' VNĐ';
+    let emailPrizeMoney = aPrize.prizeMoney.toLocaleString('vi-VN');
     prizeLine = prizeLine.replace('|<|prizeName|>|', aPrize.emailName);
     prizeLine = prizeLine.replace('|<|prizeMoney|>|', emailPrizeMoney);
     if (index > 0) {
@@ -229,9 +229,9 @@ function processASeries(aPrize, aSeries, index) {
         taxAmount = Math.ceil(taxableAmount * 0.1);
         taxLine = taxLine.replace('|<|prizeMoney|>|', emailPrizeMoney);
         taxLine = taxLine.replace('|<|taxableAmount|>|',
-            taxableAmount.toLocaleString('vi-VN') + ' VNĐ');
+            taxableAmount.toLocaleString('vi-VN'));
         taxLine = taxLine.replace('|<|taxAmount|>|',
-            taxAmount.toLocaleString('vi-VN') + ' VNĐ');
+            taxAmount.toLocaleString('vi-VN'));
         taxLine = taxLine.replace('|<|series|>|', aSeries);
     }
     return {
