@@ -25,7 +25,7 @@ module.exports = {
                     ngày <strong>|<|callDate|>|</strong>. Chi tiết trúng thưởng của quý khách như sau:</p>
                     |<|publisherDetail|>|
                     <p>Tổng số tiền trúng thưởng của quý khách là: <strong>|<|totalWinAmount|>|
-                    (|<|totalWinAmountInWord|>|)</strong></p>
+                    VNĐ (|<|totalWinAmountInWord|>| đồng)</strong></p>
                     <p>Theo quy định của các công ty xổ số, quý khách có <strong>30 ngày</strong> để 
                     đổi vé lấy tiền trúng giải. Xin quý khách vui lòng đổi vé 
                     trúng <strong>trước ngày |<|lastClaimDay|>|</strong>. Nếu quý khách dự định đổi 
@@ -60,8 +60,7 @@ module.exports = {
             |<|seriesDetail|>|
 
             <tr>
-                <td/><td/>
-                <td style='text-align: right;'><strong>|<|totalAmount|>|</strong></td>
+                <td colspan='3' style='text-align: right;'><strong>|<|totalAmount|>|</strong></td>
             </tr>
         <table>
     `,
@@ -83,8 +82,7 @@ module.exports = {
             </tr>
             |<|taxDetail|>|
             <tr>
-                <td/><td/>
-                <td style='text-align: right;'><strong>|<|totalTaxAmount|>|</strong></td>
+                <td olspan='3' style='text-align: right;'><strong>|<|totalTaxAmount|>|</strong></td>
             </tr>
         <table> 
     `,
