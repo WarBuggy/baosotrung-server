@@ -82,7 +82,7 @@ module.exports = {
             </tr>
             |<|taxDetail|>|
             <tr>
-                <td olspan='3' style='text-align: right;'><strong>|<|totalTaxAmount|>|</strong></td>
+                <td colspan='3' style='text-align: right;'><strong>|<|totalTaxAmount|>|</strong></td>
             </tr>
         <table> 
     `,
