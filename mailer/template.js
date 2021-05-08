@@ -35,7 +35,7 @@ module.exports = {
                     <p style='font-style: italic; color: gray; font-size:10pt;'>
                     Quý khách nhận được thư này vì đã sử dụng dịch vụ báo vé trúng
                     thưởng tại baotrungso.com. Nếu không phải là người nhận mong 
-                    muốn của thư này, mong quý bạn vui lòng bỏ quả sự cố này!</p>
+                    muốn của thư, mong quý bạn vui lòng bỏ quả sự cố này!</p>
                 </div>
             </body>
         </html>
@@ -44,9 +44,9 @@ module.exports = {
         <table style='width: 100%'>
             <tr><td colspan='3'><strong>Đài |<|publisherName|>|</strong></td></tr>
             <tr>
-                <td style='text-align: left;'><strong>Vé số</strong></td>
+                <td style='text-align: left; width: 70px;'><strong>Vé số</strong></td>
                 <td style='text-align: left;'><strong>Giải</strong></td>
-                <td style='text-align: right;'><strong>Trị giá (VNĐ)</strong></td>
+                <td style='text-align: right; width: 150px;'><strong>Trị giá (VNĐ)</strong></td>
             </tr>
             |<|seriesDetail|>|
 
@@ -58,21 +58,34 @@ module.exports = {
     `,
         seriesDetail: `
         <tr>
-            <td style='width: 70px;'>|<|series|>|</td>
-            <td style=''>|<|prizeName|>|</td>
-            <td style='width: 150px; text-align: right;'>
-                |<|prizeMoney|>|
-            </td>
+            <td>|<|series|>|</td>
+            <td>|<|prizeName|>|</td>
+            <td style=' text-align: right;'>|<|prizeMoney|>|</td>
         </tr>
         `,
         noTax: `không cần đóng thuế
         thu nhập cá nhân và hưởng trọn số tiền trúng giải.`,
         withTax: `có trách nhiệm đóng 
     thuế thu nhập cá nhân như sau:
+    <table style='width: 100%'>
+        <tr>
+            <td style='text-align: left; width: 70px;'><strong>Vé số</strong></td>
+            <td style='text-align: right;'><strong>Số tiền\nchịu thuế\n(VNĐ)</strong></td>
+            <td style='text-align: right; width: 150px;'><strong>Số tiền\nnộp thuế\n(VNĐ)</strong></td>
+        </tr>
         |<|taxDetail|>|
-        |<|totalTaxAmount|>|
+        <tr>
+            <td/><td/><td/><td/>
+            <td style='text-align: right;'><strong>|<|totalTaxAmount|>|</strong></td>
+        </tr>
+    <table> 
     `,
-        taxDetail: `|<|series|>| |<|prizeMoney|>| |<|taxableAmount|>| |<|taxAmount|>|
+        taxDetail: `
+        <tr>
+            <td>|<|series|>|</td>
+            <td style='text-align: right;'>|<|taxableAmount|>|</td>
+            <td style='text-align: right;'>|<|taxAmount|>|</td>
+        </tr>
         `,
     },
 };
