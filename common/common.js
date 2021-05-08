@@ -68,7 +68,6 @@ module.exports = {
             'nghìn', 'triệu', 'tỷ',
         ];
         let numberString = number.toLocaleString('vi-VN');
-        console.log(numberString);
         let parts = numberString.split('.');
         let firstPart = parts.pop();
         let resultPart = [firstPartToWord(parts, firstPart)];
