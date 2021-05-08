@@ -42,8 +42,9 @@ module.exports = {
             crawlDate: date,
             crawlDateFull: date.format(systemConfig.dayjsFormatFull),
             crawlDatePartial: date.format(systemConfig.dayjsFormatDateOnly),
-            sendResultEmail: false,
+            sendCrawlResultEmail: false,
             startCheckingProcess: false,
+            checkTodayAsCrawlDate: false,
         };
         addTicketData(crawlData);
         addPublisherData(crawlData);
@@ -229,10 +230,8 @@ function checkCrawlingCompletion(crawlData, ticketTypeData) {
         string = string + ' (' + failType.join(', ') + ')';
     }
     common.consoleLog(string);
-    if (crawlData.sendCrawlResultEmail === true) {
-        addToEmailMessage(crawlData, string);
-        sendCrawlResultEmail(crawlData);
-    }
+    addToEmailMessage(crawlData, string);
+    sendCrawlResultEmail(crawlData);
 };
 
 function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
@@ -254,9 +253,7 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
         string = string + ' (' + failType.join(', ') + ')';
     }
     common.consoleLog(string);
-    if (crawlData.sendCrawlResultEmail === true) {
-        addToEmailMessage(crawlData, string);
-    }
+    addToEmailMessage(crawlData, string);
     if (successNum > 0) {
         crawlData.successCrawl.push(ticketTypeData);
     } else {
@@ -265,11 +262,9 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
             'CRITICAL ERROR: All crawling fails for ' + ticketTypeData.name + ' ('
             + ticketTypeData.publisherName + ').';
         common.consoleLogError(criticalEmailMessage);
-        if (crawlData.sendCrawlResultEmail === true) {
-            mailer.sendMail(common.getCurrentTime() + ': ' + criticalEmailMessage,
-                false, null,
-                crawlData.crawlDatePartial + ' Báo Trúng Số Critical Crawl Error', 'crawling critical error');
-        }
+        mailer.sendMail(common.getCurrentTime() + ': ' + criticalEmailMessage,
+            false, null,
+            crawlData.crawlDatePartial + ' Báo Trúng Số Critical Crawl Error', 'crawling critical error');
     }
 };
 
@@ -288,11 +283,13 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
             'Invalid feed published date (' + feedPubDayString + ').', providerData.consoleColor);
         return false;
     }
-    if (!feedPubDay.isToday()) {
-        common.consoleLog('No new data for ' + publisher.name + ', ' + providerData.name +
-            '. Last publish date is ' + feedPubDay.format(systemConfig.dayjsFormatFull) + '.',
-            providerData.consoleColor, feededTime);
-        return false;
+    if (crawlData.checkTodayAsCrawlDate === true) {
+        if (!feedPubDay.isToday()) {
+            common.consoleLog('No new data for ' + publisher.name + ', ' + providerData.name +
+                '. Last publish date is ' + feedPubDay.format(systemConfig.dayjsFormatFull) + '.',
+                providerData.consoleColor, feededTime);
+            return false;
+        }
     }
     common.consoleLog('New data found for ' + publisher.name + ', ' + providerData.name + '.' +
         'Begin to parse feed data...',
@@ -316,6 +313,9 @@ function addToEmailMessage(crawlData, string) {
 };
 
 function sendCrawlResultEmail(crawlData) {
+    if (crawlData.sendCrawlResultEmail === false) {
+        return;
+    }
     let message = crawlData.message.join('\n');
     mailer.sendMail(message, false, null,
         crawlData.crawlDatePartial + ' Báo Trúng Số Crawl Result', 'crawl result');
