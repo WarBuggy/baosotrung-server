@@ -70,12 +70,15 @@ module.exports = {
         let numberString = number.toLocaleString('vi-VN');
         console.log(numberString);
         let parts = numberString.split('.');
-        let resultPart = [partToWordVN(parts[parts.length - 1])];
-        for (let i = parts.length - 2; i >= 0; i--) {
+        let firstPart = parts.pop();
+        let resultPart = [firstPartToWord(parts, firstPart)];
+        for (let i = parts.length - 1; i >= 0; i--) {
             let aPart = parts[i];
-            console.log(aPart);
             let word = partToWordVN(aPart);
-            let diff = parts.length - 2 - i;
+            if (word == '') {
+                continue;
+            }
+            let diff = parts.length - 1 - i;
             let over = Math.floor(diff / unitArray.length);
             let unit = [];
             for (let j = 0; j < over; j++) {
@@ -92,6 +95,19 @@ module.exports = {
         let result = resultPart.reverse().join(' ');
         return result;
     },
+};
+
+function firstPartToWord(parts, firstPart) {
+    if (parts.length == 0 || firstPart == '000') {
+        return partToWordVN(firstPart);
+    }
+    let oneOfFirstPart = firstPart[2];
+    let tenOfFirstPart = firstPart[1];
+    let hundredOfFirstPart = firstPart[0];
+    if (tenOfFirstPart == 0 && hundredOfFirstPart == 0) {
+        return 'lẻ ' + digitInWord[parseInt(oneOfFirstPart)];
+    }
+    return partToWordVN(firstPart);
 };
 
 function partToWordVN(part) {

@@ -144,4 +144,16 @@ function testNumberToWordVN() {
     console.log(common.numberToWordVN(155));
     console.log(common.numberToWordVN(115));
     console.log(common.numberToWordVN(121));
+    console.log(common.numberToWordVN(121000450));
+    console.log(common.numberToWordVN(121000000));
+    console.log(common.numberToWordVN(121000006));
+    console.log(common.numberToWordVN(11));
+    console.log(common.numberToWordVN(5));
+    console.log(common.numberToWordVN(25));
+    console.log(common.numberToWordVN(1));
+    console.log(common.numberToWordVN(1006));
+    console.log(common.numberToWordVN(1112006));
+    console.log(common.numberToWordVN(123000006));
+    console.log(common.numberToWordVN(4123000006));
+    console.log(common.numberToWordVN(4123004306));
 };
