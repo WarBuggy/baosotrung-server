@@ -180,7 +180,7 @@ function processAWinner(aWinner, emailContentTemplate) {
         taxSummary = taxSummary.replace('|<|taxDetail|>|', taxDetail);
         taxSummary = taxSummary.replace(/\|<\|totalTaxAmount\|>\|/g,
             taxAmount.toLocaleString('vi-VN'));
-        emailContent = emailContent.replace('|<|totalTaxAmountInWord|>|',
+        taxSummary = taxSummary.replace('|<|totalTaxAmountInWord|>|',
             common.numberToWordVN(taxAmount));
     }
     let emailContent =
