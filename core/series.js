@@ -203,7 +203,7 @@ function processAPublisher(aPublisher) {
     }
     publisherLine = publisherLine.replace('|<|seriesDetail|>|', seriesDetail);
     publisherLine = publisherLine.replace('|<|totalAmount|>|',
-        aPublisher.publisherWinningAmount.toLocaleString('vi-VN') + ' VNĐ');
+        aPublisher.publisherWinningAmount.toLocaleString('vi-VN'));
     return {
         publisherLine,
         taxDetail,

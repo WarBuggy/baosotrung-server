@@ -44,15 +44,15 @@ module.exports = {
         <table style='width: 100%'>
             <tr><td colspan='3'><strong>Đài |<|publisherName|>|</strong></td></tr>
             <tr>
-                <td style='text-align: center;'><strong>Vé số</strong></td>
-                <td style='text-align: center;'><strong>Giải</strong></td>
-                <td style='text-align: center;'><strong>Trị giá (VNĐ)</strong></td>
+                <td style='text-align: left;'><strong>Vé số</strong></td>
+                <td style='text-align: left;'><strong>Giải</strong></td>
+                <td style='text-align: right;'><strong>Trị giá (VNĐ)</strong></td>
             </tr>
             |<|seriesDetail|>|
 
             <tr>
                 <td/><td/>
-                <td style='text-align: center;'><strong>|<|totalAmount|>|</strong></td>
+                <td style='text-align: right;'><strong>|<|totalAmount|>|</strong></td>
             </tr>
         <table>
     `,
