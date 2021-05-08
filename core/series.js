@@ -133,15 +133,15 @@ function createWinnerDataArray(winnerData) {
 };
 
 function sortSeries(series1, series2) {
-    return series2.publisherWinningAmount - series1.publisherWinningAmount;
+    return series2.seriesWinningAmount - series1.seriesWinningAmount;
 };
 
 function sortPublisher(publisher1, publisher2) {
-    return publisher2.seriesWinningAmount - publisher1.seriesWinningAmount;
+    return publisher2.publisherWinningAmount - publisher1.publisherWinningAmount;
 };
 
 function sortWinner(winner1, winner2) {
-    return winner2.seriesWinningAmount - winner1.seriesWinningAmount;
+    return winner2.userWinningAmount - winner1.userWinningAmount;
 };
 
 function createWinningEmail(winner, crawlDate) {
@@ -162,14 +162,14 @@ function createWinningEmail(winner, crawlDate) {
 };
 
 function processAWinner(aWinner, emailContentTemplate) {
-    let publisherDetail = '';
+    let publisherDetail = [];
     let taxDetail = '';
     let taxAmount = 0;
     let winAmount = 0;
     for (let i = 0; i < aWinner.publisher.length; i++) {
         let aPublisher = aWinner.publisher[i];
         let publisherResult = processAPublisher(aPublisher);
-        publisherDetail = publisherDetail + publisherResult.publisherLine;
+        publisherDetail.push(publisherResult.publisherLine);
         taxDetail = taxDetail + publisherResult.taxDetail;
         taxAmount = taxAmount + publisherResult.taxAmount;
         winAmount = winAmount + aPublisher.publisherWinningAmount;
@@ -182,7 +182,8 @@ function processAWinner(aWinner, emailContentTemplate) {
             taxAmount.toLocaleString('vi-VN'));
     }
     let emailContent =
-        emailContentTemplate.replace('|<|publisherDetail|>|', publisherDetail);
+        emailContentTemplate.replace('|<|publisherDetail|>|',
+            publisherDetail.join('<br>'));
     emailContent = emailContent.replace('|<|taxSummary|>|', taxSummary);
     emailContent = emailContent.replace('|<|totalWinAmount|>|',
         winAmount.toLocaleString('vi-VN'));
