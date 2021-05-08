@@ -187,6 +187,8 @@ function processAWinner(aWinner, emailContentTemplate) {
     emailContent = emailContent.replace('|<|taxSummary|>|', taxSummary);
     emailContent = emailContent.replace('|<|totalWinAmount|>|',
         winAmount.toLocaleString('vi-VN'));
+    emailContent = emailContent.replace('|<|totalWinAmountInWord|>|',
+        common.numberToWordVN(winAmount));
     return emailContent;
 };
 

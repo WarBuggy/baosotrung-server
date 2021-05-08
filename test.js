@@ -13,7 +13,8 @@ async function start() {
     // }
     // rssCrawler.test();
     // testSeries();
-    rssCrawler.crawlResultOfDate('2021-05-07');
+    // rssCrawler.crawlResultOfDate('2021-05-07');
+    testNumberToWordVN();
 };
 
 async function prepareDbConnection() {
@@ -126,4 +127,21 @@ function testCrawler() {
     console.log(writeResult);
     // let publisherResult = await findPublisherResult(publisherId, date);
     // console.log(publisherResult);
+};
+
+function testNumberToWordVN() {
+    console.log(common.numberToWordVN(123456789000));
+    console.log(common.numberToWordVN(123456789105));
+    console.log(common.numberToWordVN(123456789005));
+    console.log(common.numberToWordVN(123110789000));
+    console.log(common.numberToWordVN(104123456781005));
+    console.log(common.numberToWordVN(123104123456781005));
+    console.log(common.numberToWordVN(456123104123456781005));
+    console.log(common.numberToWordVN(1456123104123456781005));
+    console.log(common.numberToWordVN(104));
+    console.log(common.numberToWordVN(110));
+    console.log(common.numberToWordVN(555));
+    console.log(common.numberToWordVN(155));
+    console.log(common.numberToWordVN(115));
+    console.log(common.numberToWordVN(121));
 };

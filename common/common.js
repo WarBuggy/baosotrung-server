@@ -3,6 +3,11 @@ const dayjs = require('dayjs');
 const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(dayjsCustomParseFormat);
 
+const digitInWord = [
+    'không', 'một', 'hai', 'ba', 'bốn',
+    'năm', 'sáu', 'bảy', 'tám', 'chín',
+];
+
 module.exports = {
     getCurrentTime: function () {
         return dayjs().format('YYYY-MM-DD HH:mm:ss');
@@ -53,4 +58,92 @@ module.exports = {
     isNumeric(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     },
+
+    numberToWordVN(input) {
+        let number = parseInt(input);
+        if (!module.exports.isNumeric(number)) {
+            return '';
+        }
+        let unitArray = [
+            'nghìn', 'triệu', 'tỷ',
+        ];
+        let numberString = number.toLocaleString('vi-VN');
+        console.log(numberString);
+        let parts = numberString.split('.');
+        let resultPart = [partToWordVN(parts[parts.length - 1])];
+        for (let i = parts.length - 2; i >= 0; i--) {
+            let aPart = parts[i];
+            console.log(aPart);
+            let word = partToWordVN(aPart);
+            let diff = parts.length - 2 - i;
+            let over = Math.floor(diff / unitArray.length);
+            let unit = [];
+            for (let j = 0; j < over; j++) {
+                unit.push('tỷ');
+            }
+            let mod = diff % unitArray.length;
+            let aResultPart = word + ' ' + unitArray[mod];
+            if (unit.length > 0) {
+                aResultPart = aResultPart + ' ';
+            }
+            aResultPart = aResultPart + unit.join(' ');
+            resultPart.push(aResultPart);
+        }
+        let result = resultPart.reverse().join(' ');
+        return result;
+    },
+};
+
+function partToWordVN(part) {
+    if (part.length == 1) {
+        return oneDigitToWordVN(part);
+    }
+    if (part.length == 2) {
+        return twoDigitToWordVN(part);
+    }
+    return threeDigitToWordVN(part);
+};
+
+function oneDigitToWordVN(input) {
+    let one = input[0];
+    return digitInWord[parseInt(one)];
+};
+
+function twoDigitToWordVN(input) {
+    let one = input[1];
+    let ten = input[0];
+    let result = digitInWord[parseInt(ten)] + ' muơi';
+    if (ten == 1) {
+        result = 'mười';
+    }
+    if (one == 0) {
+        return result;
+    }
+    if (one == 5) {
+        return result + ' lăm';
+    }
+    if (one == 1 && ten != 1) {
+        return result + ' mốt';
+    }
+    return result + ' ' + digitInWord[parseInt(one)];
+};
+
+function threeDigitToWordVN(input) {
+    if (input === '000') {
+        return '';
+    }
+    let one = input[2];
+    let ten = input[1];
+    let hundred = input[0];
+    let result = digitInWord[parseInt(hundred)] + ' trăm';
+    if (one == 0 && ten == 0) {
+        return result;
+    }
+    if (ten == 0) {
+        result = result + ' linh';
+        result = result + ' ' + oneDigitToWordVN(one);
+    } else {
+        result = result + ' ' + twoDigitToWordVN(ten + one);
+    }
+    return result;
 };
