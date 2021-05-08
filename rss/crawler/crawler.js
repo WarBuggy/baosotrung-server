@@ -357,7 +357,7 @@ function createInsertResultDetailQuery(result) {
         let series = result[aPrizeId];
         for (let j = 0; j < series.length; j++) {
             let aSeries = series[j];
-            let aQueryPart = '(' + aPrizeId + ',' + aSeries + ',<resultId>)';
+            let aQueryPart = '(' + aPrizeId + ',"' + aSeries + '",<resultId>)';
             queryParts.push(aQueryPart);
         }
     }
