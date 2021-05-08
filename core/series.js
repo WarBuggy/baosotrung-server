@@ -178,8 +178,12 @@ function processAWinner(aWinner, emailContentTemplate) {
     if (taxAmount > 0) {
         taxSummary = winEmailTemplate.withTax;
         taxSummary = taxSummary.replace('|<|taxDetail|>|', taxDetail);
-        taxSummary = taxSummary.replace('|<|totalTaxAmount|>|',
+        taxSummary = taxSummary.replaceAll('|<|totalTaxAmount|>|',
             taxAmount.toLocaleString('vi-VN'));
+        taxSummary = taxSummary.replaceAll('|<|totalTaxAmount|>|',
+            taxAmount.toLocaleString('vi-VN'));
+        emailContent = emailContent.replace('|<|totalTaxAmountInWord|>|',
+            common.numberToWordVN(taxAmount));
     }
     let emailContent =
         emailContentTemplate.replace('|<|publisherDetail|>|',
