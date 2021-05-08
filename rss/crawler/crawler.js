@@ -196,7 +196,8 @@ async function crawlAPublisher(crawlData, ticketTypeData, publisher) {
     let rssProviderId = Object.keys(publisher.providerCrawlData);
     for (let i = 0; i < rssProviderId.length; i++) {
         let aRssProviderId = rssProviderId[i];
-        let result = await crawlAProvider(ticketTypeData, publisher, aRssProviderId);
+        let result = await crawlAProvider(ticketTypeData, publisher, aRssProviderId,
+            crawlData.checkTodayAsCrawlDate);
         if (result === false) {
             continue;
         }
@@ -268,7 +269,7 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
     }
 };
 
-async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
+async function crawlAProvider(ticketTypeData, publisher, rssProviderId, checkTodayAsCrawlDate) {
     let providerData = rssProvider.provider[rssProviderId];
     let providerCrawlData = publisher.providerCrawlData[rssProviderId];
     let startTime = common.getCurrentTime();
@@ -283,7 +284,7 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId) {
             'Invalid feed published date (' + feedPubDayString + ').', providerData.consoleColor);
         return false;
     }
-    if (crawlData.checkTodayAsCrawlDate === true) {
+    if (checkTodayAsCrawlDate === true) {
         if (!feedPubDay.isToday()) {
             common.consoleLog('No new data for ' + publisher.name + ', ' + providerData.name +
                 '. Last publish date is ' + feedPubDay.format(systemConfig.dayjsFormatFull) + '.',
