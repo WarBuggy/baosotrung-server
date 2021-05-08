@@ -165,12 +165,14 @@ function processAWinner(aWinner, emailContentTemplate) {
     let publisherDetail = '';
     let taxDetail = '';
     let taxAmount = 0;
+    let winAmount = 0;
     for (let i = 0; i < aWinner.publisher.length; i++) {
         let aPublisher = aWinner.publisher[i];
         let publisherResult = processAPublisher(aPublisher);
         publisherDetail = publisherDetail + publisherResult.publisherLine;
         taxDetail = taxDetail + publisherResult.taxDetail;
         taxAmount = taxAmount + publisherResult.taxAmount;
+        winAmount = winAmount + aPublisher.publisherWinningAmount;
     }
     let taxSummary = winEmailTemplate.noTax;
     if (taxAmount > 0) {
@@ -182,6 +184,8 @@ function processAWinner(aWinner, emailContentTemplate) {
     let emailContent =
         emailContentTemplate.replace('|<|publisherDetail|>|', publisherDetail);
     emailContent = emailContent.replace('|<|taxSummary|>|', taxSummary);
+    emailContent = emailContent.replace('|<|totalWinAmount|>|',
+        winAmount.toLocaleString('vi-VN'));
     return emailContent;
 };
 

@@ -10,6 +10,13 @@ module.exports = {
                 <meta name="apple-mobile-web-app-capable" content="yes" />
                 <meta name="full-screen" content="yes" />
                 <meta name="screen-orientation" content="portrait" />
+                <style>
+                    table, th, td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                    }
+                    th, td { padding: 0px; }
+                </style>
             </head> 
             <body style='width: 100%;'>
                 <div style='margin-left: auto; margin-right: auto; width: 320px; font-size:12pt;'>
@@ -17,6 +24,8 @@ module.exports = {
                     <p>Quý khách đã may mắn mua được vé trúng thưởng của kỳ xổ số 
                     ngày <strong>|<|callDate|>|</strong>. Chi tiết trúng thưởng của quý khách như sau:</p>
                     |<|publisherDetail|>|
+                    <p>Tổng số tiền trúng thưởng của quý khách là: <strong>|<|totalWinAmount|>|
+                    (|<|totalWinAmountInWord|>|)</strong></p>
                     <p>Theo quy định của các công ty xổ số, quý khách có <strong>30 ngày</strong> để 
                     đổi vé lấy tiền trúng giải. Xin quý khách vui lòng đổi vé 
                     trúng <strong>trước ngày |<|lastClaimDay|>|</strong>. Nếu quý khách dự định đổi 
@@ -65,20 +74,19 @@ module.exports = {
         `,
         noTax: `không cần đóng thuế
         thu nhập cá nhân và hưởng trọn số tiền trúng giải.`,
-        withTax: `có trách nhiệm đóng 
-    thuế thu nhập cá nhân như sau:
-    <table style='width: 100%'>
-        <tr>
-            <td style='text-align: left; vertical-align: top; width: 70px;'><strong>Vé số</strong></td>
-            <td style='text-align: right; vertical-align: top;'><strong>Số tiền\nchịu thuế\n(VNĐ)</strong></td>
-            <td style='text-align: right; vertical-align: top; width: 150px;'><strong>Số tiền\nnộp thuế\n(VNĐ)</strong></td>
-        </tr>
-        |<|taxDetail|>|
-        <tr>
-            <td/><td/>
-            <td style='text-align: right;'><strong>|<|totalTaxAmount|>|</strong></td>
-        </tr>
-    <table> 
+        withTax: `có trách nhiệm đóng thuế thu nhập cá nhân như sau:
+        <table style='width: 100%'>
+            <tr>
+                <td style='text-align: left; vertical-align: top; width: 70px;'><strong>Vé số</strong></td>
+                <td style='text-align: right; vertical-align: top;'><strong>Số tiền\nchịu thuế\n(VNĐ)</strong></td>
+                <td style='text-align: right; vertical-align: top; width: 150px;'><strong>Số tiền\nnộp thuế\n(VNĐ)</strong></td>
+            </tr>
+            |<|taxDetail|>|
+            <tr>
+                <td/><td/>
+                <td style='text-align: right;'><strong>|<|totalTaxAmount|>|</strong></td>
+            </tr>
+        <table> 
     `,
         taxDetail: `
         <tr>
