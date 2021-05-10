@@ -249,6 +249,11 @@ function processASeries(aPrize, aSeries,
         prizeLine = prizeLine.replace('|<|series|>|', seriesRowLine);
     }
     prizeLine = prizeLine.replace('|<|seriesRowBgColor|>|', rowColor);
+    if (prizeCount > 1) {
+        prizeLine = prizeLine.replace(/|<|series|>|/g, ' border-width: 1px;');
+    } else {
+        prizeLine = prizeLine.replace(/|<|series|>|/g, '');
+    }
     let taxLine = '';
     let taxAmount = 0;
     if (aPrize.prizeMoney > systemConfig.prizeMoneyTaxThreshold) {

@@ -12,7 +12,7 @@ module.exports = {
                 <meta name="screen-orientation" content="portrait" />
                 <style>
                     table, th, td {
-                        border: 1px solid black;
+                        border: 2px solid black;
                         border-collapse: collapse;
                     }
                     th, td { padding: 0px; }
@@ -71,12 +71,14 @@ module.exports = {
         seriesDetail: `
         <tr style='background-color: |<|seriesRowBgColor|>|;'>
             |<|series|>|
-            <td style='vertical-align: top;'>|<|prizeName|>|</td>
-            <td style=' text-align: right; vertical-align: top;'>|<|prizeMoney|>|</td>
+            <td style='vertical-align: top;|<|borderWidth|>|'>|<|prizeName|>|</td>
+            <td style=' text-align: right; vertical-align: top;|<|borderWidth|>|'>|<|prizeMoney|>|</td>
         </tr>
         `,
         seriesDetailWithSeries: `
-            <td rowspan='|<|rowspan|>|' style='vertical-align: top;'>|<|series|>|</td>
+            <td rowspan='|<|rowspan|>|' style='vertical-align: top;|<|borderWidth|>|'>
+                |<|series|>|
+            </td>
         `,
         noTax: `không cần đóng thuế
         thu nhập cá nhân và hưởng trọn số tiền trúng giải.`,
