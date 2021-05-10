@@ -119,6 +119,7 @@ function createWinnerDataArray(winnerData) {
             let series = Object.keys(aPublisher.series);
             for (let k = 0; k < series.length; k++) {
                 let aSeries = aPublisher.series[series[k]];
+                aSeries.prize.sort(sortPrize);
                 seriesArray.push(aSeries);
             }
             aPublisher.series = seriesArray;
@@ -130,6 +131,10 @@ function createWinnerDataArray(winnerData) {
     }
     result.sort(sortWinner);
     return result;
+};
+
+function sortPrize(prize1, prize2) {
+    return prize2.prizeMoney - prize1.prizeMoney;
 };
 
 function sortSeries(series1, series2) {
