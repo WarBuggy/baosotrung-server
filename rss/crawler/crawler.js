@@ -241,7 +241,7 @@ function checkPublisherCrawlingCompletion(crawlData, ticketTypeData) {
     if (successNum + failNum != ticketTypeData.publisherNum) {
         return;
     }
-    if (crawlData.startCheckingProcess === true) {
+    if (crawlData.startCheckingProcess == true) {
         series.startCheckingProcess(ticketTypeData, crawlData.crawlDatePartial);
     }
     let string = 'Finish crawling for ' + ticketTypeData.name +
@@ -284,7 +284,7 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId, checkTod
             'Invalid feed published date (' + feedPubDayString + ').', providerData.consoleColor);
         return false;
     }
-    if (checkTodayAsCrawlDate === true) {
+    if (checkTodayAsCrawlDate == true) {
         if (!feedPubDay.isToday()) {
             common.consoleLog('No new data for ' + publisher.name + ', ' + providerData.name +
                 '. Last publish date is ' + feedPubDay.format(systemConfig.dayjsFormatFull) + '.',
@@ -314,7 +314,7 @@ function addToEmailMessage(crawlData, string) {
 };
 
 function sendCrawlResultEmail(crawlData) {
-    if (crawlData.sendCrawlResultEmail === false) {
+    if (crawlData.sendCrawlResultEmail == false) {
         return;
     }
     let message = crawlData.message.join('\n');
