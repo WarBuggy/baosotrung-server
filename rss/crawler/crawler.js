@@ -42,9 +42,9 @@ module.exports = {
             crawlDate: date,
             crawlDateFull: date.format(systemConfig.dayjsFormatFull),
             crawlDatePartial: date.format(systemConfig.dayjsFormatDateOnly),
-            sendCrawlResultEmail: false,
-            startCheckingProcess: false,
-            checkTodayAsCrawlDate: false,
+            sendCrawlResultEmail: true,
+            startCheckingProcess: true,
+            checkTodayAsCrawlDate: true,
         };
         addTicketData(crawlData);
         addPublisherData(crawlData);
