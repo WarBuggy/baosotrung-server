@@ -202,11 +202,14 @@ function processAPublisher(aPublisher, taxLineCount) {
     let seriesDetail = '';
     let taxDetail = '';
     let taxAmount = 0;
+    let publisherLineCount = 0;
     for (let i = 0; i < aPublisher.series.length; i++) {
         let aSeries = aPublisher.series[i];
         for (let j = 0; j < aSeries.prize.length; j++) {
             let aPrize = aSeries.prize[j];
-            let seriesResult = processASeries(aPrize, taxLineCount, aSeries.series, j);
+            publisherLineCount = publisherLineCount + 1;
+            let seriesResult = processASeries(aPrize, taxLineCount,
+                aSeries.series, publisherLineCount, j);
             seriesDetail = seriesDetail + seriesResult.prizeLine;
             taxDetail = taxDetail + seriesResult.taxLine;
             taxAmount = taxAmount + seriesResult.taxAmount;
@@ -222,7 +225,7 @@ function processAPublisher(aPublisher, taxLineCount) {
     };
 };
 
-function processASeries(aPrize, taxLineCount, aSeries, index) {
+function processASeries(aPrize, taxLineCount, aSeries, publisherLineCount, index) {
     let prizeLine = winEmailTemplate.seriesDetail;
     let emailPrizeMoney = aPrize.prizeMoney.toLocaleString('vi-VN');
     prizeLine = prizeLine.replace('|<|prizeName|>|', aPrize.emailName);
@@ -232,7 +235,7 @@ function processASeries(aPrize, taxLineCount, aSeries, index) {
     } else {
         prizeLine = prizeLine.replace('|<|series|>|', aSeries);
     }
-    if (index % 2 == 1) {
+    if (publisherLineCount % 2 == 0) {
         prizeLine = prizeLine.replace('|<|seriesRowBgColor|>|', 'lightgray');
     } else {
         prizeLine = prizeLine.replace('|<|seriesRowBgColor|>|', 'white');
