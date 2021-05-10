@@ -230,7 +230,7 @@ function processAPublisher(aPublisher, taxLineCount) {
                 taxableAmount.toLocaleString('vi-VN'));
             taxLine = taxLine.replace('|<|taxAmount|>|',
                 taxAmount.toLocaleString('vi-VN'));
-            taxLine = taxLine.replace('|<|series|>|', aSeries);
+            taxLine = taxLine.replace('|<|series|>|', aSeries.series);
             taxLineCount.count = taxLineCount.count + 1;
             if (taxLineCount.count % 2 == 0) {
                 taxLine = taxLine.replace('|<|taxRowBgColor|>|', 'lightgray');
