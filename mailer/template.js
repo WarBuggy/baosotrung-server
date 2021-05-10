@@ -85,13 +85,13 @@ module.exports = {
         withTax: `có trách nhiệm đóng thuế thu nhập cá nhân như sau:
         <table style='width: 100%'>
             <tr>
-                <td style='text-align: left; vertical-align: top; width: 70px;'>
+                <td style='text-align: left; vertical-align: middle; width: 70px;'>
                     <strong>Vé số</strong>
                 </td>
-                <td style='text-align: right; vertical-align: top;'>
+                <td style='text-align: right; vertical-align: middle;'>
                     <strong>Số tiền<br/>chịu thuế<br/>(VNĐ)</strong>
                 </td>
-                <td style='text-align: right; vertical-align: top; width: 150px;'>
+                <td style='text-align: right; vertical-align: middle; width: 150px;'>
                     <strong>Số tiền<br/>nộp thuế<br/>(VNĐ)</strong>
                 </td>
             </tr>
