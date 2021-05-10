@@ -65,7 +65,7 @@ module.exports = {
         <table>
     `,
         seriesDetail: `
-        <tr>
+        <tr style='background-color: |<|seriesRowBgColor|>|;'>
             <td style='vertical-align: top;'>|<|series|>|</td>
             <td style='vertical-align: top;'>|<|prizeName|>|</td>
             <td style=' text-align: right; vertical-align: top;'>|<|prizeMoney|>|</td>
@@ -88,7 +88,7 @@ module.exports = {
         <p>Tổng số tiền thuế là: <strong>|<|totalTaxAmount|>| VNĐ (|<|totalTaxAmountInWord|>| đồng)</strong>.</p>
     `,
         taxDetail: `
-        <tr>
+        <tr style='background-color: |<|taxRowBgColor|>|;'>
             <td style='vertical-align: top;'>|<|series|>|</td>
             <td style='text-align: right; vertical-align: top;'>|<|taxableAmount|>|</td>
             <td style='text-align: right; vertical-align: top;'>|<|taxAmount|>|</td>

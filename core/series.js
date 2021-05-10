@@ -166,9 +166,10 @@ function processAWinner(aWinner, emailContentTemplate) {
     let taxDetail = '';
     let taxAmount = 0;
     let winAmount = 0;
+    let taxLineCount = { count: 0, };
     for (let i = 0; i < aWinner.publisher.length; i++) {
         let aPublisher = aWinner.publisher[i];
-        let publisherResult = processAPublisher(aPublisher);
+        let publisherResult = processAPublisher(aPublisher, taxLineCount);
         publisherDetail.push(publisherResult.publisherLine);
         taxDetail = taxDetail + publisherResult.taxDetail;
         taxAmount = taxAmount + publisherResult.taxAmount;
@@ -194,7 +195,7 @@ function processAWinner(aWinner, emailContentTemplate) {
     return emailContent;
 };
 
-function processAPublisher(aPublisher) {
+function processAPublisher(aPublisher, taxLineCount) {
     let publisherLine = winEmailTemplate.publisherDetail;
     publisherLine = publisherLine.replace('|<|publisherName|>|',
         ticketCoreData.publisher[aPublisher.id].name);
@@ -205,7 +206,7 @@ function processAPublisher(aPublisher) {
         let aSeries = aPublisher.series[i];
         for (let j = 0; j < aSeries.prize.length; j++) {
             let aPrize = aSeries.prize[j];
-            let seriesResult = processASeries(aPrize, aSeries.series, j);
+            let seriesResult = processASeries(aPrize, taxLineCount, aSeries.series, j);
             seriesDetail = seriesDetail + seriesResult.prizeLine;
             taxDetail = taxDetail + seriesResult.taxLine;
             taxAmount = taxAmount + seriesResult.taxAmount;
@@ -221,7 +222,7 @@ function processAPublisher(aPublisher) {
     };
 };
 
-function processASeries(aPrize, aSeries, index) {
+function processASeries(aPrize, taxLineCount, aSeries, index) {
     let prizeLine = winEmailTemplate.seriesDetail;
     let emailPrizeMoney = aPrize.prizeMoney.toLocaleString('vi-VN');
     prizeLine = prizeLine.replace('|<|prizeName|>|', aPrize.emailName);
@@ -230,6 +231,11 @@ function processASeries(aPrize, aSeries, index) {
         prizeLine = prizeLine.replace('|<|series|>|', '');
     } else {
         prizeLine = prizeLine.replace('|<|series|>|', aSeries);
+    }
+    if (index % 2 == 1) {
+        prizeLine = prizeLine.replace('|<|seriesRowBgColor|>|', 'lightgray');
+    } else {
+        prizeLine = prizeLine.replace('|<|seriesRowBgColor|>|', 'white');
     }
     let taxLine = '';
     let taxAmount = 0;
@@ -242,6 +248,12 @@ function processASeries(aPrize, aSeries, index) {
         taxLine = taxLine.replace('|<|taxAmount|>|',
             taxAmount.toLocaleString('vi-VN'));
         taxLine = taxLine.replace('|<|series|>|', aSeries);
+        taxLineCount.count = taxLineCount.count + 1;
+        if (taxLineCount.count % 2 == 0) {
+            taxLine = taxLine.replace('|<|taxRowBgColor|>|', 'lightgray');
+        } else {
+            taxLine = taxLine.replace('|<|taxRowBgColor|>|', 'white');
+        }
     }
     return {
         prizeLine,
