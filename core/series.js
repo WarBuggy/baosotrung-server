@@ -26,7 +26,8 @@ module.exports = {
             await checkResult(ticketTypeData, winning, publisherId, crawlDate);
         }
         let result = consolidateWinner(winning);
-        common.consoleLog(result.winner.length + ' winning series found for ' +
+        console.log(result);
+        common.consoleLog(result.winner.length + ' winner(s) found for ' +
             ticketTypeData.name + '. Begin the email process...');
         await createWinningEmail(result.winner, crawlDate);
         common.consoleLog('All winning email for ' + ticketTypeData.name + ' processed.');
