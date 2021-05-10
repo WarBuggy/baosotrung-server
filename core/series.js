@@ -205,11 +205,15 @@ function processAPublisher(aPublisher, taxLineCount) {
     let publisherLineCount = 0;
     for (let i = 0; i < aPublisher.series.length; i++) {
         let aSeries = aPublisher.series[i];
+        publisherLineCount = publisherLineCount + 1;
+        let rowColor = 'white';
+        if (publisherLineCount % 2 == 0) {
+            rowColor = 'lightgray';
+        }
         for (let j = 0; j < aSeries.prize.length; j++) {
             let aPrize = aSeries.prize[j];
-            publisherLineCount = publisherLineCount + 1;
             let seriesResult = processASeries(aPrize, aSeries.series,
-                aSeries.prize.length, taxLineCount, publisherLineCount, j);
+                aSeries.prize.length, taxLineCount, j, rowColor);
             seriesDetail = seriesDetail + seriesResult.prizeLine;
             taxDetail = taxDetail + seriesResult.taxLine;
             taxAmount = taxAmount + seriesResult.taxAmount;
@@ -226,7 +230,7 @@ function processAPublisher(aPublisher, taxLineCount) {
 };
 
 function processASeries(aPrize, aSeries,
-    prizeCount, taxLineCount, publisherLineCount, index) {
+    prizeCount, taxLineCount, index, rowColor) {
     let prizeLine = winEmailTemplate.seriesDetail;
     let emailPrizeMoney = aPrize.prizeMoney.toLocaleString('vi-VN');
     prizeLine = prizeLine.replace('|<|prizeName|>|', aPrize.emailName);
@@ -239,11 +243,7 @@ function processASeries(aPrize, aSeries,
         seriesRowLine = seriesRowLine.replace('|<|series|>|', aSeries);
         prizeLine = prizeLine.replace('|<|series|>|', seriesRowLine);
     }
-    if (publisherLineCount % 2 == 0) {
-        prizeLine = prizeLine.replace('|<|seriesRowBgColor|>|', 'lightgray');
-    } else {
-        prizeLine = prizeLine.replace('|<|seriesRowBgColor|>|', 'white');
-    }
+    prizeLine = prizeLine.replace('|<|seriesRowBgColor|>|', rowColor);
     let taxLine = '';
     let taxAmount = 0;
     if (aPrize.prizeMoney > systemConfig.prizeMoneyTaxThreshold) {
