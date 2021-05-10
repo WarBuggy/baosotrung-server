@@ -76,7 +76,7 @@ module.exports = {
         </tr>
         `,
         seriesDetailWithSeries: `
-            <td colspan='|<|colspan|>|' style='vertical-align: top;'>|<|series|>|</td>
+            <td rowspan='|<|rowspan|>|' style='vertical-align: top;'>|<|series|>|</td>
         `,
         noTax: `không cần đóng thuế
         thu nhập cá nhân và hưởng trọn số tiền trúng giải.`,

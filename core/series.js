@@ -231,13 +231,13 @@ function processASeries(aPrize, aSeries,
     let emailPrizeMoney = aPrize.prizeMoney.toLocaleString('vi-VN');
     prizeLine = prizeLine.replace('|<|prizeName|>|', aPrize.emailName);
     prizeLine = prizeLine.replace('|<|prizeMoney|>|', emailPrizeMoney);
-    let seriesColLine = winEmailTemplate.seriesDetailWithSeries;
-    seriesColLine = seriesColLine.replace('|<|colspan|>|', prizeCount);
+    let seriesRowLine = winEmailTemplate.seriesDetailWithSeries;
+    seriesRowLine = seriesRowLine.replace('|<|rowspan|>|', prizeCount);
     if (index > 0) {
         prizeLine = prizeLine.replace('|<|series|>|', '');
     } else {
-        seriesColLine = seriesColLine.replace('|<|series|>|', aSeries);
-        prizeLine = prizeLine.replace('|<|series|>|', seriesColLine);
+        seriesRowLine = seriesRowLine.replace('|<|series|>|', aSeries);
+        prizeLine = prizeLine.replace('|<|series|>|', seriesRowLine);
     }
     if (publisherLineCount % 2 == 0) {
         prizeLine = prizeLine.replace('|<|seriesRowBgColor|>|', 'lightgray');
