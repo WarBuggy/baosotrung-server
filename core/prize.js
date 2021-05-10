@@ -4,7 +4,7 @@ module.exports = {
             name: 'Giải 8',
             smsName: 'G8',
             emailName: 'Giải 8',
-            prizeMoney: 10000000,
+            prizeMoney: 100000,
             smsPrizeMoney: '100K',
         },
         7: {

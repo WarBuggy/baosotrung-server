@@ -4,6 +4,7 @@ const winEmailTemplate = require('../mailer/template.js').winner;
 const systemConfig = require('../systemConfig.js');
 const common = require('../common/common.js');
 const db = require('../db/db.js');
+const mailer = require('../mailer/mailer.js');
 const dayjs = require('dayjs');
 const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(dayjsCustomParseFormat);
@@ -15,12 +16,14 @@ module.exports = {
             return '';
         }
         let winning = [];
+        let successPublisherId = [];
         for (let i = 0; i < successPublisher.length; i++) {
             let publisherId = successPublisher[i].id;
+            successPublisherId.push(publisherId);
             await checkResult(ticketTypeData, winning, publisherId, crawlDate);
         }
-        let winner = consolidateWinner(winning);
-        return createWinningEmail(winner, crawlDate);
+        let result = consolidateWinner(winning);
+        createWinningEmail(result.winner, crawlDate);
     },
 };
 
@@ -53,9 +56,14 @@ async function checkResult(ticketTypeData, winning, publisherId, date) {
 };
 
 function consolidateWinner(winning) {
+    let winningSerieId = {};
     let winnerData = {};
     for (let i = 0; i < winning.length; i++) {
         let aWinning = winning[i];
+        let seriesId = aWinning.sid;
+        if (winningSerieId[seriesId] == null) {
+            winningSerieId[seriesId] = true;
+        }
         let userId = aWinning.id;
         let aWinner = winnerData[userId];
         if (aWinner == null) {
@@ -100,7 +108,10 @@ function consolidateWinner(winning) {
         aSeries.seriesWinningAmount = aSeries.seriesWinningAmount + aPrize.prizeMoney;
     }
     let result = createWinnerDataArray(winnerData);
-    return result;
+    return {
+        winner: result,
+        winningSerieId,
+    };
 };
 
 function createWinnerDataArray(winnerData) {
@@ -153,17 +164,21 @@ function createWinningEmail(winner, crawlDate) {
     let emailContentTemplate = winEmailTemplate.body;
     let crawlDateJS = dayjs(crawlDate);
     let expireDate = crawlDateJS.add(30, 'day');
+    let callDateVNFormat =
+        crawlDateJS.format(systemConfig.dayjsVNFormatDateOnly);
     emailContentTemplate = emailContentTemplate.replace('|<|callDate|>|',
-        crawlDateJS.format(systemConfig.dayjsVNFormatDateOnly));
+        callDateVNFormat);
     emailContentTemplate = emailContentTemplate.replace('|<|lastClaimDay|>|',
         expireDate.format(systemConfig.dayjsVNFormatDateOnly));
-    let allEmail = '';
+    let emailTitle = winEmailTemplate.emailTitle;
+    emailTitle = emailTitle.replace('|<|callDate|>|', callDateVNFormat);
+    let purpose = 'winning inform email for user with id ';
     for (let i = 0; i < winner.length; i++) {
         let aWinner = winner[i];
         let emailContent = processAWinner(aWinner, emailContentTemplate);
-        allEmail = allEmail + emailContent + '\n\n';
+        mailer.sendMail(emailContent, true, aWinner.email,
+            emailTitle, purpose + aWinner.id);
     }
-    return allEmail;
 };
 
 function processAWinner(aWinner, emailContentTemplate) {
@@ -271,4 +286,10 @@ function processASeries(aPrize, aSeries, prizeCount, index, rowColor) {
         prizeLine = prizeLine.replace(/\|<\|borderWidth\|>\|/g, '');
     }
     return prizeLine;
+};
+
+function getNonWinningData(winningSerieId, successPublisherId) {
+    let winningSeriesIdArray = Object.keys(winningSerieId);
+    let winningSeriesIdString = winningSeriesIdArray.join(',');
+    let publisherIdString = successPublisherId.join(',');
 };

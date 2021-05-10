@@ -1,5 +1,6 @@
 module.exports = {
     winner: {
+        emailTitle: 'Thông tin trúng giải xổ số ngày |<|callDate|>|',
         body: `
         <html style='width: 100%;'>
             <head>
