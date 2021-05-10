@@ -11,9 +11,12 @@ dayjs.extend(dayjsCustomParseFormat);
 
 module.exports = {
     startCheckingProcess: async function (ticketTypeData, crawlDate) {
+        common.consoleLog('Begin to check for winning ticket for ' + ticketTypeData.name + '.');
         let successPublisher = ticketTypeData.successCrawl;
         if (successPublisher.length < 0) {
-            return '';
+            common.consoleLog(
+                'No publisher can be crawled successfully for ' + ticketTypeData.name + '.\nChecking stop.');
+            return;
         }
         let winning = [];
         let successPublisherId = [];
@@ -23,7 +26,10 @@ module.exports = {
             await checkResult(ticketTypeData, winning, publisherId, crawlDate);
         }
         let result = consolidateWinner(winning);
-        createWinningEmail(result.winner, crawlDate);
+        common.consoleLog(result.winner.length + ' winning series found for ' +
+            ticketTypeData.name + '. Begin the email process...');
+        await createWinningEmail(result.winner, crawlDate);
+        common.consoleLog('All winning email for ' + ticketTypeData.name + ' processed.');
     },
 };
 
@@ -160,7 +166,7 @@ function sortWinner(winner1, winner2) {
     return winner2.userWinningAmount - winner1.userWinningAmount;
 };
 
-function createWinningEmail(winner, crawlDate) {
+async function createWinningEmail(winner, crawlDate) {
     let emailContentTemplate = winEmailTemplate.body;
     let crawlDateJS = dayjs(crawlDate);
     let expireDate = crawlDateJS.add(30, 'day');
@@ -178,6 +184,7 @@ function createWinningEmail(winner, crawlDate) {
         let emailContent = processAWinner(aWinner, emailContentTemplate);
         mailer.sendMail(emailContent, true, aWinner.email,
             emailTitle, purpose + aWinner.id);
+        await common.sleep(100);
     }
 };
 
