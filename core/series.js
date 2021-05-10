@@ -250,9 +250,9 @@ function processASeries(aPrize, aSeries,
     }
     prizeLine = prizeLine.replace('|<|seriesRowBgColor|>|', rowColor);
     if (prizeCount > 1) {
-        prizeLine = prizeLine.replace(/|<|borderWidth|>|/g, ' border-width: 1px;');
+        prizeLine = prizeLine.replace(/\|<\|borderWidth\|>\|/g, ' border-width: 1px;');
     } else {
-        prizeLine = prizeLine.replace(/|<|borderWidth|>|/g, '');
+        prizeLine = prizeLine.replace(/\|<\|borderWidth\|>\|/g, '');
     }
     let taxLine = '';
     let taxAmount = 0;
