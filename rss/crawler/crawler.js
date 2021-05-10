@@ -34,18 +34,7 @@ module.exports = {
 
     crawlResultOfDate: function (dateString) {
         let date = dayjs(dateString);
-        let crawlData = {
-            successCrawl: [],
-            failCrawl: [],
-            typeNum: 0,
-            message: [],
-            crawlDate: date,
-            crawlDateFull: date.format(systemConfig.dayjsFormatFull),
-            crawlDatePartial: date.format(systemConfig.dayjsFormatDateOnly),
-            sendCrawlResultEmail: true,
-            startCheckingProcess: true,
-            checkTodayAsCrawlDate: true,
-        };
+        let crawlData = createBaseCrawlDataObject(date, false, false, false);
         addTicketData(crawlData);
         addPublisherData(crawlData);
         let typeId = Object.keys(crawlData.ticketType);
@@ -59,20 +48,40 @@ module.exports = {
             crawlATicketType(crawlData, aTicketTypeData);
         }
     },
-}
+};
 
 //#region Function to handle the craw schedule
-function setupCrawlSchedule() {
-    let today = dayjs();
+function createBaseCrawlDataObject(date,
+    sendCrawlResultEmail, startCheckingProcess, checkTodayAsCrawlDate) {
+    if (date == null) {
+        date = dayjs();
+    }
+    if (sendCrawlResultEmail == null) {
+        sendCrawlResultEmail = true;
+    }
+    if (startCheckingProcess == null) {
+        startCheckingProcess = true;
+    }
+    if (checkTodayAsCrawlDate == null) {
+        checkTodayAsCrawlDate = true;
+    }
     let crawlData = {
         successCrawl: [],
         failCrawl: [],
         typeNum: 0,
         message: [],
-        crawlDate: today,
-        crawlDateFull: today.format(systemConfig.dayjsFormatFull),
-        crawlDatePartial: today.format(systemConfig.dayjsFormatDateOnly),
+        crawlDate: date,
+        crawlDateFull: date.format(systemConfig.dayjsFormatFull),
+        crawlDatePartial: date.format(systemConfig.dayjsFormatDateOnly),
+        sendCrawlResultEmail,
+        startCheckingProcess,
+        checkTodayAsCrawlDate,
     };
+    return crawlData;
+};
+
+function setupCrawlSchedule() {
+    let crawlData = createBaseCrawlDataObject();
     addTicketData(crawlData);
     addPublisherData(crawlData);
     let typeId = Object.keys(crawlData.ticketType);
@@ -144,6 +153,15 @@ function createScheduleDate(crawlData, ticketTypeData) {
     }
     return new Date(crawlTime.format(systemConfig.dayjsFormatFull));
 };
+
+function scheduleToCrawlATicketType(crawlData, ticketTypeData, scheduleTime) {
+    common.consoleLog('Scheduled to crawl ' + ticketTypeData.name +
+        ' (' + ticketTypeData.publisherName + ')' + ' at ' +
+        dayjs(scheduleTime).format(systemConfig.dayjsFormatFull) + '.');
+    schedule.scheduleJob(scheduleTime, function () {
+        crawlATicketType(crawlData, ticketTypeData);
+    });
+};
 //#endregion
 
 //#region Functions to handle the actual crawling
@@ -179,15 +197,6 @@ function preparePublisherAndProviderData(publisher, publisherId, rssProviderId) 
             url,
         };
     }
-};
-
-function scheduleToCrawlATicketType(crawlData, ticketTypeData, scheduleTime) {
-    common.consoleLog('Scheduled to crawl ' + ticketTypeData.name +
-        ' (' + ticketTypeData.publisherName + ')' + ' at ' +
-        dayjs(scheduleTime).format(systemConfig.dayjsFormatFull) + '.');
-    schedule.scheduleJob(scheduleTime, function () {
-        crawlATicketType(crawlData, ticketTypeData);
-    });
 };
 
 async function crawlAPublisher(crawlData, ticketTypeData, publisher) {
