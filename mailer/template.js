@@ -52,7 +52,7 @@ module.exports = {
         publisherDetail: `
         <table style='width: 100%'>
             <tr>
-                <td colspan='3 style='text-align: center;'>
+                <td colspan='3' style='text-align: center;'>
                     <strong>Đài |<|publisherName|>|</strong>
                 </td>
             </tr>
