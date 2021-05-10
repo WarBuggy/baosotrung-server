@@ -208,8 +208,8 @@ function processAPublisher(aPublisher, taxLineCount) {
         for (let j = 0; j < aSeries.prize.length; j++) {
             let aPrize = aSeries.prize[j];
             publisherLineCount = publisherLineCount + 1;
-            let seriesResult = processASeries(aPrize, taxLineCount,
-                aSeries.series, publisherLineCount, j);
+            let seriesResult = processASeries(aPrize, aSeries.series,
+                aSeries.prize.length, taxLineCount, publisherLineCount, j);
             seriesDetail = seriesDetail + seriesResult.prizeLine;
             taxDetail = taxDetail + seriesResult.taxLine;
             taxAmount = taxAmount + seriesResult.taxAmount;
@@ -225,15 +225,19 @@ function processAPublisher(aPublisher, taxLineCount) {
     };
 };
 
-function processASeries(aPrize, taxLineCount, aSeries, publisherLineCount, index) {
+function processASeries(aPrize, aSeries,
+    prizeCount, taxLineCount, publisherLineCount, index) {
     let prizeLine = winEmailTemplate.seriesDetail;
     let emailPrizeMoney = aPrize.prizeMoney.toLocaleString('vi-VN');
     prizeLine = prizeLine.replace('|<|prizeName|>|', aPrize.emailName);
     prizeLine = prizeLine.replace('|<|prizeMoney|>|', emailPrizeMoney);
+    let seriesColLine = winEmailTemplate.seriesDetailWithSeries;
+    seriesColLine = seriesColLine.replace('|<|colspan|>|', prizeCount);
     if (index > 0) {
         prizeLine = prizeLine.replace('|<|series|>|', '');
     } else {
-        prizeLine = prizeLine.replace('|<|series|>|', aSeries);
+        seriesColLine = seriesColLine.replace('|<|series|>|', aSeries);
+        prizeLine = prizeLine.replace('|<|series|>|', seriesColLine);
     }
     if (publisherLineCount % 2 == 0) {
         prizeLine = prizeLine.replace('|<|seriesRowBgColor|>|', 'lightgray');

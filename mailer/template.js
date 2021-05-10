@@ -70,10 +70,13 @@ module.exports = {
     `,
         seriesDetail: `
         <tr style='background-color: |<|seriesRowBgColor|>|;'>
-            <td style='vertical-align: top;'>|<|series|>|</td>
+            |<|series|>|
             <td style='vertical-align: top;'>|<|prizeName|>|</td>
             <td style=' text-align: right; vertical-align: top;'>|<|prizeMoney|>|</td>
         </tr>
+        `,
+        seriesDetailWithSeries: `
+            <td colspan='|<|colspan|>|' style='vertical-align: top;'>|<|series|>|</td>
         `,
         noTax: `không cần đóng thuế
         thu nhập cá nhân và hưởng trọn số tiền trúng giải.`,
