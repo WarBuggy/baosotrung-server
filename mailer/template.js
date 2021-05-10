@@ -51,7 +51,11 @@ module.exports = {
         `,
         publisherDetail: `
         <table style='width: 100%'>
-            <tr><td colspan='3'><strong>Đài |<|publisherName|>|</strong></td></tr>
+            <tr>
+                <td colspan='3 style='text-align: center;'>
+                    <strong>Đài |<|publisherName|>|</strong>
+                </td>
+            </tr>
             <tr>
                 <td style='text-align: left; width: 70px;'><strong>Vé số</strong></td>
                 <td style='text-align: left;'><strong>Giải</strong></td>
@@ -76,13 +80,21 @@ module.exports = {
         withTax: `có trách nhiệm đóng thuế thu nhập cá nhân như sau:
         <table style='width: 100%'>
             <tr>
-                <td style='text-align: left; vertical-align: top; width: 70px;'><strong>Vé số</strong></td>
-                <td style='text-align: right; vertical-align: top;'><strong>Số tiền\nchịu thuế\n(VNĐ)</strong></td>
-                <td style='text-align: right; vertical-align: top; width: 150px;'><strong>Số tiền\nnộp thuế\n(VNĐ)</strong></td>
+                <td style='text-align: left; vertical-align: top; width: 70px;'>
+                    <strong>Vé số</strong>
+                </td>
+                <td style='text-align: right; vertical-align: top;'>
+                    <strong>Số tiền<br/>chịu thuế<br/>(VNĐ)</strong>
+                </td>
+                <td style='text-align: right; vertical-align: top; width: 150px;'>
+                    <strong>Số tiền<br/>nộp thuế<br/>(VNĐ)</strong>
+                </td>
             </tr>
             |<|taxDetail|>|
             <tr>
-                <td colspan='3' style='text-align: right;'><strong>|<|totalTaxAmount|>|</strong></td>
+                <td colspan='3' style='text-align: right;'>
+                    <strong>|<|totalTaxAmount|>|</strong>
+                </td>
             </tr>
         <table> 
         <p>Tổng số tiền thuế là: <strong>|<|totalTaxAmount|>| VNĐ (|<|totalTaxAmountInWord|>| đồng)</strong>.</p>
