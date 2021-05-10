@@ -5,14 +5,14 @@ module.exports = function (app) {
         let ticketTypeData = {
             id: 1,
             successCrawl: [
-                { id: 7, name: 'Đồng Nai', },
-                { id: 8, name: 'Cần Thơ', },
-                { id: 9, name: 'Sóc Trăng', },
+                { id: 4, name: 'Bến Tre', },
+                { id: 5, name: 'Vũng Tàu', },
+                { id: 6, name: 'Bạc Liêu', },
             ],
             checkResultSP: 'SP_FIND_TYPE_1_WINNER',
             prize: 1,
         };
-        let crawlDate = '2021-05-05';
+        let crawlDate = '2021-05-04';
         let string = await series.startCheckingProcess(ticketTypeData, crawlDate);
 
 
