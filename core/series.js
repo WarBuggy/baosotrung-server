@@ -26,7 +26,6 @@ module.exports = {
             await checkResult(ticketTypeData, winning, publisherId, crawlDate);
         }
         let result = consolidateWinner(winning);
-        console.log(result);
         common.consoleLog(result.winner.length + ' winner(s) found for ' +
             ticketTypeData.name + '. Begin the email process...');
         await createWinningEmail(result.winner, crawlDate);
@@ -224,7 +223,6 @@ function processAWinner(aWinner, emailContentTemplate) {
 };
 
 function processAPublisher(aPublisher, taxLineCount) {
-    console.log(aPublisher);
     let publisherLine = winEmailTemplate.publisherDetail;
     publisherLine = publisherLine.replace('|<|publisherName|>|',
         ticketCoreData.publisher[aPublisher.id].name);

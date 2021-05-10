@@ -57,7 +57,7 @@ function createBaseCrawlDataObject(date,
         date = dayjs();
     }
     if (sendCrawlResultEmail == null) {
-        sendCrawlResultEmail = true;
+        sendCrawlResultEmail = false;
     }
     if (startCheckingProcess == null) {
         startCheckingProcess = true;

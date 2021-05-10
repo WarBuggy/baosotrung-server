@@ -63,11 +63,10 @@ module.exports = {
                 <td style='text-align: right; width: 150px;'><strong>Trị giá (VNĐ)</strong></td>
             </tr>
             |<|seriesDetail|>|
-
             <tr>
                 <td colspan='3' style='text-align: right;'><strong>|<|totalAmount|>|</strong></td>
             </tr>
-        <table>
+        </table>
     `,
         seriesDetail: `
         <tr style='background-color: |<|seriesRowBgColor|>|;'>
