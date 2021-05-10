@@ -206,7 +206,7 @@ function processAPublisher(aPublisher, taxLineCount) {
         ticketCoreData.publisher[aPublisher.id].name);
     let seriesDetail = '';
     let taxDetail = '';
-    let taxAmount = 0;
+    let totalTaxAmount = 0;
     let publisherLineCount = 0;
     for (let i = 0; i < aPublisher.series.length; i++) {
         let aSeries = aPublisher.series[i];
@@ -217,11 +217,28 @@ function processAPublisher(aPublisher, taxLineCount) {
         }
         for (let j = 0; j < aSeries.prize.length; j++) {
             let aPrize = aSeries.prize[j];
-            let seriesResult = processASeries(aPrize, aSeries.series,
-                aSeries.prize.length, taxLineCount, j, rowColor);
-            seriesDetail = seriesDetail + seriesResult.prizeLine;
-            taxDetail = taxDetail + seriesResult.taxLine;
-            taxAmount = taxAmount + seriesResult.taxAmount;
+            let prizeLine = processASeries(aPrize, aSeries.series,
+                aSeries.prize.length, j, rowColor);
+            seriesDetail = seriesDetail + prizeLine;
+        }
+        if (aSeries.seriesWinningAmount > systemConfig.prizeMoneyTaxThreshold) {
+            let taxLine = winEmailTemplate.taxDetail;
+            let taxableAmount =
+                aSeries.seriesWinningAmount - systemConfig.prizeMoneyTaxThreshold;
+            let taxAmount = Math.ceil(taxableAmount * 0.1);
+            taxLine = taxLine.replace('|<|taxableAmount|>|',
+                taxableAmount.toLocaleString('vi-VN'));
+            taxLine = taxLine.replace('|<|taxAmount|>|',
+                taxAmount.toLocaleString('vi-VN'));
+            taxLine = taxLine.replace('|<|series|>|', aSeries);
+            taxLineCount.count = taxLineCount.count + 1;
+            if (taxLineCount.count % 2 == 0) {
+                taxLine = taxLine.replace('|<|taxRowBgColor|>|', 'lightgray');
+            } else {
+                taxLine = taxLine.replace('|<|taxRowBgColor|>|', 'white');
+            }
+            taxDetail = taxDetail + taxLine;
+            totalTaxAmount = totalTaxAmount + taxAmount;
         }
     }
     publisherLine = publisherLine.replace('|<|seriesDetail|>|', seriesDetail);
@@ -230,12 +247,11 @@ function processAPublisher(aPublisher, taxLineCount) {
     return {
         publisherLine,
         taxDetail,
-        taxAmount,
+        taxAmount: totalTaxAmount,
     };
 };
 
-function processASeries(aPrize, aSeries,
-    prizeCount, taxLineCount, index, rowColor) {
+function processASeries(aPrize, aSeries, prizeCount, index, rowColor) {
     let prizeLine = winEmailTemplate.seriesDetail;
     let emailPrizeMoney = aPrize.prizeMoney.toLocaleString('vi-VN');
     prizeLine = prizeLine.replace('|<|prizeName|>|', aPrize.emailName);
@@ -254,27 +270,5 @@ function processASeries(aPrize, aSeries,
     } else {
         prizeLine = prizeLine.replace(/\|<\|borderWidth\|>\|/g, '');
     }
-    let taxLine = '';
-    let taxAmount = 0;
-    if (aPrize.prizeMoney > systemConfig.prizeMoneyTaxThreshold) {
-        taxLine = winEmailTemplate.taxDetail;
-        let taxableAmount = aPrize.prizeMoney - systemConfig.prizeMoneyTaxThreshold;
-        taxAmount = Math.ceil(taxableAmount * 0.1);
-        taxLine = taxLine.replace('|<|taxableAmount|>|',
-            taxableAmount.toLocaleString('vi-VN'));
-        taxLine = taxLine.replace('|<|taxAmount|>|',
-            taxAmount.toLocaleString('vi-VN'));
-        taxLine = taxLine.replace('|<|series|>|', aSeries);
-        taxLineCount.count = taxLineCount.count + 1;
-        if (taxLineCount.count % 2 == 0) {
-            taxLine = taxLine.replace('|<|taxRowBgColor|>|', 'lightgray');
-        } else {
-            taxLine = taxLine.replace('|<|taxRowBgColor|>|', 'white');
-        }
-    }
-    return {
-        prizeLine,
-        taxLine,
-        taxAmount,
-    };
+    return prizeLine;
 };
