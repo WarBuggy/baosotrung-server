@@ -57,13 +57,13 @@ function createBaseCrawlDataObject(date,
         date = dayjs();
     }
     if (sendCrawlResultEmail == null) {
-        sendCrawlResultEmail = false;
+        sendCrawlResultEmail = crawlerConfig.sendCrawlResultEmail;
     }
     if (startCheckingProcess == null) {
-        startCheckingProcess = true;
+        startCheckingProcess = crawlerConfig.startCheckingProcess;
     }
     if (checkTodayAsCrawlDate == null) {
-        checkTodayAsCrawlDate = true;
+        checkTodayAsCrawlDate = crawlerConfig.checkTodayAsCrawlDate;
     }
     let crawlData = {
         successCrawl: [],
