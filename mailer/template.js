@@ -101,7 +101,7 @@ module.exports = {
                     <strong>|<|totalTaxAmount|>|</strong>
                 </td>
             </tr>
-        <table> 
+        </table> 
         <p>Tổng số tiền thuế là: <strong>|<|totalTaxAmount|>| VNĐ (|<|totalTaxAmountInWord|>| đồng)</strong>.</p>
     `,
         taxDetail: `
