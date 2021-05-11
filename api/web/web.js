@@ -17,6 +17,7 @@ module.exports = function (app) {
             result: 0,
             data: coreData,
         };
+        console.log(coreData);
         response.json(resJson);
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
     });
