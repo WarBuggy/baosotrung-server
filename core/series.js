@@ -26,6 +26,9 @@ module.exports = {
             await checkResult(ticketTypeData, winning, publisherId, crawlDate);
         }
         let result = consolidateWinner(winning);
+        let nonWinner = await createNonWinnerData(result.winnerData, ticketTypeData.id,
+            result.winningSerieId, successPublisherId, crawlDate);
+        console.log(nonWinner);
         common.consoleLog(result.winner.length + ' winner(s) found for ' +
             ticketTypeData.name + '. Begin the email process...');
         await createWinningEmail(result.winner, crawlDate);
@@ -79,6 +82,7 @@ function consolidateWinner(winning) {
                 phone: aWinning.phone,
                 publisher: {},
                 userWinningAmount: 0,
+                nonWinningSeries: [],
             };
             winnerData[userId] = aWinner;
         }
@@ -115,6 +119,7 @@ function consolidateWinner(winning) {
     }
     let result = createWinnerDataArray(winnerData);
     return {
+        winnerData,
         winner: result,
         winningSerieId,
     };
@@ -295,8 +300,58 @@ function processASeries(aPrize, aSeries, prizeCount, index, rowColor) {
     return prizeLine;
 };
 
-function getNonWinningData(winningSerieId, successPublisherId) {
+async function getNonWinningData(ticketTypeId,
+    winningSerieId, successPublisherId, date) {
     let winningSeriesIdArray = Object.keys(winningSerieId);
     let winningSeriesIdString = winningSeriesIdArray.join(',');
     let publisherIdString = successPublisherId.join(',');
+    let spName = '`baosotrung_data`.`SP_FIND_NON_WINNING_DATA`';
+    let ticketTypeId = ticketTypeData.id;
+    let params = [
+        'localhost',
+        ticketTypeId,
+        publisherIdString,
+        date,
+        winningSeriesIdString,
+    ];
+    let logInfo = {
+        username: '',
+        source: spName,
+        userIP: 'locahost',
+    };
+    let result = await db.query(params, logInfo);
+    if (result.resultCode != 0) {
+        return [];
+    }
+    let data = result.sqlResults[1];
+    return data;
+};
+
+async function createNonWinnerData(winnerData, ticketTypeId,
+    winningSerieId, successPublisherId, date) {
+    let data = await getNonWinningData(ticketTypeId,
+        winningSerieId, successPublisherId, date)
+    let nonWinnerData = {};
+    for (let i = 0; i < data.length; i++) {
+        let aData = data[i];
+        let userId = aData.id;
+        let aWinnerData = winnerData[userId];
+        if (aWinnerData != null) {
+            aWinnerData.nonWinningSeries.push(aData.series);
+            continue;
+        }
+        let aUser = nonWinnerData[userId];
+        if (aUser == null) {
+            aUser = {
+                id: userId,
+                nonWinningSeries: [],
+                email: aData.email,
+                phone: aData.phone,
+            }
+            nonWinnerData[userId] = aUser;
+        }
+        aUser.nonWinningSeries.push(aData.series);
+    }
+    let nonWinner = Object.values(nonWinnerData);
+    return nonWinner;
 };
