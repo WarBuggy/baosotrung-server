@@ -90,19 +90,16 @@ class Common {
     };
 
     static show(messageType, message) {
-        if (typeof SystemMessage === 'function') {
-            new SystemMessage(SystemMessage[messageType], message);
+        if (typeof SystemMessage !== 'function') {
+            alert(message);
             return;
         }
-        alert(message);
+        new SystemMessage(SystemMessage[messageType], message);
     };
 
     static parseJSON(input) {
-        console.log(typeof (input))
-        console.log(input);
         return new Promise(function (resolve, reject) {
             let jsonRes = JSON.parse(input);
-            console.log(jsonRes);
             if (jsonRes.success) {
                 resolve(jsonRes);
             } else {
