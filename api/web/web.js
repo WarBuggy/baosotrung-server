@@ -10,7 +10,7 @@ module.exports = function (app) {
     app.post('/api/data/core', function (request, response) {
         let requestIp = common.getReadableIP(request);
         let purpose = 'front end core data';
-        common.consoleLog('(' + ip + ') Received request for ' + purpose + '.');
+        common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
         let coreData = createCoreData();
         let resJson = {
             success: true,
@@ -18,7 +18,7 @@ module.exports = function (app) {
             data: coreData,
         };
         response.json(resJson);
-        common.consoleLog('(' + ip + ') Request for ' + purpose + ' was successfully handled.');
+        common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
     });
 
     function createCoreData() {
