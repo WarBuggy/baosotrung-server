@@ -1,5 +1,3 @@
-const { consoleLog } = require("../../../common/common");
-
 class Common {
     static sendToBackend(webPart, dataJson) {
         let url = window.BACKEND_URL + webPart;
