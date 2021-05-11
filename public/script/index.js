@@ -1,5 +1,6 @@
 window.onload = async function () {
-    window.coreData = await Common.sendToBackend('/api/data/core').data;
+    let coreDataResult = await Common.sendToBackend('/api/data/core');
+    window.coreData = coreDataResult.data;
     window.inputSeriesGrid = new InputSeriesGrid();
 };
 
