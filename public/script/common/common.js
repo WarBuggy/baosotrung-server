@@ -1,5 +1,5 @@
 class Common {
-    static async sendToBackend(webPart, dataJson) {
+    static sendToBackend(webPart, dataJson) {
         let url = window.BACKEND_URL + webPart;
         return new Promise(function (resolve, reject) {
             var xmlhttp = new XMLHttpRequest();
