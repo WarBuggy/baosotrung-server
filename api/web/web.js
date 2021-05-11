@@ -45,7 +45,7 @@ module.exports = function (app) {
     };
 
     function addDateData(data) {
-        let currentTime = dayj();
+        let currentTime = dayjs();
         let todayString = currentTime.format(systemConfig.dayjsFormatDateOnly);
         let todayDisplayString = currentTime.format(systemConfig.dayjsVNFormatDateOnly);
         let tomorrow = currentTime.add(1, 'day');
