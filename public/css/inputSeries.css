@@ -1,0 +1,12 @@
+div.input-series-parent-grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(1fr);
+}
+
+div.input-series-grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr 1fr;
+  background-color: gray;
+}

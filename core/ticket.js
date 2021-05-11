@@ -12,6 +12,9 @@ module.exports = {
             defaultPrize: 1,
             createResultData: createResultDataType1,
             checkResultSP: 'SP_FIND_TYPE_1_WINNER',
+            allowUserAlert: true,
+            maxInputSeriesTimeAllow: '15:00:00',
+            seriesLength: 6,
         },
         2: {
             name: 'Miền Trung',

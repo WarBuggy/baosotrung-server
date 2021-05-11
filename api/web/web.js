@@ -1,23 +1,104 @@
-const series = require('../../core/series.js');
+const systemConfig = require('../../systemConfig.js');
+const coreTicketData = require('../../core/ticket.js');
+const dayjs = require('dayjs');
+const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(dayjsCustomParseFormat);
 
 module.exports = function (app) {
-    app.get('/api/test', async function (request, response) {
-        let ticketTypeData = {
-            id: 1,
-            successCrawl: [
-                { id: 4, name: 'Bến Tre', },
-                { id: 5, name: 'Vũng Tàu', },
-                { id: 6, name: 'Bạc Liêu', },
-            ],
-            checkResultSP: 'SP_FIND_TYPE_1_WINNER',
-            prize: 1,
+    //#region /api/data/core 
+    app.post('/api/data/core', function (request, response) {
+        let coreData = createCoreData();
+        let resJson = {
+            success: true,
+            result: 0,
+            data: coreData,
         };
-        let crawlDate = '2021-05-04';
-        let string = await series.startCheckingProcess(ticketTypeData, crawlDate);
-
-
-        response.statusCode = 200;
-        response.setHeader('Content-Type', 'text/html');
-        response.end(string);
+        response.json(resJson);
     });
+
+    function createCoreData() {
+        let data = createTicketTypeData();
+        addDateData(data);
+        addPublisherData(data);
+        return data;
+    };
+
+    function createTicketTypeData() {
+        let result = [];
+        let ticketTypeId = Object.keys(coreTicketData.type);
+        for (let i = 0; i < ticketTypeId.length; i++) {
+            let aTicketTypeId = ticketTypeId[i];
+            let aTicketTypeData = coreTicketData.type[aTicketTypeId];
+            if (aTicketTypeData.allowUserAlert !== true) {
+                continue;
+            }
+            let aResult = {
+                id: aTicketTypeId,
+                name: aTicketTypeData.name,
+                maxInputSeriesTimeAllow: aTicketTypeData.maxInputSeriesTimeAllow,
+                seriesLength: aTicketTypeData.seriesLength,
+                date: [],
+            };
+            result.push(aResult);
+        }
+        return result;
+    };
+
+    function addDateData(data) {
+        let currentTime = dayj();
+        let todayString = currentTime.format(systemConfig.dayjsFormatDateOnly);
+        let todayDisplayString = currentTime.format(systemConfig.dayjsVNFormatDateOnly);
+        let tomorrow = currentTime.add(1, 'day');
+        let tomorrowString = tomorrow.format(systemConfig.dayjsFormatDateOnly);
+        let tomorrowDisplayString = tomorrow.format(systemConfig.dayjsVNFormatDateOnly);
+        for (let i = 0; i < data.length; i++) {
+            let aTicketTypeData = data[i];
+            let maxInputSeriesTimeAllow = dayjs(
+                todayString + ' ' + aTicketTypeData.maxInputSeriesTimeAllow);
+            if (currentTime.isBefore(maxInputSeriesTimeAllow)) {
+                // add today
+                let todayObject = {
+                    name: 'Hôm nay',
+                    dateString: todayString,
+                    displayDateString: todayDisplayString,
+                    publisher: [],
+                };
+                aTicketTypeData.result.push(todayObject);
+            }
+            // add tomorrow
+            let tomorrowObject = {
+                name: 'Ngày mai',
+                dateString: tomorrowString,
+                displayDateString: tomorrowDisplayString,
+                publisher: [],
+            };
+            aTicketTypeData.result.push(tomorrowObject);
+        }
+    };
+
+    function addPublisherData(data) {
+        let publisherId = Object.keys(coreTicketData.publisher);
+        for (let i = 0; i < data.length; i++) {
+            let aTicketTypeData = data[i];
+            let aTicketTypeId = aTicketTypeData.id;
+            for (let j = 0; j < aTicketTypeData.date.length; i++) {
+                let aDate = aTicketTypeData.date[j];
+                let aDateJs = dayjs(aDate.todayString);
+                let aWeekday = aDateJs.day();
+                for (let k = 0; k < publisherId.length; k++) {
+                    let aPublisherId = publisherId[k];
+                    let aPublisher = coreTicketData[aPublisherId];
+                    if (aPublisher.type == aTicketTypeId &&
+                        aPublisher.callDay.includes(aWeekday)) {
+                        let aPublisherData = {
+                            id: aPublisherId,
+                            name: aPublisher.name,
+                        };
+                        aDate.publisher.push(aPublisherData);
+                    }
+                }
+            }
+        }
+    };
+    //#endregion
 };

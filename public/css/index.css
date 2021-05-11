@@ -1,0 +1,77 @@
+:root {
+  --main-min-width: 320px;
+  --main-max-width: 450px;
+}
+
+html {
+  touch-action: manipulation;
+  position: fixed;
+  overflow: hidden;
+  outline: 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  font-family: "Quicksand", sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  overflow: hidden;
+  outline: 0;
+  padding: 0;
+  margin: 0;
+  font-size: 0px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  background-color: black;
+  font-family: "Quicksand", sans-serif;
+}
+
+p {
+  margin: 0px;
+}
+
+div.main-top {
+  width: 100%;
+  background-color: blue;
+}
+
+div.main-top-menu {
+  width: 100%;
+  height: 40px;
+  background-color: cyan;
+  padding: 20px 0px 20px 0px;
+}
+
+div.main-top-intro {
+  max-width: var(--main-max-width);
+  min-width: var(--main-min-width);
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 100px;
+  background-color: blueviolet;
+  font-size: 40px;
+  color: white;
+}
+
+div.main-input-series-outer {
+  max-width: var(--main-max-width);
+  min-width: var(--main-min-width);
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 50px;
+  background-color: cornflowerblue;
+  color: white;
+}

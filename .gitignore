@@ -1,5 +1,6 @@
 .env
 config.js*
+backendURL.js
 
 # Ignore everything in public
 # public/*
