@@ -87,8 +87,8 @@ module.exports = function (app) {
                 let aWeekday = aDateJs.day();
                 for (let k = 0; k < publisherId.length; k++) {
                     let aPublisherId = publisherId[k];
-                    let aPublisher = coreTicketData[aPublisherId];
-                    if (aPublisher.id == aTicketTypeId &&
+                    let aPublisher = coreTicketData.publisher[aPublisherId];
+                    if (aPublisher.type == aTicketTypeId &&
                         aPublisher.callDay.includes(aWeekday)) {
                         let aPublisherData = {
                             id: aPublisherId,
