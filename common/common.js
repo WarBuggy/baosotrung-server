@@ -47,7 +47,7 @@ module.exports = {
         if (time == null) {
             time = module.exports.getCurrentTime();
         }
-        console.log(consoleColor + '\x1b[31m%s\x1b[0m', time + ': ' + string);
+        console.log(consoleColor + '\x1b[5m%s\x1b[0m', time + ': ' + string);
     },
 
     cloneObject(object) {
