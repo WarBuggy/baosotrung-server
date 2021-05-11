@@ -1,3 +1,5 @@
+const { consoleLog } = require("../../../common/common");
+
 class Common {
     static sendToBackend(webPart, dataJson) {
         let url = window.BACKEND_URL + webPart;
@@ -101,7 +103,8 @@ class Common {
         console.log(typeof (input))
         console.log(input);
         return new Promise(function (resolve, reject) {
-            jsonRes = JSON.parse(input);
+            let jsonRes = JSON.parse(input);
+            console.log(jsonRes);
             if (jsonRes.success) {
                 resolve(jsonRes);
             } else {
@@ -109,5 +112,4 @@ class Common {
             }
         });
     };
-
 };
