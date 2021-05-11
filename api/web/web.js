@@ -63,7 +63,7 @@ module.exports = function (app) {
                     displayDateString: todayDisplayString,
                     publisher: [],
                 };
-                aTicketTypeData.result.push(todayObject);
+                aTicketTypeData.date.push(todayObject);
             }
             // add tomorrow
             let tomorrowObject = {
@@ -72,7 +72,7 @@ module.exports = function (app) {
                 displayDateString: tomorrowDisplayString,
                 publisher: [],
             };
-            aTicketTypeData.result.push(tomorrowObject);
+            aTicketTypeData.date.push(tomorrowObject);
         }
     };
 
