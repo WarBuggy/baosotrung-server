@@ -98,6 +98,7 @@ class Common {
     };
 
     static parseJSON(input) {
+        console.log(typeof (input))
         console.log(input);
         return new Promise(function (resolve, reject) {
             jsonRes = JSON.parse(input);
