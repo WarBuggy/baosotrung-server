@@ -2,11 +2,15 @@ const systemConfig = require('../../systemConfig.js');
 const coreTicketData = require('../../core/ticket.js');
 const dayjs = require('dayjs');
 const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
+const common = require('../../common/common.js');
 dayjs.extend(dayjsCustomParseFormat);
 
 module.exports = function (app) {
     //#region /api/data/core 
     app.post('/api/data/core', function (request, response) {
+        let requestIp = common.getReadableIP(request);
+        let purpose = 'front end core data';
+        common.consoleLog('(' + ip + ') Received request for ' + purpose + '.');
         let coreData = createCoreData();
         let resJson = {
             success: true,
@@ -14,6 +18,7 @@ module.exports = function (app) {
             data: coreData,
         };
         response.json(resJson);
+        common.consoleLog('(' + ip + ') Request for ' + purpose + ' was successfully handled.');
     });
 
     function createCoreData() {
