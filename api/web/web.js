@@ -88,7 +88,7 @@ module.exports = function (app) {
                 for (let k = 0; k < publisherId.length; k++) {
                     let aPublisherId = publisherId[k];
                     let aPublisher = coreTicketData[aPublisherId];
-                    if (aPublisher.type == aTicketTypeId &&
+                    if (aPublisher.id == aTicketTypeId &&
                         aPublisher.callDay.includes(aWeekday)) {
                         let aPublisherData = {
                             id: aPublisherId,
