@@ -6,7 +6,7 @@ class Common {
             xmlhttp.onreadystatechange = function () {
                 if (this.readyState === 4) {
                     if (this.status === 200) {
-                        parseJSON(this['response'])
+                        Common.parseJSON(this['response'])
                             .then(function (parseResult) {
                                 let result = parseResult.result;
                                 if (result != 0) {
@@ -97,7 +97,7 @@ class Common {
         alert(message);
     };
 
-    parseJSON(input) {
+    static parseJSON(input) {
         return new Promise(function (resolve, reject) {
             jsonRes = JSON.parse(input);
             if (jsonRes.success) {
