@@ -2,11 +2,30 @@ div.input-series-parent-grid {
   display: grid;
   width: 100%;
   grid-template-columns: repeat(1fr);
+  font-size: 12pt;
+  color: black;
 }
 
 div.input-series-grid {
   display: grid;
   width: 100%;
+  grid-template-columns: repeat(1fr);
+}
+
+div.input-series-ticket-type-grid {
+  display: grid;
+  width: 100%;
   grid-template-columns: 1fr 1fr 1fr;
-  background-color: gray;
+}
+
+div.input-serie-date-grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
+}
+
+div.input-serie-publisher-grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr 1fr;
 }
