@@ -16,16 +16,22 @@ div.input-series-ticket-type-grid {
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 1fr 1fr;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 div.input-serie-date-grid {
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 1fr;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 div.input-serie-publisher-grid {
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 1fr 1fr;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }

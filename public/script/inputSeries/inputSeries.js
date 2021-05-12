@@ -20,12 +20,29 @@ class InputSeries {
             aRadioTicketType.name = 'ticketType';
             aRadioTicketType.value = radioTicketTypeId;
             let aLabelTicketType = document.createElement('label');
-            aLabelTicketType.for = radioTicketTypeId;
+            aLabelTicketType.htmlFor = radioTicketTypeId;
             aLabelTicketType.innerText = aTicketTypeData.name;
             aDivTicketType.appendChild(aRadioTicketType);
             aDivTicketType.appendChild(aLabelTicketType);
             divTicketTypeGrid.appendChild(aDivTicketType);
-            this.createRadioDate(aTicketTypeData);
+            if (i == 0) {
+                aRadioTicketType.checked = true;
+            }
+            let aDivDateGrid = this.createRadioDate(aTicketTypeData);
+            if (i > 0) {
+                aDivDateGrid.style.display = 'none';
+            }
+            aRadioTicketType.onchange = function () {
+                let divDateGrid =
+                    document.getElementsByClassName('input-serie-date-grid');
+                for (let j = 0; j < divDateGrid.length; j++) {
+                    let aGrid = divDateGrid[j];
+                    aGrid.style.display = 'none';
+                }
+                let divSelectGrid =
+                    document.getElementById('divDateGrid' + aTicketTypeId);
+                divSelectGrid.style.display = 'grid';
+            };
         }
     };
 
@@ -45,15 +62,33 @@ class InputSeries {
             aRadioDate.name = 'dateTicketType' + aTicketTypeId;
             aRadioDate.value = aDateData.dateString;
             let aLabelDate = document.createElement('label');
-            aLabelDate.for = aRadioDateId;
+            aLabelDate.htmlFor = aRadioDateId;
             aLabelDate.innerText = aDateData.name +
                 ' (' + aDateData.displayDateString + ')';
             let aDivDate = document.createElement('div');
             aDivDate.appendChild(aRadioDate);
             aDivDate.appendChild(aLabelDate);
             aDivDateGrid.appendChild(aDivDate);
-            this.createRadioPublisher(aDateData);
+            if (i == 0) {
+                aRadioDate.checked = true;
+            }
+            let aDivPublisherGrid = this.createRadioPublisher(aDateData);
+            if (i > 0) {
+                aDivPublisherGrid.style.display = 'none';
+            }
+            aRadioDate.onchange = function () {
+                let divPublisherGrid =
+                    document.getElementsByClassName('input-serie-publisher-grid');
+                for (let j = 0; j < divPublisherGrid.length; j++) {
+                    let aGrid = divPublisherGrid[j];
+                    aGrid.style.display = 'none';
+                }
+                let divSelectGrid =
+                    document.getElementById('divPublisherGrid' + this.id);
+                divSelectGrid.style.display = 'grid';
+            };
         }
+        return aDivDateGrid;
     };
 
     createRadioPublisher(aDateData) {
@@ -72,12 +107,13 @@ class InputSeries {
             aRadioPublisher.name = 'publisher' + aDateDataId;
             aRadioPublisher.value = aPublisherId;
             let aLabelPublisher = document.createElement('label');
-            aLabelPublisher.for = aRadioPublisherId;
+            aLabelPublisher.htmlFor = aRadioPublisherId;
             aLabelPublisher.innerText = aPublisher.name;
             let aDivPublisher = document.createElement('div');
             aDivPublisher.appendChild(aRadioPublisher);
             aDivPublisher.appendChild(aLabelPublisher);
             aDivPublisherGrid.appendChild(aDivPublisher);
         }
+        return aDivPublisherGrid;
     };
 };
