@@ -6,14 +6,16 @@ class InputText {
         if (width != null) {
             this.div.style.width = width;
         }
-        this.div.style.boxSizing = 'border-box';
-        this.div.style.border = this.borderBlur;
-        this.div.style.margin = this.marginBlur;
-        this.div.style.borderRadius = '8px';
-        this.div.style.padding = this.inputPadding + 'px';
-        this.div.style.backgroundColor = this.backgroundColor;
-        this.div.style.position = 'relative';
         this.div.style.fontFamily = this.fontFamily;
+        this.divInner = document.createElement('div');
+        this.divInner.style.backgroundColor = this.backgroundColor;
+        this.divInner.style.boxSizing = 'border-box';
+        this.divInner.style.border = this.borderBlur;
+        this.divInner.style.margin = this.marginBlur;
+        this.divInner.style.borderRadius = '8px';
+        this.divInner.style.padding = this.inputPadding + 'px';
+        this.divInner.style.position = 'relative';
+        this.div.appendChild(this.divInner);
         this.setupInput(id);
         this.setupPlaceholder(placeholder);
         this.setupLabel(label);
@@ -65,7 +67,7 @@ class InputText {
         let divInputOuter = document.createElement('div');
         divInputOuter.style.overflow = 'hidden';
         divInputOuter.appendChild(this.input);
-        this.div.appendChild(divInputOuter);
+        this.divInner.appendChild(divInputOuter);
     };
 
     setupPlaceholder(placeholder) {
@@ -79,8 +81,8 @@ class InputText {
     setupEvent() {
         let parent = this;
         this.input.addEventListener('focus', function () {
-            parent.div.style.border = parent.borderFocus;
-            parent.div.style.margin = parent.marginFocus;
+            parent.divInner.style.border = parent.borderFocus;
+            parent.divInner.style.margin = parent.marginFocus;
             if (parent.input.value == '') {
                 parent.moveLabelUp();
             } else {
@@ -88,8 +90,8 @@ class InputText {
             }
         });
         this.input.addEventListener('blur', function () {
-            parent.div.style.border = parent.borderBlur;
-            parent.div.style.margin = parent.marginBlur;
+            parent.divInner.style.border = parent.borderBlur;
+            parent.divInner.style.margin = parent.marginBlur;
             if (parent.input.value == '') {
                 parent.moveLabelDown();
             } else {
@@ -113,7 +115,7 @@ class InputText {
         this.divLabel.style.display = 'none';
         this.divLabel.style.paddingLeft = this.divLabelPadding + 'px';
         this.divLabel.style.paddingRight = this.divLabelPadding + 'px';
-        this.div.appendChild(this.divLabel);
+        this.divInner.appendChild(this.divLabel);
     };
 
     moveLabelUp() {
