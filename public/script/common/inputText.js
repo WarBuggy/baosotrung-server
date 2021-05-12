@@ -1,5 +1,5 @@
 class InputText {
-    constructor(width, row, id, placeholder, label) {
+    constructor(id, width, placeholder, label) {
         this.setupStyle();
         this.setupLabelAnimationParam();
         this.div = document.createElement('div');
@@ -10,12 +10,13 @@ class InputText {
         this.div.style.border = this.borderBlur;
         this.div.style.margin = this.marginBlur;
         this.div.style.borderRadius = '8px';
+        this.div.style.padding = this.inputPadding + 'px';
         this.div.style.backgroundColor = this.backgroundColor;
         this.div.style.position = 'relative';
         this.div.style.fontFamily = this.fontFamily;
-        this.setupInput(row, id);
+        this.setupInput(id);
         this.setupPlaceholder(placeholder);
-        this.setupLabel();
+        this.setupLabel(label);
         this.setupEvent();
     };
 
@@ -48,28 +49,24 @@ class InputText {
         this.currentIntervalNum = 1;
     };
 
-    setupInput(row, id) {
-        if (row == null || row <= 1) {
-            this.input = document.createElement('input');
-        } else {
-            this.input = document.createElement('textarea');
-            this.input.rows = row;
-            this.input.style.resize = 'none';
-        }
+    setupInput(id) {
+        this.input = document.createElement('input');
         if (id != null) {
             this.input.id = id;
         }
-        this.input.style.width = '100%';
-        this.input.style.padding = this.inputPadding + 'px';
+        this.input.style.width = '200%';
         this.input.style.border = 'none';
         this.input.style.outline = 'none';
         this.input.style.boxSizing = 'border-box';
         this.input.style.backgroundColor = 'transparent';
         this.input.style.fontSize = this.inputFontSizeMax + 'pt';
         this.input.style.fontFamily = this.fontFamily;
-        this.div.appendChild(this.input);
+        this.input.style.position = 'relative';
+        let divInputOuter = document.createElement('div');
+        divInputOuter.style.overflow = 'hidden';
+        divInputOuter.appendChild(this.input);
+        this.div.appendChild(divInputOuter);
     };
-
 
     setupPlaceholder(placeholder) {
         if (placeholder == null) {
@@ -84,7 +81,7 @@ class InputText {
         this.input.onfocus = function () {
             parent.div.style.border = parent.borderFocus;
             parent.div.style.margin = parent.marginFocus;
-            if (parent.input.value == '') {
+            if (parent.input.value.toString() == '') {
                 parent.moveLabelUp();
             } else {
                 parent.divLabel.style.color = parent.focusColor;
@@ -93,7 +90,7 @@ class InputText {
         this.input.onblur = function () {
             parent.div.style.border = parent.borderBlur;
             parent.div.style.margin = parent.marginBlur;
-            if (parent.input.value == '') {
+            if (parent.input.value.toString() == '') {
                 parent.moveLabelDown();
             } else {
                 parent.divLabel.style.color = parent.blurColor;
