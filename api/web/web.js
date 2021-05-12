@@ -72,7 +72,7 @@ module.exports = function (app) {
             }
             // add tomorrow
             let tomorrowObject = {
-                name: 'Ngày mai',
+                name: 'Mai',
                 dateString: tomorrowString,
                 displayDateString: tomorrowDisplayString,
                 publisher: [],
