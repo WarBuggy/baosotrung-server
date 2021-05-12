@@ -13,7 +13,7 @@ module.exports = {
             createResultData: createResultDataType1,
             checkResultSP: 'SP_FIND_TYPE_1_WINNER',
             allowUserAlert: true,
-            maxInputSeriesTimeAllow: '15:00:00',
+            maxInputSeriesTimeAllow: '16:35:00',
             seriesLength: 6,
         },
         2: {
