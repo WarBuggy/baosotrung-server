@@ -3,6 +3,8 @@ class InputSeries {
         this.div = document.createElement('div');
         this.div.classList.add('input-series-grid');
         this.createInputRadio();
+        this.inputSeries = new InputText(null, null, null, 'Số vé', 'Số vé');
+        this.div.appendChild(this.inputSeries.div);
     };
 
     createInputRadio() {
