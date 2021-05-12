@@ -78,24 +78,24 @@ class InputText {
 
     setupEvent() {
         let parent = this;
-        this.input.onfocus = function () {
+        this.input.addEventListener('onfocus', function () {
             parent.div.style.border = parent.borderFocus;
             parent.div.style.margin = parent.marginFocus;
-            if (parent.input.value.toString() == '') {
+            if (parent.input.value == '') {
                 parent.moveLabelUp();
             } else {
                 parent.divLabel.style.color = parent.focusColor;
             }
-        };
-        this.input.onblur = function () {
+        });
+        this.input.addEventListener('onblur', function () {
             parent.div.style.border = parent.borderBlur;
             parent.div.style.margin = parent.marginBlur;
-            if (parent.input.value.toString() == '') {
+            if (parent.input.value == '') {
                 parent.moveLabelDown();
             } else {
                 parent.divLabel.style.color = parent.blurColor;
             }
-        };
+        });
     };
 
     setupLabel(label) {

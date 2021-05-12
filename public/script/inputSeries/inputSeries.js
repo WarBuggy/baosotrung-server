@@ -4,6 +4,7 @@ class InputSeries {
         this.div.classList.add('input-series-grid');
         this.createInputRadio();
         this.inputSeries = new InputNumber(null, null, 'Số vé');
+        this.inputSeries.input.min = 0;
         this.div.appendChild(this.inputSeries.div);
     };
 
