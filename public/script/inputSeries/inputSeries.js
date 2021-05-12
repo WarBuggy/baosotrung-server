@@ -63,7 +63,7 @@ class InputSeries {
             aRadioDate.value = aDateData.dateString;
             let aLabelDate = document.createElement('label');
             aLabelDate.htmlFor = aRadioDateId;
-            aLabelDate.innerText = aDateData.name +
+            aLabelDate.innerHTML = aDateData.name +
                 ' (' + aDateData.displayDateString + ')';
             let aDivDate = document.createElement('div');
             aDivDate.appendChild(aRadioDate);
