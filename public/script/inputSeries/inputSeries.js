@@ -2,6 +2,11 @@ class InputSeries {
     constructor() {
         this.div = document.createElement('div');
         this.div.classList.add('input-series-grid');
+        this.value = {
+            ticketType: null,
+            date: null,
+            publisher: null,
+        };
         this.createInputRadio();
         this.inputSeries = new InputNumber(null, null, 'Số vé');
         this.inputSeries.div.style.marginTop = '8px';
@@ -10,6 +15,7 @@ class InputSeries {
     };
 
     createInputRadio() {
+        let idKeyword = 'ticketType';
         let divTicketTypeGrid = document.createElement('div');
         divTicketTypeGrid.classList.add('input-series-ticket-type-grid');
         this.div.appendChild(divTicketTypeGrid);
@@ -17,12 +23,13 @@ class InputSeries {
             let aTicketTypeData = window.coreTicketData[i];
             let aTicketTypeId = aTicketTypeData.id;
             let aDivTicketType = document.createElement('div');
-            let radioTicketTypeId = 'ticketType' + aTicketTypeId;
+            let radioTicketTypeId = idKeyword + aTicketTypeId;
             let aRadioTicketType = document.createElement('input');
             aRadioTicketType.type = 'radio';
             aRadioTicketType.id = radioTicketTypeId;
-            aRadioTicketType.name = 'ticketType';
+            aRadioTicketType.name = idKeyword;
             aRadioTicketType.value = radioTicketTypeId;
+            aRadioTicketType.setAttribute(idKeyword, aTicketTypeId);
             let aLabelTicketType = document.createElement('label');
             aLabelTicketType.htmlFor = radioTicketTypeId;
             aLabelTicketType.innerText = aTicketTypeData.name;
@@ -31,12 +38,15 @@ class InputSeries {
             divTicketTypeGrid.appendChild(aDivTicketType);
             if (i == 0) {
                 aRadioTicketType.checked = true;
+                this.value.ticketType = aTicketTypeId;
             }
             let aDivDateGrid = this.createRadioDate(aTicketTypeData);
             if (i > 0) {
                 aDivDateGrid.style.display = 'none';
             }
+            let parent = this;
             aRadioTicketType.onchange = function () {
+                let ticketTypeId = parseInt(this.getAttribute(idKeyword));
                 let divDateGrid =
                     document.getElementsByClassName('input-serie-date-grid');
                 for (let j = 0; j < divDateGrid.length; j++) {
@@ -44,8 +54,9 @@ class InputSeries {
                     aGrid.style.display = 'none';
                 }
                 let divSelectGrid =
-                    document.getElementById('divDateGrid' + aTicketTypeId);
+                    document.getElementById('divDateGrid' + ticketTypeId);
                 divSelectGrid.style.display = 'grid';
+                parent.value.ticketType = ticketTypeId;
             };
         }
     };
@@ -65,6 +76,7 @@ class InputSeries {
             aRadioDate.id = aRadioDateId;
             aRadioDate.name = 'dateTicketType' + aTicketTypeId;
             aRadioDate.value = aDateData.dateString;
+            aRadioDate.setAttribute('dateString', aDateData.dateString);
             let aLabelDate = document.createElement('label');
             aLabelDate.htmlFor = aRadioDateId;
             aLabelDate.innerHTML = aDateData.name +
@@ -75,11 +87,13 @@ class InputSeries {
             aDivDateGrid.appendChild(aDivDate);
             if (i == 0) {
                 aRadioDate.checked = true;
+                this.value.date = aDateData.dateString;
             }
             let aDivPublisherGrid = this.createRadioPublisher(aDateData);
             if (i > 0) {
                 aDivPublisherGrid.style.display = 'none';
             }
+            let parent = this;
             aRadioDate.onchange = function () {
                 let divPublisherGrid =
                     document.getElementsByClassName('input-serie-publisher-grid');
@@ -90,6 +104,7 @@ class InputSeries {
                 let divSelectGrid =
                     document.getElementById('divPublisherGrid' + this.id);
                 divSelectGrid.style.display = 'grid';
+                parent.value.date = this.getAttribute('dateString');
             };
         }
         return aDivDateGrid;
@@ -110,6 +125,7 @@ class InputSeries {
             aRadioPublisher.id = aRadioPublisherId;
             aRadioPublisher.name = 'publisher' + aDateDataId;
             aRadioPublisher.value = aPublisherId;
+            aRadioPublisher.setAttribute('publisherId', aPublisherId);
             let aLabelPublisher = document.createElement('label');
             aLabelPublisher.htmlFor = aRadioPublisherId;
             aLabelPublisher.innerText = aPublisher.name;
@@ -117,6 +133,11 @@ class InputSeries {
             aDivPublisher.appendChild(aRadioPublisher);
             aDivPublisher.appendChild(aLabelPublisher);
             aDivPublisherGrid.appendChild(aDivPublisher);
+            let parent = this;
+            aRadioPublisher.onchange = function () {
+                let id = parseInt(this.getAttribute('publisherId'));
+                parent.value.publisher = id;
+            };
         }
         return aDivPublisherGrid;
     };
