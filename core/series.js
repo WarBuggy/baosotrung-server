@@ -306,7 +306,6 @@ async function getNonWinningData(ticketTypeId,
     let winningSeriesIdString = winningSeriesIdArray.join(',');
     let publisherIdString = successPublisherId.join(',');
     let spName = '`baosotrung_data`.`SP_FIND_NON_WINNING_DATA`';
-    let ticketTypeId = ticketTypeData.id;
     let params = [
         'localhost',
         ticketTypeId,
