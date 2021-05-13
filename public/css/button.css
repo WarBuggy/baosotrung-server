@@ -13,6 +13,7 @@ div.button {
   overflow: hidden;
   cursor: pointer;
   pointer-events: all;
+  position: relative;
 }
 
 .button:hover {
@@ -27,7 +28,7 @@ div.button {
 }
 
 .button.inverted {
-  background-color: transparent;
+  background-color: yellow;
   color: cornflowerblue;
 }
 
@@ -38,4 +39,17 @@ div.button {
 
 .button.inverted.disabled {
   color: rgba(0, 0, 255, 0.6);
+}
+
+div.button-effect {
+  position: absolute;
+  border-radius: 50%;
+  left: 0px;
+  top: 0px;
+  background-color: navy;
+}
+
+div.button-text {
+  position: relative;
+  background-color: transparent;
 }

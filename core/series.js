@@ -26,9 +26,8 @@ module.exports = {
             await checkResult(ticketTypeData, winning, publisherId, crawlDate);
         }
         let result = consolidateWinner(winning);
-        let nonWinner = await createNonWinnerData(result.winnerData, ticketTypeData.id,
-            result.winningSerieId, successPublisherId, crawlDate);
-        console.log(nonWinner);
+        // let nonWinner = await createNonWinnerData(result.winnerData, ticketTypeData.id,
+        //     result.winningSerieId, successPublisherId, crawlDate);
         common.consoleLog(result.winner.length + ' winner(s) found for ' +
             ticketTypeData.name + '. Begin the email process...');
         await createWinningEmail(result.winner, crawlDate);
