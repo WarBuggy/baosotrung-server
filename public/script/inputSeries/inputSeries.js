@@ -12,6 +12,7 @@ class InputSeries {
         this.inputSeries.div.style.marginTop = '8px';
         this.inputSeries.input.min = 0;
         this.div.appendChild(this.inputSeries.div);
+        this.createDivDelete();
     };
 
     createInputRadio() {
@@ -140,5 +141,27 @@ class InputSeries {
             };
         }
         return aDivPublisherGrid;
+    };
+
+    createDivDelete() {
+        this.divDelete = document.createElement('div');
+        this.divDelete.classList.add('input-series-delete');
+        this.divDelete.setAttribute('selected', 'false');
+        this.div.appendChild(this.divDelete);
+        this.divDelete.onclick = function () {
+            let selected = this.getAttribute('selected');
+            if (selected === 'false') {
+                console.log(window.rootStyle.getPropertyValue('--input-series-delete-selected'));
+                // this.style.backgroundImage =
+                //     window.rootStyle.getPropertyValue('--input-series-delete-selected');
+                this.style.backgroundImage = 'var(--input-series-delete-selected)';
+                this.setAttribute('selected', 'true');
+            } else {
+                // this.style.backgroundImage =
+                //     window.rootStyle.getPropertyValue('--input-series-delete');
+                this.style.backgroundImage = 'var(--input-series-delete)';
+                this.setAttribute('selected', 'false');
+            }
+        };
     };
 };

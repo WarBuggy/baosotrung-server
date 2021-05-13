@@ -115,6 +115,7 @@ class InputText {
         this.divLabel.style.display = 'none';
         this.divLabel.style.paddingLeft = this.divLabelPadding + 'px';
         this.divLabel.style.paddingRight = this.divLabelPadding + 'px';
+        this.divLabel.style.borderRadius = '4px';
         this.divInner.appendChild(this.divLabel);
     };
 

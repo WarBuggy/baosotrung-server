@@ -72,6 +72,5 @@ div.main-input-series-outer {
   margin-right: auto;
   margin-left: auto;
   margin-top: 50px;
-  background-color: cornflowerblue;
-  color: white;
+  overflow: hidden;
 }
