@@ -151,14 +151,9 @@ class InputSeries {
         this.divDelete.onclick = function () {
             let selected = this.getAttribute('selected');
             if (selected === 'false') {
-                console.log(window.rootStyle.getPropertyValue('--input-series-delete-selected'));
-                // this.style.backgroundImage =
-                //     window.rootStyle.getPropertyValue('--input-series-delete-selected');
                 this.style.backgroundImage = 'var(--input-series-delete-selected)';
                 this.setAttribute('selected', 'true');
             } else {
-                // this.style.backgroundImage =
-                //     window.rootStyle.getPropertyValue('--input-series-delete');
                 this.style.backgroundImage = 'var(--input-series-delete)';
                 this.setAttribute('selected', 'false');
             }
