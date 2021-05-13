@@ -40,5 +40,7 @@ class InputSeriesManager {
     addInputSeries(anInputSeries) {
         document.getElementById('divInputSeriesParent').
             appendChild(anInputSeries.div);
+        document.getElementById('divInputSeriesControlGrid').
+            scrollIntoView({ behavior: 'smooth' });
     };
 };
