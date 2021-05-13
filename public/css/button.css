@@ -1,0 +1,41 @@
+div.button {
+  display: inline-block;
+  font-family: Quicksand;
+  font-size: 12pt;
+  font-weight: 700;
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  color: white;
+  background-color: cornflowerblue;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.button:hover {
+  background-color: blue;
+}
+
+.button.disabled {
+  background-color: lightslategray;
+  color: lightgray;
+  cursor: default;
+  pointer-events: none;
+}
+
+.button.inverted {
+  background-color: transparent;
+  color: cornflowerblue;
+}
+
+.button.inverted:hover {
+  background-color: transparent;
+  color: rgb(0, 0, 255);
+}
+
+.button.inverted.disabled {
+  color: rgba(0, 0, 255, 0.6);
+}

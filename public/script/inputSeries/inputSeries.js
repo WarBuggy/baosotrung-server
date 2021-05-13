@@ -1,5 +1,6 @@
 class InputSeries {
-    constructor() {
+    constructor(index) {
+        this.index = index;
         this.div = document.createElement('div');
         this.div.classList.add('input-series-grid');
         this.value = {
@@ -16,7 +17,9 @@ class InputSeries {
     };
 
     createInputRadio() {
-        let idKeyword = 'ticketType';
+        let idKeywordTicketType = '.ticketType.';
+        let idKeywordDate = '.divDateGrid.';
+        let idKeywordPublisher = '.divPublisherGrid.';
         let divTicketTypeGrid = document.createElement('div');
         divTicketTypeGrid.classList.add('input-series-ticket-type-grid');
         this.div.appendChild(divTicketTypeGrid);
@@ -24,13 +27,12 @@ class InputSeries {
             let aTicketTypeData = window.coreTicketData[i];
             let aTicketTypeId = aTicketTypeData.id;
             let aDivTicketType = document.createElement('div');
-            let radioTicketTypeId = idKeyword + aTicketTypeId;
+            let radioTicketTypeId = this.index + idKeywordTicketType + aTicketTypeId;
             let aRadioTicketType = document.createElement('input');
             aRadioTicketType.type = 'radio';
             aRadioTicketType.id = radioTicketTypeId;
-            aRadioTicketType.name = idKeyword;
-            aRadioTicketType.value = radioTicketTypeId;
-            aRadioTicketType.setAttribute(idKeyword, aTicketTypeId);
+            aRadioTicketType.name = this.index;
+            aRadioTicketType.value = aTicketTypeId;
             let aLabelTicketType = document.createElement('label');
             aLabelTicketType.htmlFor = radioTicketTypeId;
             aLabelTicketType.innerText = aTicketTypeData.name;
@@ -41,43 +43,43 @@ class InputSeries {
                 aRadioTicketType.checked = true;
                 this.value.ticketType = aTicketTypeId;
             }
-            let aDivDateGrid = this.createRadioDate(aTicketTypeData);
+            let aDivDateGrid = this.createRadioDate(aTicketTypeData,
+                idKeywordDate, idKeywordPublisher);
             if (i > 0) {
                 aDivDateGrid.style.display = 'none';
             }
             let parent = this;
             aRadioTicketType.onchange = function () {
-                let ticketTypeId = parseInt(this.getAttribute(idKeyword));
                 let divDateGrid =
-                    document.getElementsByClassName('input-serie-date-grid');
+                    parent.div.getElementsByClassName('input-serie-date-grid');
                 for (let j = 0; j < divDateGrid.length; j++) {
                     let aGrid = divDateGrid[j];
                     aGrid.style.display = 'none';
                 }
+                let ticketTypeId = this.value;
                 let divSelectGrid =
-                    document.getElementById('divDateGrid' + ticketTypeId);
+                    document.getElementById(parent.index + idKeywordDate + ticketTypeId);
                 divSelectGrid.style.display = 'grid';
                 parent.value.ticketType = ticketTypeId;
             };
         }
     };
 
-    createRadioDate(aTicketTypeData) {
+    createRadioDate(aTicketTypeData, idKeywordDate, idKeywordPublisher) {
         let aTicketTypeId = aTicketTypeData.id;
         let aDivDateGrid = document.createElement('div');
         aDivDateGrid.classList.add('input-serie-date-grid');
-        aDivDateGrid.id = 'divDateGrid' + aTicketTypeId;
+        aDivDateGrid.id = this.index + idKeywordDate + aTicketTypeId;
         this.div.appendChild(aDivDateGrid);
         for (let i = 0; i < aTicketTypeData.date.length; i++) {
             let aDateData = aTicketTypeData.date[i];
             let aRadioDate = document.createElement('input');
             aRadioDate.type = 'radio';
-            let aRadioDateId = aDateData.dateString + '.' + aTicketTypeId;
+            let aRadioDateId = this.index + '.' + aDateData.dateString + '.' + aTicketTypeId;
             aDateData.id = aRadioDateId;
             aRadioDate.id = aRadioDateId;
-            aRadioDate.name = 'dateTicketType' + aTicketTypeId;
+            aRadioDate.name = this.index + '.' + aTicketTypeId;
             aRadioDate.value = aDateData.dateString;
-            aRadioDate.setAttribute('dateString', aDateData.dateString);
             let aLabelDate = document.createElement('label');
             aLabelDate.htmlFor = aRadioDateId;
             aLabelDate.innerHTML = aDateData.name +
@@ -90,43 +92,42 @@ class InputSeries {
                 aRadioDate.checked = true;
                 this.value.date = aDateData.dateString;
             }
-            let aDivPublisherGrid = this.createRadioPublisher(aDateData);
+            let aDivPublisherGrid = this.createRadioPublisher(aDateData, idKeywordPublisher);
             if (i > 0) {
                 aDivPublisherGrid.style.display = 'none';
             }
             let parent = this;
             aRadioDate.onchange = function () {
                 let divPublisherGrid =
-                    document.getElementsByClassName('input-serie-publisher-grid');
+                    parent.div.getElementsByClassName('input-serie-publisher-grid');
                 for (let j = 0; j < divPublisherGrid.length; j++) {
                     let aGrid = divPublisherGrid[j];
                     aGrid.style.display = 'none';
                 }
                 let divSelectGrid =
-                    document.getElementById('divPublisherGrid' + this.id);
+                    document.getElementById(parent.index + idKeywordPublisher + this.value);
                 divSelectGrid.style.display = 'grid';
-                parent.value.date = this.getAttribute('dateString');
+                parent.value.date = this.value;
             };
         }
         return aDivDateGrid;
     };
 
-    createRadioPublisher(aDateData) {
-        let aDateDataId = aDateData.id;
+    createRadioPublisher(aDateData, idKeywordPublisher) {
+        let dateString = aDateData.dateString;
         let aDivPublisherGrid = document.createElement('div');
         aDivPublisherGrid.classList.add('input-serie-publisher-grid');
-        aDivPublisherGrid.id = 'divPublisherGrid' + aDateDataId;
+        aDivPublisherGrid.id = this.index + idKeywordPublisher + dateString;
         this.div.appendChild(aDivPublisherGrid);
         for (let i = 0; i < aDateData.publisher.length; i++) {
             let aPublisher = aDateData.publisher[i];
             let aPublisherId = aPublisher.id;
             let aRadioPublisher = document.createElement('input');
             aRadioPublisher.type = 'radio';
-            let aRadioPublisherId = aPublisherId + '.' + aDateDataId;
+            let aRadioPublisherId = this.index + '.' + aPublisherId + '.' + dateString;
             aRadioPublisher.id = aRadioPublisherId;
-            aRadioPublisher.name = 'publisher' + aDateDataId;
+            aRadioPublisher.name = this.index + '.' + dateString;
             aRadioPublisher.value = aPublisherId;
-            aRadioPublisher.setAttribute('publisherId', aPublisherId);
             let aLabelPublisher = document.createElement('label');
             aLabelPublisher.htmlFor = aRadioPublisherId;
             aLabelPublisher.innerText = aPublisher.name;
@@ -136,8 +137,7 @@ class InputSeries {
             aDivPublisherGrid.appendChild(aDivPublisher);
             let parent = this;
             aRadioPublisher.onchange = function () {
-                let id = parseInt(this.getAttribute('publisherId'));
-                parent.value.publisher = id;
+                parent.value.publisher = this.value;
             };
         }
         return aDivPublisherGrid;
@@ -147,6 +147,7 @@ class InputSeries {
         this.divDelete = document.createElement('div');
         this.divDelete.classList.add('input-series-delete');
         this.divDelete.setAttribute('selected', 'false');
+        this.divDelete.style.display = 'none';
         this.div.appendChild(this.divDelete);
         this.divDelete.onclick = function () {
             let selected = this.getAttribute('selected');

@@ -7,18 +7,15 @@ div.input-series-parent {
   width: 100%;
   font-size: 12pt;
   color: black;
-  overflow: hidden;
-  border-radius: 8px;
-  border: 4px solid transparent;
   box-sizing: border-box;
   background-color: white;
   position: relative;
 }
 
 div.input-series-grid {
-  display: grid;
-  width: 100%;
-  grid-template-columns: 1fr;
+  border: 4px solid gray;
+  margin-bottom: 16px;
+  border-radius: 8px;
 }
 
 div.input-series-ticket-type-grid {
@@ -56,4 +53,11 @@ div.input-series-delete {
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
+}
+
+div.input-series-control-grid {
+  width: 100%;
+  display: grid;
+  margin-bottom: 32px;
+  grid-template-columns: 1fr 1fr 1fr;
 }

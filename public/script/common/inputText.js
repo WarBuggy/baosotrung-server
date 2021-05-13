@@ -28,7 +28,7 @@ class InputText {
         this.blurColor = 'gray';
         this.borderFocus = '3px solid ' + this.focusColor;
         this.borderBlur = '2px solid ' + this.blurColor;
-        this.marginBlur = '5px';
+        this.marginBlur = '6px';
         this.marginFocus = '4px';
         this.backgroundColor = 'white';
         this.inputPadding = 12;
@@ -44,7 +44,7 @@ class InputText {
         this.leftBlur = this.inputPadding - this.divLabelPadding;
         this.leftFocus = 8;
         this.fontSizeBlur = this.inputFontSizeMax;
-        this.fontSizeFocus = 10;
+        this.fontSizeFocus = 8;
         this.diffTopPerInterval = (this.topBlur - this.topFocus) / this.intervalNum;
         this.diffLeftPerInterval = (this.leftBlur - this.leftFocus) / this.intervalNum;
         this.diffFontSizePerInterval = (this.fontSizeBlur - this.fontSizeFocus) / this.intervalNum;

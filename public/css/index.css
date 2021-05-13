@@ -5,8 +5,6 @@
 
 html {
   touch-action: manipulation;
-  position: fixed;
-  overflow: hidden;
   outline: 0;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -14,16 +12,13 @@ html {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   font-family: "Quicksand", sans-serif;
 }
 
 html,
 body {
-  height: 100%;
   width: 100%;
-  position: fixed;
-  overflow: hidden;
   outline: 0;
   padding: 0;
   margin: 0;
@@ -34,8 +29,8 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-  background-color: black;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  background-color: white;
   font-family: "Quicksand", sans-serif;
 }
 
@@ -72,5 +67,4 @@ div.main-input-series-outer {
   margin-right: auto;
   margin-left: auto;
   margin-top: 50px;
-  overflow: hidden;
 }
