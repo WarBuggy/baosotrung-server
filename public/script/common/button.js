@@ -6,6 +6,8 @@ class Button {
             this.div.classList.add('inverted');
         }
         this.effectExpanding = false;
+        this.mouseDownDetected = false;
+        this.mouseUpDetected = false;
         let parent = this;
         if (typeof (onclickFunction) === 'function') {
             this.divEffect = document.createElement('div');
@@ -15,10 +17,20 @@ class Button {
                 if (parent.effectExpanding === true) {
                     return;
                 }
-                parent.startEffect(event);
+                parent.mouseDownDetected = true;
+                parent.startEffect(event, onclickFunction);
             };
             this.div.onmouseup = function () {
-                onclickFunction();
+                if (parent.mouseDownDetected !== true) {
+                    return;
+                }
+                if (parent.effectExpanding !== true) {
+                    parent.mouseUpDetected = false;
+                    parent.mouseDownDetected = false;
+                    onclickFunction();
+                    return;
+                }
+                parent.mouseUpDetected = true;
             };
         } else {
             this.div.classList.add('disabled');
@@ -32,12 +44,12 @@ class Button {
     startEffect(event, callback) {
         this.effectExpanding = true;
         let rect = this.div.getBoundingClientRect();
-        let left = event.pageX - rect.left;
-        let top = event.pageY - rect.top;
+        let left = event.pageX - rect.left - window.scrollX;
+        let top = event.pageY - rect.top - window.scrollY;
         let maxDimension = Math.max(rect.width, rect.height);
         let targetLength = maxDimension * 2.5;
         let interval = 16;
-        let intervalNum = 20;
+        let intervalNum = 25;
         let currentIntervalNum = 1;
         let diffDimension = targetLength / intervalNum;
         let parent = this;
@@ -51,7 +63,11 @@ class Button {
             if (currentIntervalNum == intervalNum) {
                 window.clearInterval(intervalId);
                 parent.effectExpanding = false;
-                if (callback != null) {
+                parent.divEffect.style.width = '0px';
+                parent.divEffect.style.height = '0px';
+                if (parent.mouseUpDetected === true) {
+                    parent.mouseUpDetected = false;
+                    parent.mouseDownDetected = false;
                     callback();
                 }
             }
