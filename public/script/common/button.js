@@ -20,9 +20,6 @@ class Button {
             this.div.onmouseup = function () {
                 onclickFunction();
             };
-            this.div.onclick = function (event) {
-                parent.startEffect(event, onclickFunction);
-            };
         } else {
             this.div.classList.add('disabled');
         }
@@ -40,7 +37,7 @@ class Button {
         let maxDimension = Math.max(rect.width, rect.height);
         let targetLength = maxDimension * 2.5;
         let interval = 16;
-        let intervalNum = 25;
+        let intervalNum = 20;
         let currentIntervalNum = 1;
         let diffDimension = targetLength / intervalNum;
         let parent = this;

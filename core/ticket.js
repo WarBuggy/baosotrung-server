@@ -287,14 +287,14 @@ function createConsolationSpecialSeries(specialSeries) {
 function parseDataType1(parseData, publisher, providerData) {
     let checkParseDataArrayLengthResult = checkParseDataArrayLengthType1(parseData);
     if (checkParseDataArrayLengthResult !== true) {
-        common.consoleLogError('Error while parsing feed for ' + publisher.name + ', ' + providerData.name + '.' +
+        common.consoleLogError('Error while parsing feed for ' + publisher.name + ', ' + providerData.name + '. ' +
             'Invalid result array length.\n' + checkParseDataArrayLengthResult,
             providerData.consoleColor);
         return false;
     }
     let result = extractResultFromParseDataType1(parseData);
     if (result.error === true) {
-        common.consoleLogError('Error while parsing feed for ' + publisher.name + ', ' + providerData.name + '.' +
+        common.consoleLogError('Error while parsing feed for ' + publisher.name + ', ' + providerData.name + '. ' +
             'Invalid numeric value or invalid length.\n' + result.invalidArray,
             providerData.consoleColor);
         return false;
