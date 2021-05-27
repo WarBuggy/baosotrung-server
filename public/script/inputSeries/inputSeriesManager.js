@@ -69,7 +69,6 @@ class InputSeriesManager {
         document.getElementById('divInputSeriesControlGrid').
             scrollIntoView({ behavior: 'smooth' });
         this.checkButtonDelete();
-        document.activeElement.blur();
     };
 
     hideDivConfirmDelete() {

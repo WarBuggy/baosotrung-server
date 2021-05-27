@@ -28,6 +28,7 @@ class Button {
                     parent.mouseUpDetected = false;
                     parent.mouseDownDetected = false;
                     onclickFunction();
+                    document.activeElement.blur();
                     return;
                 }
                 parent.mouseUpDetected = true;
@@ -70,6 +71,7 @@ class Button {
                     parent.mouseUpDetected = false;
                     parent.mouseDownDetected = false;
                     callback();
+                    document.activeElement.blur();
                 }
             }
         }, interval);
