@@ -69,6 +69,7 @@ class Button {
                 if (parent.mouseUpDetected === true) {
                     parent.mouseUpDetected = false;
                     parent.mouseDownDetected = false;
+                    parent.div.blur();
                     callback();
                 }
             }
