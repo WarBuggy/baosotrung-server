@@ -6,8 +6,6 @@ div.button {
   text-align: center;
   padding: 12px;
   border-radius: 8px;
-  color: white;
-  background-color: cornflowerblue;
   overflow: hidden;
   cursor: pointer;
   pointer-events: all;
@@ -15,36 +13,7 @@ div.button {
 }
 
 .button.inverted {
-  background-color: yellow;
-  color: cornflowerblue;
-}
-
-@media (hover: none) {
-  .button:hover {
-    background-color: inherit;
-    color: inherit;
-  }
-  .button.inverted:hover {
-    background-color: inherit;
-    color: inherit;
-  }
-}
-
-.button:active {
-  background-color: inherit;
-  color: inherit;
-}
-.button.inverted:active {
-  background-color: inherit;
-  color: inherit;
-}
-
-.button:hover {
-  background-color: blue;
-}
-.button.inverted:hover {
-  background-color: transparent;
-  color: rgb(0, 0, 255);
+  position: relative;
 }
 
 .button.disabled {

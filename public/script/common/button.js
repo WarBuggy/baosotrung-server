@@ -1,10 +1,23 @@
 class Button {
     constructor(label, inverted, disabled, onclickFunction) {
+        this.colorStandard = {
+            color: 'white',
+            bgColor: 'cornflowerblue',
+            hoverColor: 'white',
+            hoverBgColor: 'blue',
+        };
+        this.colorInverted = {
+            color: 'cornflowerblue',
+            bgColor: 'yellow',
+            hoverColor: 'rgb(0, 0, 255)',
+            hoverBgColor: 'transparent',
+        };
         this.div = document.createElement('div');
         this.div.classList.add('button');
         if (inverted === true) {
             this.div.classList.add('inverted');
         }
+        this.setupColor(inverted);
         this.effectExpanding = false;
         this.mouseDownDetected = false;
         this.mouseUpDetected = false;
@@ -86,5 +99,24 @@ class Button {
         if (this.div.classList.contains('disabled')) {
             this.div.classList.remove('disabled');
         }
+    };
+
+    setupColor(inverted) {
+        let colorObject = this.colorStandard;
+        if (inverted === true) {
+            colorObject = this.colorInverted;
+        }
+        this.div.style.backgroundColor = colorObject.bgColor;
+        this.div.style.color = colorObject.color;
+        this.div.onmouseover = function () {
+            console.log(this);
+            this.style.backgroundColor = colorObject.hoverBgColor;
+            this.style.color = colorObject.hoverColor;
+        };
+        this.div.onmouseout = function () {
+            console.log(this);
+            this.style.backgroundColor = colorObject.bgColor;
+            this.style.color = colorObject.color;
+        };
     };
 };
