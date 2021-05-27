@@ -109,7 +109,10 @@ class Button {
         this.div.style.backgroundColor = colorObject.bgColor;
         this.div.style.color = colorObject.color;
         if (window.touchDevice === true) {
+            alert('touch');
             return;
+        } else {
+            alert('no touch');
         }
         this.div.onmouseover = function () {
             this.style.backgroundColor = colorObject.hoverBgColor;
