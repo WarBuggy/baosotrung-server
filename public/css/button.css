@@ -18,6 +18,10 @@ div.button {
   .button:hover {
     background-color: blue;
   }
+  .button.inverted:hover {
+    background-color: transparent;
+    color: rgb(0, 0, 255);
+  }
 }
 
 .button.disabled {
@@ -30,11 +34,6 @@ div.button {
 .button.inverted {
   background-color: yellow;
   color: cornflowerblue;
-}
-
-.button.inverted:hover {
-  background-color: transparent;
-  color: rgb(0, 0, 255);
 }
 
 .inverted.disabled {
