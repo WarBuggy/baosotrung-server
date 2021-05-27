@@ -54,7 +54,6 @@ class InputSeriesManager {
     insertAnInputSeries() {
         let anInputSeries = this.createAnInputSeries();
         this.addInputSeries(anInputSeries);
-        anInputSeries.inputSeries.input.focus();
     };
 
     createAnInputSeries() {
@@ -70,6 +69,7 @@ class InputSeriesManager {
         document.getElementById('divInputSeriesControlGrid').
             scrollIntoView({ behavior: 'smooth' });
         this.checkButtonDelete();
+        document.activeElement.blur();
     };
 
     hideDivConfirmDelete() {
