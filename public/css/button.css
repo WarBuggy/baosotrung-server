@@ -14,14 +14,9 @@ div.button {
   position: relative;
 }
 
-@media (hover: hover) {
-  .button:hover {
-    background-color: blue;
-  }
-  .button.inverted:hover {
-    background-color: transparent;
-    color: rgb(0, 0, 255);
-  }
+.button.inverted {
+  background-color: yellow;
+  color: cornflowerblue;
 }
 
 @media (hover: none) {
@@ -35,16 +30,28 @@ div.button {
   }
 }
 
+.button:active {
+  background-color: inherit;
+  color: inherit;
+}
+.button.inverted:active {
+  background-color: inherit;
+  color: inherit;
+}
+
+.button:hover {
+  background-color: blue;
+}
+.button.inverted:hover {
+  background-color: transparent;
+  color: rgb(0, 0, 255);
+}
+
 .button.disabled {
   background-color: lightslategray;
   color: lightgray;
   cursor: default;
   pointer-events: none;
-}
-
-.button.inverted {
-  background-color: yellow;
-  color: cornflowerblue;
 }
 
 .inverted.disabled {
