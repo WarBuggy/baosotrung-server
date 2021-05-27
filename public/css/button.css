@@ -24,6 +24,14 @@ div.button {
   }
 }
 
+.button:active {
+  background-color: blue;
+}
+.button.inverted:active {
+  background-color: transparent;
+  color: rgb(0, 0, 255);
+}
+
 .button.disabled {
   background-color: lightslategray;
   color: lightgray;
