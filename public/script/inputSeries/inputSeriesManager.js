@@ -16,6 +16,7 @@ class InputSeriesManager {
         divControlGrid.appendChild(this.buttonDelete.div);
         let buttonAdd = new Button('Thêm số', true, false, function () {
             parent.insertAnInputSeries();
+            document.getElementById('divInputSeriesControlGrid').focus();
         });
         buttonAdd.div.classList.add('input-series-control-grid-add');
         divControlGrid.appendChild(buttonAdd.div);
