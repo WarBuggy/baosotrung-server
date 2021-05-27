@@ -108,13 +108,14 @@ class Button {
         }
         this.div.style.backgroundColor = colorObject.bgColor;
         this.div.style.color = colorObject.color;
+        if (window.touchDevice === true) {
+            return;
+        }
         this.div.onmouseover = function () {
-            console.log(this);
             this.style.backgroundColor = colorObject.hoverBgColor;
             this.style.color = colorObject.hoverColor;
         };
         this.div.onmouseout = function () {
-            console.log(this);
             this.style.backgroundColor = colorObject.bgColor;
             this.style.color = colorObject.color;
         };
