@@ -35,8 +35,11 @@ div.button {
   color: rgb(0, 0, 255);
 }
 
-.button.inverted.disabled {
-  color: rgba(0, 0, 255, 0.6);
+.inverted.disabled {
+  background-color: white;
+  color: lightgray;
+  cursor: default;
+  pointer-events: none;
 }
 
 div.button-effect {

@@ -7,12 +7,15 @@ class InputSeries {
             ticketType: null,
             date: null,
             publisher: null,
+            serial: null,
         };
         this.createInputRadio();
+        this.createDivRadioValidate();
         this.inputSeries = new InputNumber(null, null, 'Số vé');
         this.inputSeries.div.style.marginTop = '8px';
         this.inputSeries.input.min = 0;
         this.div.appendChild(this.inputSeries.div);
+        this.createDivSeriesValidate();
         this.createDivDelete();
     };
 
@@ -138,9 +141,33 @@ class InputSeries {
             let parent = this;
             aRadioPublisher.onchange = function () {
                 parent.value.publisher = this.value;
+                parent.hideRadioPublisherValidate();
             };
         }
         return aDivPublisherGrid;
+    };
+
+    highlightRadioPublisher() {
+        let aDivPublisherGridlet = this.div.getElementsByClassName('input-serie-publisher-grid')[0];
+        let labels = aDivPublisherGridlet.getElementsByTagName('label');
+        for (let i = 0; i < labels.length; i++) {
+            labels[i].style.color = 'red';
+        }
+    };
+
+    createDivRadioValidate() {
+        this.divRadioPublisherValidate = document.createElement('div');
+        this.divRadioPublisherValidate.classList.add('validate');
+        this.divRadioPublisherValidate.innerText = 'Xin chọn đài!';
+        this.divRadioPublisherValidate.style.display = 'none';
+        this.div.appendChild(this.divRadioPublisherValidate);
+    };
+
+    createDivSeriesValidate() {
+        this.divSeriesValidate = document.createElement('div');
+        this.divSeriesValidate.classList.add('validate');
+        this.divSeriesValidate.style.display = 'none';
+        this.div.appendChild(this.divSeriesValidate);
     };
 
     createDivDelete() {
@@ -157,6 +184,7 @@ class InputSeries {
             } else {
                 parent.setDivDeleteDeselected();
             }
+            window.inputSeriesManager.checkButtonConfirmDelete();
         };
     };
 
@@ -181,5 +209,69 @@ class InputSeries {
 
     hideDivDelete() {
         this.divDelete.style.display = 'none';
+    };
+
+    validate() {
+        let allOk = true;
+        if (this.value.publisher == null) {
+            this.divRadioPublisherValidate.style.display = 'block';
+            this.highlightRadioPublisher();
+            allOk = false;
+        }
+        if (this.validateInputSeries() === false) {
+            allOk = false;
+        }
+        return allOk;
+    };
+
+    validateInputSeries() {
+        let inputRequireString = 'Xin nhập số vé!';
+        let inputInvalidString = 'Số vé không hợp lệ.';
+        let serial = this.inputSeries.input.value;
+        if (serial == null) {
+            this.onInputSeriesError(inputRequireString);
+            return false;
+        }
+        serial = serial.toString().trim();
+        if (serial.length < 1) {
+            this.onInputSeriesError(inputRequireString);
+            return false;
+        }
+        switch (this.value.ticketType) {
+            case '1':
+                if (serial.length != 6) {
+                    this.onInputSeriesError(inputInvalidString);
+                    return false;
+                }
+                for (let i = 0; i < serial.length; i++) {
+                    let aChar = serial[i];
+                    if (!'0123456789'.includes(aChar)) {
+                        this.onInputSeriesError(inputInvalidString);
+                        return false;
+                    }
+                }
+                break;
+        }
+        this.value.serial = serial;
+        this.inputSeries.setStandardStyle();
+        this.divSeriesValidate.style.display = 'none';
+        return true;
+    };
+
+    hideRadioPublisherValidate() {
+        this.divRadioPublisherValidate.style.display = 'none';
+        let aDivPublisherGridlet = this.div.getElementsByClassName('input-serie-publisher-grid')[0];
+        let labels = aDivPublisherGridlet.getElementsByTagName('label');
+        for (let i = 0; i < labels.length; i++) {
+            labels[i].style.color = 'black';
+        }
+    };
+
+    onInputSeriesError(text) {
+        this.value.serial = null;
+        this.inputSeries.setErrorStyle();
+        this.divSeriesValidate.innerText = text;
+        this.divSeriesValidate.style.display = 'block';
+        this.inputSeries.input.focus();
     };
 };

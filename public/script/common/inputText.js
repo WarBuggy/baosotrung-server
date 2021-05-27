@@ -19,15 +19,16 @@ class InputText {
         this.setupInput(id);
         this.setupPlaceholder(placeholder);
         this.setupLabel(label);
+        this.setStandardStyle();
         this.setupEvent();
     };
 
     setupStyle() {
         this.fontFamily = 'Quicksand';
-        this.focusColor = 'blue';
-        this.blurColor = 'gray';
-        this.borderFocus = '3px solid ' + this.focusColor;
-        this.borderBlur = '2px solid ' + this.blurColor;
+        this.focusColorStandard = 'blue';
+        this.blurColorStandard = 'gray';
+        this.focusColorError = 'red';
+        this.blurColorError = 'red';
         this.marginBlur = '6px';
         this.marginFocus = '4px';
         this.backgroundColor = 'white';
@@ -165,5 +166,25 @@ class InputText {
                 (parent.fontSizeBlur - (parent.currentIntervalNum * parent.diffFontSizePerInterval)) + 'px';
             parent.currentIntervalNum = parent.currentIntervalNum - 1;
         }, this.labelAnimationInterval);
+    };
+
+    setErrorStyle() {
+        this.focusColor = this.focusColorError;
+        this.blurColor = this.blurColorError;
+        this.resetStyle();
+    };
+
+    setStandardStyle() {
+        this.focusColor = this.focusColorStandard;
+        this.blurColor = this.blurColorStandard;
+        this.resetStyle();
+    };
+
+    resetStyle() {
+        this.borderFocus = '3px solid ' + this.focusColor;
+        this.borderBlur = '2px solid ' + this.blurColor;
+        this.divInner.style.border = this.borderBlur;
+        this.divInner.style.margin = this.marginBlur;
+        this.divLabel.style.color = this.blurColor;
     };
 };

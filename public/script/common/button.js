@@ -1,5 +1,5 @@
 class Button {
-    constructor(label, inverted, onclickFunction) {
+    constructor(label, inverted, disabled, onclickFunction) {
         this.div = document.createElement('div');
         this.div.classList.add('button');
         if (inverted === true) {
@@ -32,7 +32,8 @@ class Button {
                 }
                 parent.mouseUpDetected = true;
             };
-        } else {
+        }
+        if (disabled === true) {
             this.div.classList.add('disabled');
         }
         this.divText = document.createElement('div');
@@ -72,5 +73,17 @@ class Button {
                 }
             }
         }, interval);
+    };
+
+    disable() {
+        if (!this.div.classList.contains('disabled')) {
+            this.div.classList.add('disabled');
+        }
+    };
+
+    enable() {
+        if (this.div.classList.contains('disabled')) {
+            this.div.classList.remove('disabled');
+        }
     };
 };
