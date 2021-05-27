@@ -8,8 +8,6 @@ div.button {
   border-radius: 8px;
   color: white;
   background-color: cornflowerblue;
-  margin-left: auto;
-  margin-right: auto;
   overflow: hidden;
   cursor: pointer;
   pointer-events: all;

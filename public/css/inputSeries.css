@@ -16,6 +16,7 @@ div.input-series-grid {
   border: 4px solid gray;
   margin-bottom: 16px;
   border-radius: 8px;
+  position: relative;
 }
 
 div.input-series-ticket-type-grid {
@@ -60,4 +61,24 @@ div.input-series-control-grid {
   display: grid;
   margin-bottom: 32px;
   grid-template-columns: auto 1fr auto;
+}
+
+.button.input-series-control-grid-add {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.input-series-control-delete {
+  width: 100%;
+  display: none;
+  margin-bottom: 32px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.button.input-series-control-delete-cancel {
+  justify-self: start;
+}
+
+.button.input-series-control-delete-confirm {
+  justify-self: end;
 }

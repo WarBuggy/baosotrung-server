@@ -149,15 +149,37 @@ class InputSeries {
         this.divDelete.setAttribute('selected', 'false');
         this.divDelete.style.display = 'none';
         this.div.appendChild(this.divDelete);
+        let parent = this;
         this.divDelete.onclick = function () {
-            let selected = this.getAttribute('selected');
+            let selected = parent.getDivDeleteSelected();
             if (selected === 'false') {
-                this.style.backgroundImage = 'var(--input-series-delete-selected)';
-                this.setAttribute('selected', 'true');
+                parent.setDivDeleteSelected();
             } else {
-                this.style.backgroundImage = 'var(--input-series-delete)';
-                this.setAttribute('selected', 'false');
+                parent.setDivDeleteDeselected();
             }
         };
+    };
+
+    getDivDeleteSelected() {
+        return this.divDelete.getAttribute('selected');
+    };
+
+    setDivDeleteSelected() {
+        this.divDelete.style.backgroundImage = 'var(--input-series-delete-selected)';
+        this.divDelete.setAttribute('selected', 'true');
+    };
+
+    setDivDeleteDeselected() {
+        this.divDelete.style.backgroundImage = 'var(--input-series-delete)';
+        this.divDelete.setAttribute('selected', 'false');
+    };
+
+    showDivDelete() {
+        this.setDivDeleteDeselected();
+        this.divDelete.style.display = 'block';
+    };
+
+    hideDivDelete() {
+        this.divDelete.style.display = 'none';
     };
 };
