@@ -14,7 +14,8 @@ div.button {
   position: relative;
 }
 
-.button:hover {
+.button:hover,
+.button:active {
   background-color: blue;
 }
 
