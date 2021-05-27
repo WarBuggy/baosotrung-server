@@ -54,6 +54,7 @@ class InputSeriesManager {
     insertAnInputSeries() {
         let anInputSeries = this.createAnInputSeries();
         this.addInputSeries(anInputSeries);
+        anInputSeries.inputSeries.input.focus();
     };
 
     createAnInputSeries() {
