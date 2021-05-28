@@ -7,12 +7,15 @@ module.exports = {
             rssProvider: [1, 2, 3,],
             crawlRss: true,
             crawlSchedule: true,
-            crawlTime: '16:35:00',
+            crawlTime: '16:40:00',
             maxCrawlTime: '17:10:00',
             defaultPrize: 1,
             createResultData: createResultDataType1,
             checkResultSP: 'SP_FIND_TYPE_1_WINNER',
             allowUserAlert: true,
+            // maxInputSeriesTimeAllow: after this time, 
+            // only tomorrow is displayed on the front end
+            // when input series
             maxInputSeriesTimeAllow: '16:35:00',
             seriesLength: 6,
         },
