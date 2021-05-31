@@ -41,7 +41,6 @@ class Button {
                     parent.mouseUpDetected = false;
                     parent.mouseDownDetected = false;
                     onclickFunction();
-                    document.activeElement.blur();
                     return;
                 }
                 parent.mouseUpDetected = true;
