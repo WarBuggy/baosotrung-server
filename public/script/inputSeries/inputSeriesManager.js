@@ -5,6 +5,8 @@ class InputSeriesManager {
         this.createControlButton();
         this.createDeleteControlButton();
         this.insertAnInputSeries();
+        this.createInputAlertEmail();
+        this.createButtonSendInfo();
     };
 
     createControlButton() {
@@ -13,16 +15,15 @@ class InputSeriesManager {
         this.buttonDelete = new Button('Xóa', true, true, function () {
             parent.showDivConfirmDelete();
         });
+        this.buttonDelete.div.style.justifySelf = 'start';
+        this.buttonDelete.div.style.marginLeft = '12px';
         divControlGrid.appendChild(this.buttonDelete.div);
         let buttonAdd = new Button('Thêm số', true, false, function () {
             parent.insertAnInputSeries();
         });
-        buttonAdd.div.classList.add('input-series-control-grid-add');
+        buttonAdd.div.style.justifySelf = 'end';
+        buttonAdd.div.style.marginRight = '12px';
         divControlGrid.appendChild(buttonAdd.div);
-        let buttonSend = new Button('Gửi thông tin', false, false, function () {
-            parent.onButtonSendClicked();
-        });
-        divControlGrid.appendChild(buttonSend.div);
     };
 
     createDeleteControlButton() {
@@ -117,5 +118,18 @@ class InputSeriesManager {
             }
         }
         console.log(allOk);
+    };
+
+    createInputAlertEmail() {
+        this.inputAlertEmail = new InputText('inputAlertEmail', null, 'Email', 'Email');
+        document.getElementById('divAlertEmailOuter')
+            .appendChild(this.inputAlertEmail.div);
+    };
+
+    createButtonSendInfo() {
+        let buttonSend = new Button('Gửi thông báo khi trúng số', false, false, function () {
+            parent.onButtonSendClicked();
+        });
+        document.getElementById('divSendInfoOuter').appendChild(buttonSend.div);
     };
 };

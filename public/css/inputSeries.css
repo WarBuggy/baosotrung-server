@@ -60,18 +60,13 @@ div.input-series-control-grid {
   width: 100%;
   display: grid;
   margin-bottom: 32px;
-  grid-template-columns: auto 1fr auto;
-}
-
-.button.input-series-control-grid-add {
-  margin-left: auto;
-  margin-right: auto;
+  grid-template-columns: 1fr 1fr;
 }
 
 div.input-series-control-delete {
   width: 100%;
   display: none;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   grid-template-columns: 1fr 1fr;
 }
 
@@ -93,4 +88,34 @@ div.validate {
   color: red;
   padding-left: 24px;
   margin-bottom: 8px;
+}
+
+div.input-detail-parent {
+  max-width: var(--main-max-width);
+  min-width: var(--main-min-width);
+  font-size: 12pt;
+  color: black;
+  box-sizing: border-box;
+  background-color: white;
+  position: relative;
+  border: 4px solid gray;
+  margin-bottom: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
+}
+
+div.input-series-send-outer {
+  max-width: var(--main-max-width);
+  min-width: var(--main-min-width);
+  font-size: 12pt;
+  box-sizing: border-box;
+  background-color: white;
+  position: relative;
+  margin-bottom: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
+  text-align: right;
+  padding-right: 12px;
 }

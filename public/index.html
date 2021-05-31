@@ -39,6 +39,17 @@
         <div id='divInputSeriesControlGrid' class='input-series-control-grid'></div>
         <div id='divInputSeriesConfirmDelete' class='input-series-control-delete'></div>
     </div>
+    <div id='divInputDetail' class='input-detail-parent'>
+        <div style='padding: 12px 12px 4px 12px;'>Khi trúng số, hãy gửi thông báo đến</div>
+        <input id='radioAlertEmail' type='checkbox' name='alertMethod' style='margin-bottom: 8px;' disabled='true'
+            checked>
+        <label for='radioAlertEmail' style='color: gray;'>Email</label>
+        <div id='divAlertEmailOuter'></div>
+        <input id='radioAlertSMS' type='checkbox' name='alertMethod' disabled='true' style='margin-bottom: 8px;'>
+        <label for='radioAlertSMS' style='color: gray;'>SMS (Đang phát triển)</label>
+    </div>
+    </div>
+    <div id='divSendInfoOuter' class='input-series-send-outer'></div>
 </body>
 
 </html>
