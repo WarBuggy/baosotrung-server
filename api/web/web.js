@@ -184,7 +184,7 @@ module.exports = function (app) {
             let date = parts[1];
             let publisher = parts[2];
             let serial = String(parts[3]).trim();
-            let ticketTypeData = coreTicketData.ticket[ticketType];
+            let ticketTypeData = coreTicketData.type[ticketType];
             if (ticketTypeData == null) {
                 return {
                     result: false,
