@@ -227,7 +227,24 @@ class InputSeriesManager {
         return inputSeriesOk;
     };
 
-    sendData() {
-
+    async sendData() {
+        let seriesData = [];
+        for (let i = 0; i < this.inputSeries.length; i++) {
+            let anInputSeries = this.inputSeries[i];
+            let aString = anInputSeries.value.ticketType + ',' +
+                anInputSeries.value.date + ',' +
+                anInputSeries.value.publisher + ',' +
+                anInputSeries.value.serial;
+            seriesData.push(aString);
+        }
+        let seriesString = seriesData.join('|||');
+        let sendData = {
+            count: this.inputSeries.length,
+            seriesString,
+            email: this.alertDetail.email,
+            sms: this.alertDetail.sms,
+        };
+        let response = await Common.sendToBackend('/api/alert', sendData);
+        console.log(response);
     };
 };

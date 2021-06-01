@@ -106,4 +106,153 @@ module.exports = function (app) {
         }
     };
     //#endregion
+
+    //#region /api/alert
+    app.post('/api/alert', async function (request, response) {
+        let requestIp = common.getReadableIP(request);
+        let purpose = 'record alert data';
+        common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
+        let count = request.body.count;
+        let seriesString = request.body.seriesString;
+        let email = request.body.email;
+        let sms = request.body.sms;
+        let seriesData = seriesString.split('|||');
+        if (seriesData.length != count) {
+            let errorCode = 600;
+            common.consoleLogError('Error when ' + purpose + ': Invalid count (' +
+                count + '/' + seriesData.length + ').');
+            response.status(errorCode);
+            response.json({ success: false, });
+            return;
+        }
+        if (!common.validateEmail(email)) {
+            let errorCode = 601;
+            common.consoleLogError('Error when ' + purpose + ': Invalid email (' + email + ').');
+            response.status(errorCode);
+            response.json({ success: false, });
+            return;
+        }
+        let seriesValidate = validateAlertSeriesData(seriesData);
+        if (seriesValidate.result == false) {
+            let errorCode = 601 + seriesValidate.errorCode;
+            common.consoleLogError('Error when ' + purpose + ':' + seriesValidate.errorMessage);
+            response.status(errorCode);
+            response.json({ success: false, });
+            return;
+        }
+        let sqlString = createAlertSQLString(seriesData);
+        let params = [
+            requestIp,
+            email,
+            sms,
+            sqlString,
+            count,
+        ];
+        let logInfo = {
+            username: '',
+            source: '`baosotrung_data`.`SP_CREATE_ALERT_DATA`',
+            userIP: requestIp,
+        };
+        let result = await db.query(params, logInfo);
+        if (result.resultCode != 0) {
+            let errorCode = result.resultCode;
+            common.consoleLogError('Database error when ' + purpose + '. Error code ' + errorCode + '.');
+            response.status(errorCode);
+            response.json({ success: false, });
+            return;
+        }
+        let resJson = {
+            success: true,
+            result: 0,
+        };
+        response.json(resJson);
+        common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+    });
+
+    function validateAlertSeriesData(seriesData) {
+        for (let i = 0; i < seriesData.length; i++) {
+            let aSeriesData = seriesData[i];
+            let parts = aSeriesData.split(',');
+            if (parts.length != 4) {
+                return {
+                    result: false,
+                    errorCode: 1,
+                    errorMessage: 'Invalid data parts (' + aSeriesData + ').',
+                };
+            }
+            let ticketType = parts[0];
+            let date = parts[1];
+            let publisher = parts[2];
+            let serial = String(parts[3]).trim();
+            let ticketTypeData = coreTicketData.ticket[ticketType];
+            if (ticketTypeData == null) {
+                return {
+                    result: false,
+                    errorCode: 2,
+                    errorMessage: 'Invalid ticket type data (' + aSeriesData + ').',
+                };
+            }
+            let publisherData = coreTicketData.publisher[publisher];
+            if (publisherData == null) {
+                return {
+                    result: false,
+                    errorCode: 3,
+                    errorMessage: 'Invalid publisher data (' + aSeriesData + ').',
+                };
+            }
+            if (publisherData.type != ticketType) {
+                return {
+                    result: false,
+                    errorCode: 4,
+                    errorMessage: 'Ticket type and publisher mismatch (' + aSeriesData + ').',
+                };
+            }
+            if (!dayjs(date).isValid()) {
+                return {
+                    result: false,
+                    errorCode: 5,
+                    errorMessage: 'Invalid date (' + aSeriesData + ').',
+                };
+            }
+            if (serial.length != 6) {
+                return {
+                    result: false,
+                    errorCode: 6,
+                    errorMessage: 'Invalid serial length (' + aSeriesData + ').',
+                };
+            }
+            for (let j = 0; j < serial.length; j++) {
+                if (!'0123456789'.includes(serial[j])) {
+                    return {
+                        result: false,
+                        errorCode: 7,
+                        errorMessage: 'Invalid serial (' + aSeriesData + ').',
+                    };
+                }
+            }
+        }
+        return { result: true };
+    };
+
+    function createAlertSQLString(seriesData) {
+        let sqlString = 'INSERT INTO `baosotrung_data`.`series` ' +
+            '(`user`, `publisher`, `call_date`, `ticket_type`, ' +
+            '`series`,`last_2`, `last_3`, `last_4`, `last_5`) VALUES ';
+        let stringParts = [];
+        for (let i = 0; i < seriesData.length; i++) {
+            let aSeriesData = seriesData[i];
+            let parts = aSeriesData.split(',');
+            let ticketType = parts[0];
+            let date = parts[1];
+            let publisher = parts[2];
+            let serial = String(parts[3]).trim();
+            let aSQLString = '(<uId>, ' + publisher + ',"' + date + '",' +
+                ticketType + ',"' + serial + '","' + serial.slice(-2) + '","' +
+                serial.slice(-3) + '","' + serial.slice(-4) + '","' + serial.slice(-5) + '")';
+            stringParts.push(aSQLString);
+        }
+        sqlString = sqlString + stringParts.join(',');
+        return sqlString;
+    };
+    //#endregion
 };

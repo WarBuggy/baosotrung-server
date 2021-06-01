@@ -50,16 +50,16 @@ module.exports = {
         console.log(consoleColor + '\x1b[5m%s\x1b[0m', time + ': ' + string);
     },
 
-    cloneObject(object) {
+    cloneObject: function (object) {
         let string = JSON.stringify(object);
         return JSON.parse(string);
     },
 
-    isNumeric(n) {
+    isNumeric: function (n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     },
 
-    numberToWordVN(input) {
+    numberToWordVN: function (input) {
         let number = parseInt(input);
         if (!module.exports.isNumeric(number)) {
             return '';
@@ -93,6 +93,12 @@ module.exports = {
         }
         let result = resultPart.reverse().join(' ');
         return result;
+    },
+
+    validateEmail: function (input) {
+        let re =
+            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(input).toLowerCase());
     },
 };
 
