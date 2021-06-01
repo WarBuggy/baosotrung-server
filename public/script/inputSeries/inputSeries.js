@@ -212,16 +212,18 @@ class InputSeries {
     };
 
     validate() {
-        let allOk = true;
+        let publisherValidate = true;
         if (this.value.publisher == null) {
             this.divRadioPublisherValidate.style.display = 'block';
             this.highlightRadioPublisher();
-            allOk = false;
+            publisherValidate = false;
         }
-        if (this.validateInputSeries() === false) {
-            allOk = false;
+        let inputValidate = this.validateInputSeries();
+        return {
+            result: publisherValidate && inputValidate,
+            publisher: publisherValidate,
+            input: inputValidate,
         }
-        return allOk;
     };
 
     validateInputSeries() {
@@ -272,6 +274,5 @@ class InputSeries {
         this.inputSeries.setErrorStyle();
         this.divSeriesValidate.innerText = text;
         this.divSeriesValidate.style.display = 'block';
-        this.inputSeries.input.focus();
     };
 };

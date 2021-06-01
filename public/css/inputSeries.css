@@ -59,15 +59,15 @@ div.input-series-delete {
 div.input-series-control-grid {
   width: 100%;
   display: grid;
-  margin-bottom: 32px;
-  grid-template-columns: 1fr 1fr;
+  margin-bottom: 16px;
+  grid-template-columns: 1fr auto;
 }
 
 div.input-series-control-delete {
   width: 100%;
   display: none;
   margin-bottom: 16px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr auto;
 }
 
 .button.input-series-control-cancel-delete {
@@ -76,6 +76,7 @@ div.input-series-control-delete {
 
 .button.input-series-control-confirm-delete {
   justify-self: end;
+  display: none;
 }
 
 div.validate {
