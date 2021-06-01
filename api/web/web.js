@@ -3,6 +3,7 @@ const coreTicketData = require('../../core/ticket.js');
 const dayjs = require('dayjs');
 const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
 const common = require('../../common/common.js');
+const db = require('../../db/db.js');
 dayjs.extend(dayjsCustomParseFormat);
 
 module.exports = function (app) {
