@@ -116,7 +116,10 @@ module.exports = function (app) {
         let count = request.body.count;
         let seriesString = request.body.seriesString;
         let email = request.body.email;
-        let sms = request.body.sms;
+        let sms = String(request.body.sms).trim();
+        if (sms == 'null' || sms == '') {
+            sms = null;
+        }
         let seriesData = seriesString.split('|||');
         if (seriesData.length != count) {
             let errorCode = 600;
