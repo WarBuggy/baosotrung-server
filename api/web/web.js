@@ -111,7 +111,7 @@ module.exports = function (app) {
     //#region /api/alert
     app.post('/api/alert', async function (request, response) {
         let requestIp = common.getReadableIP(request);
-        let purpose = 'record alert data';
+        let purpose = 'creating user submission';
         common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
         let count = request.body.count;
         let seriesString = request.body.seriesString;
@@ -144,17 +144,17 @@ module.exports = function (app) {
             response.json({ success: false, });
             return;
         }
-        let sqlString = createAlertSQLString(seriesData);
+        let sqlQueryData = createAlertSQLString(seriesData);
         let params = [
             requestIp,
             email,
             sms,
-            sqlString,
+            sqlQueryData['1'].insertQuery, // hard code all the type
             count,
         ];
         let logInfo = {
             username: '',
-            source: '`baosotrung_data`.`SP_CREATE_ALERT_DATA`',
+            source: '`baosotrung_data`.`SP_CREATE_USER_SUBMISSION`',
             userIP: requestIp,
         };
         let result = await db.query(params, logInfo);
@@ -239,10 +239,11 @@ module.exports = function (app) {
     };
 
     function createAlertSQLString(seriesData) {
-        let sqlString = 'INSERT INTO `baosotrung_data`.`series` ' +
-            '(`user`, `publisher`, `call_date`, `ticket_type`, ' +
-            '`series`,`last_2`, `last_3`, `last_4`, `last_5`) VALUES ';
-        let stringParts = [];
+        // sqlStringType1 is also the default
+        let sqlStringType1 = 'INSERT INTO `baosotrung_data`.`submission_detail_type_1` ' +
+            '(`submission`, `publisher`, `call_date`, ' +
+            '`last_2`, `last_3`, `last_4`, `last_5`, `serial`) VALUES ';
+        let sqlQueryData = {};
         for (let i = 0; i < seriesData.length; i++) {
             let aSeriesData = seriesData[i];
             let parts = aSeriesData.split(',');
@@ -250,13 +251,29 @@ module.exports = function (app) {
             let date = parts[1];
             let publisher = parts[2];
             let serial = String(parts[3]).trim();
-            let aSQLString = '(<uId>, ' + publisher + ',"' + date + '",' +
-                ticketType + ',"' + serial + '","' + serial.slice(-2) + '","' +
-                serial.slice(-3) + '","' + serial.slice(-4) + '","' + serial.slice(-5) + '")';
-            stringParts.push(aSQLString);
+            let typeData = sqlQueryData[ticketType];
+            if (typeData == null) {
+                let insertString = sqlStringType1;
+                // insert if for other values of ticketType
+                typeData = {
+                    parts: [],
+                    insertString,
+                };
+                sqlQueryData[ticketType] = typeData;
+            }
+            let aSQLString = '(<sId>, ' + publisher + ',"' + date + '","' +
+                serial.slice(-2) + '","' + serial.slice(-3) + '","' +
+                serial.slice(-4) + '","' + serial.slice(-5) + '","' +
+                serial + '")';
+            typeData.parts.push(aSQLString);
         }
-        sqlString = sqlString + stringParts.join(',');
-        return sqlString;
+        let ticketTypeList = Object.keys(sqlQueryData);
+        for (let i = 0; i < ticketTypeList.length; i++) {
+            let aTicketType = ticketTypeList[i];
+            let typeData = sqlQueryData[aTicketType];
+            typeData.insertQuery = typeData.insertString + typeData.parts.join(',');
+        }
+        return sqlQueryData;
     };
     //#endregion
 };
