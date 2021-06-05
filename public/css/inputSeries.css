@@ -1,6 +1,6 @@
 :root {
-  --input-series-delete-selected: url(../image/required/input_series_delete_red.png);
-  --input-series-delete: url(../image/required/input_series_delete_black.png);
+  --input-series-delete-selected: url(../res/image/required/input_series_delete_red.png);
+  --input-series-delete: url(../res/image/required/input_series_delete_black.png);
 }
 
 div.input-series-parent {
