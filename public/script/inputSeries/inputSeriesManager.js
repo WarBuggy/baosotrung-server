@@ -181,7 +181,7 @@ class InputSeriesManager {
                 this.showAlertEmailValidate(inputEmailString);
                 return false;
             }
-            email = email.toString().trim();
+            email = email.toString().trim().toLowerCase();
             if (email == '') {
                 this.showAlertEmailValidate(inputEmailString);
                 return false;
