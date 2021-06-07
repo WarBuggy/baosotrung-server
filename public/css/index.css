@@ -40,7 +40,6 @@ p {
 
 div.main-top {
   width: 100%;
-  background-color: blue;
 }
 
 div.main-top-menu {
@@ -66,5 +65,17 @@ div.main-input-series-outer {
   min-width: var(--main-min-width);
   margin-right: auto;
   margin-left: auto;
-  margin-top: 50px;
+  margin-top: 10px;
+}
+
+div.main-banner {
+  max-width: var(--main-max-width);
+  min-width: var(--main-min-width);
+  height: 180px;
+  background-image: url(../res/image/required/main_banner.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-left: auto;
+  margin-right: auto;
 }
