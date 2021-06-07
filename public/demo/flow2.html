@@ -9,12 +9,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="full-screen" content="yes" />
     <meta name="screen-orientation" content="landscape" />
-    <title>Demo quan tâm Zalo</title>
+    <title>(Partial) Demo quan tâm Zalo</title>
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="demo.css" />
     <!-- SCRIPT -->
     <script src="https://sp.zalo.me/plugins/sdk.js"></script>
-    <script src="demo.js?version=0.1"></script>
+    <script src="flow.js?version=0.1"></script>
 </head>
 
 <body>
@@ -31,7 +31,7 @@
                         <div class="zalo-follow-button" data-oaid="979333996028174177" data-cover="yes" data-article="3"
                             data-width="295" data-height="210px"></div>
                     </div>
-                    <div class='span2col' style='padding: 8px;'>Xin vui lòng quan nhập số điện thoại đăng ký Zalo của
+                    <div class='span2col' style='padding: 8px;'>Xin vui lòng nhập số điện thoại đăng ký Zalo của
                         bạn để
                         xác
                         thực quan tâm!</div>
@@ -39,31 +39,8 @@
                     <input class='input' style='justify-self: start; align-self: center; width: 90%;'
                         id='inputZaloNumber' />
                     <div class='span2col' style='justify-self: end; padding: 8px;'>
-                        <button class='button' onclick='onValidateRequest()'>Xác thực</button>
+                        <button class='button' onclick='flow2Enter()'>Vào vòng quay</button>
                     </div>
-                </div>
-                <div id='divOTP' class='otp'>
-                    <div class='span2col' style='padding: 8px;'>Hệ thống đã gửi tin nhắn Zalo chứa mã OTP đến số điện
-                        thoại
-                        vừa được bạn cung
-                        cấp.
-                        Xin bạn vui lòng nhập mã OTP khi nhận được vào ô dưới đây!</div>
-                    <div class='span2col' style='padding: 8px;'>
-                        <div id='divCountdownEffective'>
-                            <div style='display: inline-block;'>Thời gian OTP còn hiệu lực:</div>
-                            <div id='divCountdown' style='display: inline-block;'>60</div>
-                            <div style='display: inline-block;'>giây</div>
-                        </div>
-                        <div id='divCountdownFinished' style='color: red; display: none;'>
-                            Mã OTP đã hết hiệu lực. Xin vui lòng nhấn nút Quay lại để xác thực lại lần nữa!
-                        </div>
-                    </div>
-                    <input id='inputOTP' class='span2col input' style='width: 60%; justify-self: center;' />
-                    <button class='button' style='justify-self: start; margin:8px;' onclick='showDivFollow()'>Quay
-                        lại</button>
-                    <button id='buttonEnter' class='button' style='justify-self: end; margin:8px;' onclick='enter()'>Vào
-                        vòng
-                        quay</button>
                 </div>
             </div>
         </div>

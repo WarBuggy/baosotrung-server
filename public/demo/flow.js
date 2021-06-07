@@ -1,13 +1,9 @@
 function onValidateRequest() {
-    let inputZaloNumber = document.getElementById('inputZaloNumber');
-    let zaloNumber = String(inputZaloNumber.value);
-    if (zaloNumber == '') {
-        alert('Xin vui lòng nhập số điện thoại đăng ký Zalo của bạn!');
-        return;
+    if (validateInputZaloNumber() == true) {
+        document.getElementById('buttonEnter').style.display = 'block';
+        showDivOTP();
+        resetAndStartCountdown();
     }
-    document.getElementById('buttonEnter').style.display = 'block';
-    showDivOTP();
-    resetAndStartCountdown();
 };
 
 function showDivFollow() {
@@ -27,8 +23,7 @@ function enter() {
         alert('Xin vui lòng nhập OTP gửi bằng tin nhắn Zalo!');
         return;
     }
-    document.getElementById('divPage1').style.display = 'none';
-    document.getElementById('divPage2').style.display = 'grid';
+    showPage2();
 };
 
 function resetAndStartCountdown() {
@@ -47,4 +42,25 @@ function resetAndStartCountdown() {
             document.getElementById('divCountdownEffective').style.display = 'none';
         }
     }, 1000);
+};
+
+function showPage2() {
+    document.getElementById('divPage1').style.display = 'none';
+    document.getElementById('divPage2').style.display = 'grid';
+};
+
+function validateInputZaloNumber() {
+    let inputZaloNumber = document.getElementById('inputZaloNumber');
+    let zaloNumber = String(inputZaloNumber.value);
+    if (zaloNumber == '') {
+        alert('Xin vui lòng nhập số điện thoại đăng ký Zalo của bạn!');
+        return false;
+    }
+    return true;
+};
+
+function flow2Enter() {
+    if (validateInputZaloNumber() == true) {
+        showPage2();
+    }
 };
