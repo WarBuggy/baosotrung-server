@@ -8,9 +8,9 @@ class Button {
         };
         this.colorInverted = {
             color: 'cornflowerblue',
-            bgColor: 'yellow',
-            hoverColor: 'rgb(0, 0, 255)',
-            hoverBgColor: 'transparent',
+            bgColor: 'white',
+            hoverColor: 'cornflowerblue',
+            hoverBgColor: '#e8e8e8',
         };
         this.div = document.createElement('div');
         this.div.classList.add('button');
