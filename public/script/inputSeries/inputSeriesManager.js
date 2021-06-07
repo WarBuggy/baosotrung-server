@@ -140,6 +140,9 @@ class InputSeriesManager {
     createInputAlertEmail() {
         let divAlertEmailOuter = document.getElementById('divAlertEmailOuter');
         this.inputAlertEmail = new InputText('inputAlertEmail', null, 'Email', 'Email');
+        this.inputAlertEmail.input.setAttribute('autocorrect', 'off');
+        this.inputAlertEmail.input.setAttribute('autocapitalize', 'none');
+        this.inputAlertEmail.input.setAttribute('autocomplete', 'none');
         divAlertEmailOuter.appendChild(this.inputAlertEmail.div);
         this.divAlertEmailValidate = document.createElement('div');
         this.divAlertEmailValidate.classList.add('validate');
