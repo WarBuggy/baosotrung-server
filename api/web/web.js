@@ -166,7 +166,7 @@ module.exports = function (app) {
             return;
         }
         let submissionId = result.sqlResults[1][0].submissionId;
-        response.redirect('/receipt.html?submission=' + submissionId);
+        response.redirect(301, '/receipt.html?submission=' + submissionId);
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
     });
 
