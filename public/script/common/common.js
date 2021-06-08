@@ -4,6 +4,8 @@ class Common {
         return new Promise(function (resolve, reject) {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
+                console.log(this.readyState);
+                console.log(this.status);
                 if (this.readyState === 4) {
                     if (this.status === 200) {
                         Common.parseJSON(this['response'])
