@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <!-- Link preview -->
     <meta name="description"
-        content="Tự động dò vé số giúp bạn và thông báo nếu trúng số. Chần chờ gì mà không thử ngay nào!">
+        content="Tóm tắt thông tin các vé bạn đã gửi. Bạn sẽ nhận được thông báo nếu có vé trúng giải ngay sau khi quá trình xổ số kết thúc.">
     <meta name="keywords" content="xổ số kiến thiết,vé số,thông báo,trúng số">
     <meta property="og:image" content="https://baotrungso.com/res/image/required/favicon/android-chrome-192x192.png" />
     <link rel="image_src" href="res/image/required/favicon/android-chrome-192x192.png" />
@@ -20,22 +20,19 @@
     <link rel="icon" type="image/png" sizes="32x32" href="res/image/required/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="res/image/required/favicon/favicon-16x16.png">
     <link rel="manifest" href="res/image/required/favicon/site.webmanifest">
-    <title>Gửi số vé, nhận thông báo khi trúng số</title>
+    <title>Tóm tắt thông tin vé số đã gửi</title>
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="css/button.css" />
     <link rel="stylesheet" type="text/css" href="css/general.css" />
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" type="text/css" href="css/receipt.css" />
     <!-- COMMON SCRIPT -->
     <script src="script/common/backendURL.js?version=1.0"></script>
     <script src="script/common/common.js?version=1.0"></script>
     <script src="script/common/inputText.js?version=1.0"></script>
-    <script src="script/common/inputNumber.js?version=1.0"></script>
     <script src="script/common/button.js?version=0.1"></script>
     <!-- SCRIPT -->
     <script src="script/header.js?version=0.1"></script>
-    <script src="script/inputSeries/inputSeries.js?version=0.1"></script>
-    <script src="script/inputSeries/inputSeriesManager.js?version=0.11"></script>
-    <script src="script/index.js?version=0.1"></script>
+    <script src="script/receipt.js?version=0.1"></script>
 </head>
 
 <body>
@@ -51,23 +48,12 @@
     </div>
     <!-- End of menu and header -->
     <div class='content-root'>
-        <div>
-            <div id='divInputSeriesParent' class='input-series-parent'></div>
-            <div id='divInputSeriesControlGrid' class='input-series-control-grid'></div>
-            <div id='divInputSeriesConfirmDelete' class='input-series-control-delete'></div>
+        <div id='divIntroText' class='receipt-intro-text'>
+            Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi! Bạn sẽ nhận được thông báo nếu trúng số
+            không lâu sau khi quá trình xổ số kết thúc.<br />
+            Xin tóm tắt lại thông tin bạn đã gửi như sau:
         </div>
-        <div id='divInputDetail' class='input-detail-parent'>
-            <div style='padding: 12px 12px 4px 12px;'>Khi trúng số, hãy gửi thông báo đến</div>
-            <input id='radioAlertEmail' type='checkbox' name='alertMethod' style='margin-bottom: 8px;' disabled='true'
-                checked>
-            <label for='radioAlertEmail' style='color: gray;'>Email</label>
-            <div id='divAlertEmailOuter'></div>
-            <input id='radioAlertZalo' type='checkbox' name='alertMethod' disabled='true' style='margin-bottom: 8px;'>
-            <label for='radioAlertZalo' style='color: gray;'>Zalo (Đang phát triển)</label>
-            <!--input id='radioAlertSMS' type='checkbox' name='alertMethod' disabled='true' style='margin-bottom: 8px;'>
-        <label for='radioAlertSMS' style='color: gray;'>SMS (Đang phát triển)</label-->
-        </div>
-        <div id='divSendInfoOuter' class='input-series-send-outer'></div>
+        <div id='divSummary' class='receipt-summary'></div>
     </div>
 </body>
 

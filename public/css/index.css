@@ -1,81 +1,108 @@
 :root {
-  --main-min-width: 320px;
-  --main-max-width: 450px;
+  --input-series-delete-selected: url(../res/image/required/input_series_delete_red.png);
+  --input-series-delete: url(../res/image/required/input_series_delete_black.png);
 }
 
-html {
-  touch-action: manipulation;
-  outline: 0;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  font-family: "Quicksand", sans-serif;
-}
-
-html,
-body {
+div.input-series-parent {
   width: 100%;
-  outline: 0;
-  padding: 0;
-  margin: 0;
-  font-size: 0px;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-size: 12pt;
+  color: black;
+  box-sizing: border-box;
   background-color: white;
-  font-family: "Quicksand", sans-serif;
+  position: relative;
 }
 
-p {
-  margin: 0px;
+div.input-series-grid {
+  border: 4px solid gray;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  position: relative;
 }
 
-div.main-top {
+div.input-series-ticket-type-grid {
+  display: grid;
   width: 100%;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
-div.main-top-menu {
+div.input-serie-date-grid {
+  display: grid;
   width: 100%;
-  height: 40px;
-  background-color: cyan;
-  padding: 20px 0px 20px 0px;
+  grid-template-columns: 1fr 1fr;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
-div.main-top-intro {
-  max-width: var(--main-max-width);
-  min-width: var(--main-min-width);
-  margin-right: auto;
-  margin-left: auto;
-  margin-top: 100px;
-  background-color: blueviolet;
-  font-size: 40px;
-  color: white;
+div.input-serie-publisher-grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
-div.main-input-series-outer {
-  max-width: var(--main-max-width);
-  min-width: var(--main-min-width);
-  margin-right: auto;
-  margin-left: auto;
-  margin-top: 10px;
-}
-
-div.main-banner {
-  max-width: var(--main-max-width);
-  min-width: var(--main-min-width);
-  height: 180px;
-  background-image: url(../res/image/required/main_banner.png);
-  background-size: contain;
-  background-repeat: no-repeat;
+div.input-series-delete {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: rgba(128, 128, 128, 0.7);
+  background-image: var(--input-series-delete);
   background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+div.input-series-control-grid {
+  width: 100%;
+  display: grid;
+  margin-bottom: 16px;
+  grid-template-columns: 1fr auto;
+}
+
+div.input-series-control-delete {
+  width: 100%;
+  display: none;
+  margin-bottom: 16px;
+  grid-template-columns: 1fr auto;
+}
+
+.button.input-series-control-cancel-delete {
+  justify-self: start;
+}
+
+.button.input-series-control-confirm-delete {
+  justify-self: end;
+  display: none;
+}
+
+div.input-detail-parent {
+  width: 100%;
+  font-size: 12pt;
+  color: black;
+  box-sizing: border-box;
+  background-color: white;
+  position: relative;
+  border: 4px solid gray;
+  margin-bottom: 16px;
   margin-left: auto;
   margin-right: auto;
+  border-radius: 8px;
+}
+
+div.input-series-send-outer {
+  width: 100%;
+  font-size: 12pt;
+  box-sizing: border-box;
+  background-color: white;
+  position: relative;
+  margin-bottom: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
+  text-align: right;
+  padding-right: 12px;
 }
