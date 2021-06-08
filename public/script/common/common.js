@@ -8,6 +8,7 @@ class Common {
                 console.log(this.status);
                 if (this.readyState === 4) {
                     if (this.status === 200) {
+                        console.log(this['response']);
                         Common.parseJSON(this['response'])
                             .then(function (parseResult) {
                                 let result = parseResult.result;
