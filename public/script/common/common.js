@@ -4,11 +4,8 @@ class Common {
         return new Promise(function (resolve, reject) {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
-                console.log(this.readyState);
-                console.log(this.status);
                 if (this.readyState === 4) {
                     if (this.status === 200) {
-                        console.log(this['response']);
                         Common.parseJSON(this['response'])
                             .then(function (parseResult) {
                                 let result = parseResult.result;
@@ -25,9 +22,6 @@ class Common {
                                     + 'Xin vui lòng liên hệ admin của hệ thống!');
                                 reject(909);
                             });
-                    } else if (this.status == 301 || this.status == 302 ||
-                        this.status == 307 || this.status == 308) {
-                        resolve();
                     } else if (this.status < 550 || this.status >= 900) {
                         Common.show('TYPE_ERROR', 'Lỗi hệ thống khi xử lý thông tin tại server (' + this.status + ').\n'
                             + 'Xin vui lòng liên hệ admin của hệ thống!');

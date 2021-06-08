@@ -4,6 +4,7 @@ const dayjs = require('dayjs');
 const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
 const common = require('../../common/common.js');
 const db = require('../../db/db.js');
+const cryptoAES256CBC = require('../../common/crypto/crypto.js')['aes-256-cbc'];
 dayjs.extend(dayjsCustomParseFormat);
 
 module.exports = function (app) {
@@ -166,7 +167,13 @@ module.exports = function (app) {
             return;
         }
         let submissionId = result.sqlResults[1][0].submissionId;
-        response.redirect(301, '/receipt.html?submission=' + submissionId);
+        let submission = cryptoAES256CBC.encrypt(String(submissionId));
+        let resJson = {
+            success: true,
+            result: 0,
+            submission,
+        };
+        response.json(resJson);
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
     });
 

@@ -247,6 +247,8 @@ class InputSeriesManager {
             email: this.alertDetail.email,
             sms: this.alertDetail.sms,
         };
-        Common.sendToBackend('/api/alert', sendData);
+        let response = await Common.sendToBackend('/api/alert', sendData);
+        window.location.href = window.FRONTEND_URL +
+            '/receipt.html?submission=' + response.submission;
     };
 };
