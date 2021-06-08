@@ -247,7 +247,6 @@ class InputSeriesManager {
             email: this.alertDetail.email,
             sms: this.alertDetail.sms,
         };
-        let response = await Common.sendToBackend('/api/alert', sendData);
-        console.log(response);
+        Common.sendToBackend('/api/alert', sendData);
     };
 };

@@ -22,6 +22,9 @@ class Common {
                                     + 'Xin vui lòng liên hệ admin của hệ thống!');
                                 reject(909);
                             });
+                    } else if (this.status == 301 || this.status == 302 ||
+                        this.status == 307 || this.status == 308) {
+                        resolve();
                     } else if (this.status < 550 || this.status >= 900) {
                         Common.show('TYPE_ERROR', 'Lỗi hệ thống khi xử lý thông tin tại server (' + this.status + ').\n'
                             + 'Xin vui lòng liên hệ admin của hệ thống!');
