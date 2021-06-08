@@ -114,7 +114,10 @@ class Common {
         return re.test(String(input).toLowerCase());
     };
 
-    static getURLParameter(locationSearch, sParam) {
+    static getURLParameter(sParam, locationSearch) {
+        if (locationSearch == null) {
+            locationSearch = document.location.search;
+        }
         let sPageURL = locationSearch.substring(1);
         let sURLVariables = sPageURL.split('&');
         for (let i = 0; i < sURLVariables.length; i++) {

@@ -167,11 +167,19 @@ module.exports = function (app) {
             return;
         }
         let submissionId = result.sqlResults[1][0].submissionId;
-        let submission = cryptoAES256CBC.encrypt(String(submissionId));
+        let encryptResult = cryptoAES256CBC.encrypt(String(submissionId));
+        if (!encryptResult.success) {
+            let errorCode = 800;
+            common.consoleLogError('Encryption error when ' + purpose + ': ' + encryptResult.error
+                + '. Error code ' + errorCode + '.');
+            response.status(errorCode);
+            response.json({ success: false, });
+            return;
+        }
         let resJson = {
             success: true,
             result: 0,
-            submission,
+            submission: encryptResult.result,
         };
         response.json(resJson);
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
@@ -279,5 +287,92 @@ module.exports = function (app) {
         }
         return sqlQueryData;
     };
+    //#endregion
+
+    //#region /api/submission
+    app.post('/api/submission', async function (request, response) {
+        let requestIp = common.getReadableIP(request);
+        let purpose = 'retreive user submission';
+        common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
+        let submission = request.body.submission;
+        let decryptResult = cryptoAES256CBC.decrypt(String(submission));
+        if (!decryptResult.success) {
+            let errorCode = 801;
+            common.consoleLogError('Decryption error when ' + purpose + ': ' + decryptResult.error
+                + '. Error code ' + errorCode + '.');
+            response.status(errorCode);
+            response.json({ success: false, });
+            return;
+        }
+        let submissionId = parseInt(submission);
+        if (!common.isNumeric(submissionId)) {
+            let errorCode = 802;
+            common.consoleLogError('Error when ' + purpose + ': received submission is not a number.' +
+                ' Error code ' + errorCode + '.');
+            response.status(errorCode);
+            response.json({ success: false, });
+            return;
+        }
+        // let seriesString = request.body.seriesString;
+        // let email = request.body.email;
+        // let sms = String(request.body.sms).trim();
+        // if (sms == 'null' || sms == '') {
+        //     sms = null;
+        // }
+        // let seriesData = seriesString.split('|||');
+        // if (seriesData.length != count) {
+        //     let errorCode = 600;
+        //     common.consoleLogError('Error when ' + purpose + ': Invalid count (' +
+        //         count + '/' + seriesData.length + ').');
+        //     response.status(errorCode);
+        //     response.json({ success: false, });
+        //     return;
+        // }
+        // if (!common.validateEmail(email)) {
+        //     let errorCode = 601;
+        //     common.consoleLogError('Error when ' + purpose + ': Invalid email (' + email + ').');
+        //     response.status(errorCode);
+        //     response.json({ success: false, });
+        //     return;
+        // }
+        // let seriesValidate = validateAlertSeriesData(seriesData);
+        // if (seriesValidate.result == false) {
+        //     let errorCode = 601 + seriesValidate.errorCode;
+        //     common.consoleLogError('Error when ' + purpose + ':' + seriesValidate.errorMessage);
+        //     response.status(errorCode);
+        //     response.json({ success: false, });
+        //     return;
+        // }
+        // let sqlQueryData = createAlertSQLString(seriesData);
+        // let params = [
+        //     requestIp,
+        //     email,
+        //     sms,
+        //     sqlQueryData['1'].insertQuery, // hard code all the type
+        //     count,
+        // ];
+        // let logInfo = {
+        //     username: '',
+        //     source: '`baosotrung_data`.`SP_CREATE_USER_SUBMISSION`',
+        //     userIP: requestIp,
+        // };
+        // let result = await db.query(params, logInfo);
+        // if (result.resultCode != 0) {
+        //     let errorCode = result.resultCode;
+        //     common.consoleLogError('Database error when ' + purpose + '. Error code ' + errorCode + '.');
+        //     response.status(errorCode);
+        //     response.json({ success: false, });
+        //     return;
+        // }
+        // let submissionId = result.sqlResults[1][0].submissionId;
+        // let submission = cryptoAES256CBC.encrypt(String(submissionId));
+        // let resJson = {
+        //     success: true,
+        //     result: 0,
+        //     submission,
+        // };
+        // response.json(resJson);
+        // common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+    });
     //#endregion
 };

@@ -20,3 +20,9 @@ svg.receipt-loading {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+div.receipt-summary {
+  font-size: 12pt;
+  font-family: Quicksand;
+  padding: 8px;
+}
