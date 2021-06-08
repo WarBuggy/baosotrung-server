@@ -1,4 +1,5 @@
 const configAES256CBC = require('./config.js')['aes-256-cbc'];
+const crypto = require('crypto');
 
 module.exports = {
     'aes-256-cbc': {
