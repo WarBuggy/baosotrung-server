@@ -165,11 +165,8 @@ module.exports = function (app) {
             response.json({ success: false, });
             return;
         }
-        let resJson = {
-            success: true,
-            result: 0,
-        };
-        response.json(resJson);
+        let submissionId = result.sqlResults[1][0].submissionId;
+        response.redirect('/receipt.html?submission=' + submissionId);
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
     });
 
