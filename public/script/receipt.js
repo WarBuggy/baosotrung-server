@@ -5,7 +5,6 @@ window.addEventListener('load', function () {
 class Receipt {
     constructor() {
         let submission = String(Common.getURLParameter('submission')).trim();
-        console.log(submission);
         if (submission == 'null' || submission == 'undefined' || submission == '') {
             this.showSummary();
             this.onNoSubmissionFound();
@@ -30,7 +29,7 @@ class Receipt {
             submission,
         };
         let response = await Common.sendToBackend('/api/submission', sendData);
-        let formatReceipt = new FormatReceipt(response.content);
-        console.log(formatReceipt.content);
+        let formatReceipt = new FormatReceipt(response);
+        console.log(formatReceipt.data);
     };
 };

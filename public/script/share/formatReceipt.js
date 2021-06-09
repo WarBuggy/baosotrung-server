@@ -1,6 +1,15 @@
 class FormatReceipt {
     constructor(data) {
-        this.content = data;
+        this.data = data;
+    };
+
+    processSubmissionDetail(submissionDetail) {
+        let data = {};
+        for (let i = 0; i < submissionDetail.length; i++) {
+            let aDetail = submissionDetail[i];
+            let callDate = aDetail.callDate;
+            let dateDetail = '';
+        }
     };
 };
 
