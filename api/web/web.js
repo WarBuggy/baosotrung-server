@@ -295,7 +295,7 @@ module.exports = function (app) {
         let purpose = 'retreive user submission';
         common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
         let submission = request.body.submission;
-        let submissionResult = await findSubmissionDetail(purpose, submission);
+        let submissionResult = await findSubmissionDetail(requestIp, purpose, submission);
         if (!submissionResult.success) {
             response.status(submissionResult.errorCode);
             response.json({ success: false, });
@@ -316,7 +316,7 @@ module.exports = function (app) {
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
     });
 
-    async function findSubmissionDetail(purpose, submission) {
+    async function findSubmissionDetail(requestIp, purpose, submission) {
         let decryptResult = cryptoAES256CBC.decrypt(String(submission));
         if (!decryptResult.success) {
             let errorCode = 801;
