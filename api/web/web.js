@@ -304,7 +304,7 @@ module.exports = function (app) {
         let submissionInfo = submissionResult.sqlResults[1][0];
         let submissionCreateDate = submissionInfo.create_date;
         let submissionEmail = submissionInfo.email;
-        let submissionDetail = processSubmissionData(result.sqlResults[2]);
+        let submissionDetail = processSubmissionData(submissionResult.sqlResults[2]);
         let resJson = {
             success: true,
             result: 0,
