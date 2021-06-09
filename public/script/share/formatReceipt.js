@@ -4,4 +4,9 @@ class FormatReceipt {
     };
 };
 
-module.exports.FormatReceipt = FormatReceipt;
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = FormatReceipt;
+}
+else {
+    window.FormatReceipt = FormatReceipt;
+}
