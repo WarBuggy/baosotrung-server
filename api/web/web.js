@@ -295,7 +295,7 @@ module.exports = function (app) {
         let purpose = 'retreive user submission';
         common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
         let submission = request.body.submission;
-        let submissionResult = await findSubmissionDetail(submission);
+        let submissionResult = await findSubmissionDetail(purpose, submission);
         if (!submissionResult.success) {
             response.status(submissionResult.errorCode);
             response.json({ success: false, });
