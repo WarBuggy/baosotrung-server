@@ -1,6 +1,7 @@
 class FormatReceipt {
-    constructor(data) {
-        this.data = data;
+    constructor(submissionDetail) {
+        let processData = this.processSubmissionDetail(submissionDetail);
+        console.log(processData);
     };
 
     processSubmissionDetail(submissionDetail) {
@@ -8,8 +9,23 @@ class FormatReceipt {
         for (let i = 0; i < submissionDetail.length; i++) {
             let aDetail = submissionDetail[i];
             let callDate = aDetail.callDate;
-            let dateDetail = '';
+            let dateDetail = data[callDate];
+            if (dateDetail == null) {
+                dateDetail = {};
+                data[callDate] = dateDetail;
+            };
+            let publisher = aDetail.publisher;
+            let publisherDetail = dateDetail[publisher];
+            if (publisherDetail == null) {
+                publisherDetail = [];
+                dateDetail[publisher] = publisherDetail;
+            }
+            let serial = aDetail.serial;
+            if (!publisherDetail.includes(serial)) {
+                publisherDetail.push(serial);
+            }
         }
+        return data;
     };
 };
 
