@@ -301,10 +301,10 @@ module.exports = function (app) {
             response.json({ success: false, });
             return;
         }
-        let submissionInfo = submissionResult[1][0];
+        let submissionInfo = submissionResult.sqlResults[1][0];
         let submissionCreateDate = submissionInfo.create_date;
         let submissionEmail = submissionInfo.email;
-        let submissionDetail = submissionResult[2];
+        let submissionDetail = submissionResult.sqlResults[2];
         let resJson = {
             success: true,
             result: 0,
@@ -357,8 +357,8 @@ module.exports = function (app) {
         }
         return {
             success: true,
-            result: result.sqlResults,
-        }
+            sqlResults: result.sqlResults,
+        };
     };
     //#endregion
 };
