@@ -327,7 +327,7 @@ module.exports = function (app) {
                 errorCode,
             };
         }
-        let submissionId = parseInt(submission);
+        let submissionId = parseInt(decryptResult.result);
         if (!common.isNumeric(submissionId)) {
             let errorCode = 802;
             common.consoleLogError('Error when ' + purpose + ': received submission is not a number.' +
