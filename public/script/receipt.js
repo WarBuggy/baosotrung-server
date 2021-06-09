@@ -1,3 +1,5 @@
+const { FormatReceipt } = require("./share/formatReceipt");
+
 window.addEventListener('load', function () {
     new Receipt();
 });
@@ -30,6 +32,7 @@ class Receipt {
             submission,
         };
         let response = await Common.sendToBackend('/api/submission', sendData);
-        console.log(response);
+        let formatReceipt = new FormatReceipt(response.content);
+        console.log(formatReceipt.content);
     };
 };

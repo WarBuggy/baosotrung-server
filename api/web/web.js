@@ -313,6 +313,36 @@ module.exports = function (app) {
             response.json({ success: false, });
             return;
         }
+        let params = [
+            requestIp,
+            submissionId,
+        ];
+        let logInfo = {
+            username: '',
+            source: '`baosotrung_data`.`SP_FIND_SUBMISSION_DETAIL`',
+            userIP: requestIp,
+        };
+        let result = await db.query(params, logInfo);
+        if (result.resultCode != 0) {
+            let errorCode = result.resultCode;
+            common.consoleLogError('Database error when ' + purpose + '. Error code ' + errorCode + '.');
+            response.status(errorCode);
+            response.json({ success: false, });
+            return;
+        }
+        let submissionInfo = result.sqlResults[1][0];
+        let submissionCreatedDate = submissionInfo.create_date;
+        let submissionEmail = submissionInfo.email;
+        const FormatReceipt = require('../../public/script/share/formatReceipt.js').FormatReceipt;
+        let formatReceipt = new FormatReceipt(submissionEmail);
+        let resJson = {
+            success: true,
+            result: 0,
+            content: formatReceipt.content,
+        };
+        response.json(resJson);
+        common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+
         // let seriesString = request.body.seriesString;
         // let email = request.body.email;
         // let sms = String(request.body.sms).trim();
