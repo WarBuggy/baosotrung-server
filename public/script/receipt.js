@@ -1,5 +1,3 @@
-const { FormatReceipt } = require("./share/formatReceipt");
-
 window.addEventListener('load', function () {
     new Receipt();
 });
