@@ -333,7 +333,7 @@ module.exports = function (app) {
         let submissionInfo = result.sqlResults[1][0];
         let submissionCreatedDate = submissionInfo.create_date;
         let submissionEmail = submissionInfo.email;
-        const FormatReceipt = require('../../public/script/share/formatReceipt.js').FormatReceipt;
+        const FormatReceipt = require('../../public/script/share/formatReceipt.js');
         let formatReceipt = new FormatReceipt(submissionEmail);
         let resJson = {
             success: true,
