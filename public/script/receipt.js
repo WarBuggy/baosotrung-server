@@ -29,7 +29,6 @@ class Receipt {
             submission,
         };
         let response = await Common.sendToBackend('/api/submission', sendData);
-        let formatReceipt = new FormatReceipt(response);
-        console.log(formatReceipt.data);
+        let formatReceipt = new FormatReceipt(response.submissionDetail);
     };
 };

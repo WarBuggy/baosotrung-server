@@ -304,7 +304,7 @@ module.exports = function (app) {
         let submissionInfo = submissionResult.sqlResults[1][0];
         let submissionCreateDate = submissionInfo.create_date;
         let submissionEmail = submissionInfo.email;
-        let submissionDetail = submissionResult.sqlResults[2];
+        let submissionDetail = processSubmissionData(result.sqlResults[2]);
         let resJson = {
             success: true,
             result: 0,
@@ -359,6 +359,49 @@ module.exports = function (app) {
             success: true,
             sqlResults: result.sqlResults,
         };
+    };
+
+    function processSubmissionData(data) {
+        let result = {};
+        for (let i = 0; i < data.length; i++) {
+            let aDetail = data[i];
+            let callDate = aDetail.call_date;
+            let dateDetail = result[callDate];
+            if (dateDetail == null) {
+                dateDetail = {};
+                result[callDate] = dateDetail;
+            };
+            let ticketType = aDetail.type;
+            let ticketTypeCoreData = coreTicketData.type[ticketType];
+            if (ticketTypeCoreData == null) {
+                continue;
+            }
+            let ticketTypeName = ticketTypeCoreData.name;
+            let ticketTypeDetail = dateDetail[ticketTypeName];
+            if (ticketTypeDetail == null) {
+                ticketTypeDetail = {};
+                dateDetail[ticketTypeName] = ticketTypeDetail;
+            }
+            let publisher = aDetail.publisher;
+            let publisherCoreData = coreTicketData.publisher[publisher];
+            if (publisherCoreData == null) {
+                continue;
+            }
+            if (publisherCoreData.type != ticketType) {
+                continue;
+            }
+            let publisherName = publisherCoreData.name;
+            let publisherDetail = ticketTypeDetail[publisherName];
+            if (publisherDetail == null) {
+                publisherDetail = [];
+                ticketTypeDetail[publisherName] = publisherDetail;
+            }
+            let serial = aDetail.serial;
+            if (!publisherDetail.includes(serial)) {
+                publisherDetail.push(serial);
+            }
+        }
+        return result;
     };
     //#endregion
 };

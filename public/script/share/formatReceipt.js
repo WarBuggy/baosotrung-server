@@ -1,31 +1,23 @@
 class FormatReceipt {
     constructor(submissionDetail) {
-        let processData = this.processSubmissionDetail(submissionDetail);
-        console.log(processData);
+        this.html = this.convertToHtml(submissionDetail);
     };
 
-    processSubmissionDetail(submissionDetail) {
-        let data = {};
-        for (let i = 0; i < submissionDetail.length; i++) {
-            let aDetail = submissionDetail[i];
-            let callDate = aDetail.callDate;
-            let dateDetail = data[callDate];
-            if (dateDetail == null) {
-                dateDetail = {};
-                data[callDate] = dateDetail;
-            };
-            let publisher = aDetail.publisher;
-            let publisherDetail = dateDetail[publisher];
-            if (publisherDetail == null) {
-                publisherDetail = [];
-                dateDetail[publisher] = publisherDetail;
+    convertToHtml(data) {
+        let tableHtml = [];
+        let dateList = Object.keys(data);
+        for (let i = 0; i < dateList.length; i++) {
+            let aDate = dateList[i];
+            let table = '<div class="divSummaryDate">'
+            table = table + '<div class="">' + aDate + '</div>';
+            let typeList = Object.keys(data[aDate]);
+            for (let j = 0; j < typeList.length; j++) {
+                let aType = typeList[j];
             }
-            let serial = aDetail.serial;
-            if (!publisherDetail.includes(serial)) {
-                publisherDetail.push(serial);
-            }
+            table = table + '</div>';
+            tableHtml.push(table);
         }
-        return data;
+        return tableHtml.join('');
     };
 };
 
