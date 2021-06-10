@@ -26,3 +26,12 @@ div.receipt-summary {
   font-family: Quicksand;
   padding: 8px;
 }
+
+div.receipt-share {
+  width: 100%;
+  display: none;
+  grid-template-columns: auto auto auto auto;
+  justify-content: space-between;
+  padding: 8px;
+  box-sizing: border-box;
+}

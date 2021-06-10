@@ -127,4 +127,43 @@ class Common {
             }
         }
     };
+
+    //#region Copy to clipboard
+    // copied from https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
+    static copyTextToClipboard(text, callback) {
+        if (!navigator.clipboard) {
+            this.fallbackCopyTextToClipboard(text);
+            return;
+        }
+        navigator.clipboard.writeText(text).
+            then(function () {
+                if (callback) {
+                    callback();
+                }
+            });
+    };
+
+    fallbackCopyTextToClipboard(text) {
+        let textArea = document.createElement("textarea");
+        textArea.value = text;
+
+        // Avoid scrolling to bottom
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.position = "fixed";
+
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            document.execCommand('copy');
+        } catch (err) {
+            console.log('fallbackCopyTextToClipboard failed.');
+            console.error(err);
+        }
+        document.body.removeChild(textArea);
+    };
+    // end of copy
+    //#endregion
 };
