@@ -111,3 +111,85 @@ div.countdown {
   display: grid;
   grid-template-columns: 185px 20px auto;
 }
+
+div.page3 {
+  width: 100%;
+  height: 100%;
+  font-size: 20pt;
+  color: black;
+  background-color: white;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+div.page3-cta-follow {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  width: 128px;
+  height: 128px;
+  background-color: blue;
+  border: 4px solid gold;
+  display: grid;
+  border-radius: 16px;
+}
+
+div.page3-cta-text {
+  width: 90px;
+  color: white;
+  align-self: center;
+  justify-self: center;
+  text-align: center;
+  font-size: 12pt;
+  cursor: pointer;
+  display: inline-block;
+}
+
+div.page4 {
+  width: 100%;
+  height: 100%;
+  display: none;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+div.popup2 {
+  width: 300px;
+  font-size: 10pt;
+  color: black;
+  border-radius: 8px;
+  background-color: white;
+  border: 1px solid black;
+  align-self: center;
+  justify-self: center;
+  display: inline-grid;
+  grid-template-columns: 1fr;
+}
+
+.button.secondary {
+  background-color: transparent;
+  border: none;
+}
+
+.button.secondary:hover {
+  text-decoration: underline;
+}
+
+div.thankyou {
+  width: 290px;
+  height: 160px;
+  background-image: url(thankyoụ.jpeg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  justify-self: center;
+}
+
+div.instruction {
+  width: 100%;
+  align-self: center;
+  justify-self: center;
+  display: none;
+  grid-template-columns: 1fr 1fr;
+}

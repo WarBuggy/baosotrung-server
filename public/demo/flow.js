@@ -64,3 +64,23 @@ function flow2Enter() {
         showPage2();
     }
 };
+
+function showPage4() {
+    document.getElementById('divPage4').style.display = 'grid';
+};
+
+function thankyou() {
+    if (validateInputZaloNumber() == true) {
+        document.getElementById('divFollow').style.display = 'none';
+        document.getElementById('divInstruction').style.display = 'grid';
+    }
+};
+
+function hidePopup2() {
+    document.getElementById('divPage4').style.display = 'none';
+};
+
+function onFollowComplete() {
+    hidePopup2();
+    document.getElementById('divCTAFollow').style.display = 'none';
+}
