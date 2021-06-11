@@ -1,5 +1,5 @@
 class FormatReceipt {
-    constructor(submissionDetail) {
+    constructor(submissionDetail, submissionEmail) {
         this.introText = `
         Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi! Thông tin các vé bạn gửi đã được ghi nhận thành công.<br />
         Bạn sẽ nhận được thông báo nếu trúng số không lâu sau khi quá trình xổ số kết thúc.<br /><br />
@@ -25,16 +25,24 @@ class FormatReceipt {
             </head> 
             <body style='width: 100%;'>
                 |<|tables|>|
+            <table style='width: 290px; margin-left: auto; margin-right: auto; margin-bottom: 32px;'>
+                <tr><td colspan='2'>Phương thức thông báo khi trúng</td></tr>
+                <tr><td>Email</td><td>|<|submissionEmail|>|</td></tr>
+            </table>
+            <div style='margin-bottom: 16px;'>
+                Một lần nữa xin chân thành cảm ơn quý khách! Xin kình chúc quý khách vạn sự may mắn!
+            </div>
             </body>
         </html>
         `;
         this.templateTableDate = `
             <table style='width: 290px; margin-left: auto; margin-right: auto; margin-bottom: 32px;'>
-                <tr><td colspan='2'>Ngày |<|callDate|>|</td></tr>
+                <tr><td colspan='2'>Ngày xổ |<|callDate|>|</td></tr>
                 |<|ticketType|>|
             </table>
         `;
         let htmlTable = this.convertToHtml(submissionDetail);
+        templateTableMain = templateTableMain.replace('|<|submissionEmail|>|', submissionEmail);
         this.html = templateTableMain.replace('|<|tables|>|', htmlTable);
     };
 

@@ -31,7 +31,7 @@ class Receipt {
             submission,
         };
         let response = await Common.sendToBackend('/api/submission', sendData);
-        let formatReceipt = new FormatReceipt(response.submissionDetail);
+        let formatReceipt = new FormatReceipt(response.submissionDetail, response.submissionEmail);
         this.showIntroText(formatReceipt.introText,
             response.submissionCreateDate, response.submissionCreateHour);
         this.showSummaryAndShare();
