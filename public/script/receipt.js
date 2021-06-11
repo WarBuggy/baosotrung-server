@@ -10,6 +10,8 @@ class Receipt {
             this.onNoSubmissionFound();
             return;
         }
+        this.copyTimeoutId = null;
+        this.emailTimeoutId = null;
         this.populateDivInputShareEmail(submission);
         this.addSubmissionData(submission);
         this.handleShareButton(submission);
@@ -60,8 +62,11 @@ class Receipt {
             return false;
         };
 
-        this.copyTimeoutId = null;
         let parent = this;
+        let copyClipboardCallback = function () {
+            parent.showTickBackgroundImage('divCopyLink', parent.copyTimeoutId,
+                'res/image/required/share_link.png');
+        };
         document.getElementById('divCopyLink').onclick = function () {
             Common.copyTextToClipboard(link, function () {
                 window.clearTimeout(parent.copyTimeoutId);
@@ -78,6 +83,7 @@ class Receipt {
             let divInputShareEmail = document.getElementById('divInputShareEmail');
             if (divInputShareEmail.style.display == 'none') {
                 divInputShareEmail.style.display = 'grid';
+                parent.inputEmail.input.focus();
             } else {
                 divInputShareEmail.style.display = 'none';
             }
@@ -85,25 +91,35 @@ class Receipt {
     };
 
     populateDivInputShareEmail(submission) {
+        let parent = this;
+
         let divInputShareEmail = document.getElementById('divInputShareEmail');
         divInputShareEmail.style.display = 'none';
         this.inputEmail = new InputText(null, null, 'Email');
         this.inputEmail.div.style.marginTop = '8px';
         this.inputEmail.div.style.alignSelf = 'center';
+        this.inputEmail.input.addEventListener('keydown', function (event) {
+            if (event.keyCode == 13) {
+                parent.onButtonShareEmailClicked(submission);
+            };
+        });
         divInputShareEmail.appendChild(this.inputEmail.div);
 
-        let parent = this;
         let buttonShareEmail = new Button('Gửi', false, false, function () {
-            let checkResult = parent.checkInputShareEmail();
-            if (checkResult.success == false) {
-                return;
-            }
-            parent.sendShareEmail(submission, checkResult.email);
+            parent.onButtonShareEmailClicked(submission);
         });
         buttonShareEmail.div.style.justifySelf = 'end';
         buttonShareEmail.div.style.alignSelf = 'center';
         buttonShareEmail.div.style.margin = '14px 6px 6px 6px';
         divInputShareEmail.appendChild(buttonShareEmail.div);
+    };
+
+    onButtonShareEmailClicked(submission) {
+        let checkResult = this.checkInputShareEmail();
+        if (checkResult.success == false) {
+            return;
+        }
+        this.sendShareEmail(submission, checkResult.email);
     };
 
     checkInputShareEmail() {
@@ -139,7 +155,15 @@ class Receipt {
         };
         try {
             await Common.sendToBackend('/api/submission/share/email', sendData);
-            console.log('Done');
+            this.inputEmail.input.value = '';
+            document.getElementById('divInputShareEmail').style.display = 'none';
+            window.clearTimeout(this.emailTimeoutId);
+            document.getElementById('divShareEmail').style.backgroundImage =
+                'url(res/image/required/tick.png)';
+            this.emailTimeoutId = window.setTimeout(function () {
+                document.getElementById('divShareEmail').style.backgroundImage =
+                    'url(res/image/required/share_email.svg)';
+            }, 1500);
         } catch (error) {
         }
     };
