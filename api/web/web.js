@@ -5,6 +5,7 @@ const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
 const common = require('../../common/common.js');
 const db = require('../../db/db.js');
 const cryptoAES256CBC = require('../../common/crypto/crypto.js')['aes-256-cbc'];
+const mailer = require('../../mailer/mailer.js');
 dayjs.extend(dayjsCustomParseFormat);
 
 module.exports = function (app) {
@@ -405,5 +406,38 @@ module.exports = function (app) {
         }
         return result;
     };
+    //#endregion
+
+    //#region /api/submission/share/email
+    app.post('/api/submission/share/email', async function (request, response) {
+        let requestIp = common.getReadableIP(request);
+        let purpose = 'share submission detail via email';
+        common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
+        let submission = request.body.submission;
+        let receiverEmail = request.body.email;
+        let submissionResult = await findSubmissionDetail(requestIp, purpose, submission);
+        if (!submissionResult.success) {
+            response.status(submissionResult.errorCode);
+            response.json({ success: false, });
+            return;
+        }
+        let submissionInfo = submissionResult.sqlResults[1][0];
+        let submissionCreateDate = submissionInfo.create_date;
+        let submissionCreateHour = submissionInfo.create_hour;
+        let submissionEmail = submissionInfo.email;
+        let submissionDetail = processSubmissionData(submissionResult.sqlResults[2]);
+        let FormatReceipt = require('../../public/script/share/formatReceipt.js');
+        let formatReceipt = new FormatReceipt(submissionDetail, submissionEmail);
+        let emailHtmlContent =
+            formatReceipt.createEmailHtml(submissionCreateDate, submissionCreateHour);
+        mailer.sendMail(emailHtmlContent, true, receiverEmail,
+            'Tóm tắc thông tin vé số', 'share submission detail');
+        let resJson = {
+            success: true,
+            result: 0,
+        };
+        response.json(resJson);
+        common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+    });
     //#endregion
 };

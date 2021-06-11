@@ -31,17 +31,18 @@ class Receipt {
         let sendData = {
             submission,
         };
-        let response = await Common.sendToBackend('/api/submission', sendData);
-        let formatReceipt = new FormatReceipt(response.submissionDetail, response.submissionEmail);
-        this.showIntroText(formatReceipt.introText,
-            response.submissionCreateDate, response.submissionCreateHour);
-        this.showSummaryAndShare();
-        document.getElementById('divSummary').innerHTML = formatReceipt.html;
+        try {
+            let response = await Common.sendToBackend('/api/submission', sendData);
+            let formatReceipt = new FormatReceipt(response.submissionDetail, response.submissionEmail);
+            this.showIntroText(formatReceipt, response.submissionCreateDate, response.submissionCreateHour);
+            this.showSummaryAndShare();
+            document.getElementById('divSummary').innerHTML = formatReceipt.html;
+        } catch (error) {
+        }
     };
 
-    showIntroText(originalIntroText, date, hour) {
-        let introText = originalIntroText.replace('|<|hour|>|', hour);
-        introText = introText.replace('|<|date|>|', date);
+    showIntroText(formatReceipt, date, hour) {
+        let introText = formatReceipt.createIntroText(date, hour);
         document.getElementById('divIntroText').innerHTML = introText;
     };
 
@@ -137,6 +138,10 @@ class Receipt {
             submission,
             email,
         };
-        let response = await Common.sendToBackend('/api/submission/share/email', sendData);
+        try {
+            await Common.sendToBackend('/api/submission/share/email', sendData);
+            console.log('Done');
+        } catch (error) {
+        }
     };
 };

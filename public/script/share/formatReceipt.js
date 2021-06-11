@@ -22,7 +22,7 @@ class FormatReceipt {
                     }
                     th, td { padding: 2px; }
                 </style>
-            </head> 
+            </head>
             <body style='width: 100%;'>
                 |<|tables|>|
             <table style='width: 290px; margin-left: auto; margin-right: auto; margin-bottom: 32px;'>
@@ -44,6 +44,20 @@ class FormatReceipt {
         let htmlTable = this.convertToHtml(submissionDetail);
         templateTableMain = templateTableMain.replace('|<|submissionEmail|>|', submissionEmail);
         this.html = templateTableMain.replace('|<|tables|>|', htmlTable);
+    };
+
+    createIntroText(submissionCreateDate, submissionCreateHour) {
+        let introText = this.introText.replace('|<|hour|>|', submissionCreateHour);
+        introText = introText.replace('|<|date|>|', submissionCreateDate);
+        return introText;
+    };
+
+    createEmailHtml(submissionCreateDate, submissionCreateHour) {
+        let introText = this.createIntroText(submissionCreateDate, submissionCreateHour);
+        let divIntroText = '<div>' + introText + '</div>';
+        let anchorText = "<body style='width: 100%;'>";
+        let html = this.html.replace(anchorText, anchorText + divIntroText);
+        return html;
     };
 
     convertToHtml(data) {

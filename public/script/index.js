@@ -1,8 +1,11 @@
 window.addEventListener('load', async function () {
     window.touchDevice = isTouchDevice();
-    let coreDataResult = await Common.sendToBackend('/api/data/core');
-    window.coreTicketData = coreDataResult.data;
-    window.inputSeriesManager = new InputSeriesManager();
+    try {
+        let coreDataResult = await Common.sendToBackend('/api/data/core');
+        window.coreTicketData = coreDataResult.data;
+        window.inputSeriesManager = new InputSeriesManager();
+    } catch (error) {
+    }
 });
 
 function isTouchDevice() {
