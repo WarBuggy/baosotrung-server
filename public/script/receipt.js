@@ -10,6 +10,7 @@ class Receipt {
             this.onNoSubmissionFound();
             return;
         }
+        this.populateDivInputShareEmail(submission);
         this.addSubmissionData(submission);
         this.handleShareButton(submission);
     };
@@ -73,7 +74,69 @@ class Receipt {
         };
 
         document.getElementById('divShareEmail').onclick = function () {
-
+            let divInputShareEmail = document.getElementById('divInputShareEmail');
+            console.log(divInputShareEmail.style.display);
+            if (divInputShareEmail.style.display == 'none') {
+                divInputShareEmail.style.display = 'grid';
+            } else {
+                divInputShareEmail.style.display = 'none';
+            }
         };
+    };
+
+    populateDivInputShareEmail(submission) {
+        let divInputShareEmail = document.getElementById('divInputShareEmail');
+        divInputShareEmail.style.display = 'none';
+        this.inputEmail = new InputText(null, null, 'Email');
+        this.inputEmail.div.style.marginTop = '8px';
+        this.inputEmail.div.style.alignSelf = 'center';
+        divInputShareEmail.appendChild(this.inputEmail.div);
+
+        let parent = this;
+        let buttonShareEmail = new Button('Gửi', false, false, function () {
+            let checkResult = parent.checkInputShareEmail();
+            if (checkResult.success == false) {
+                return;
+            }
+            parent.sendShareEmail(submission, checkResult.email);
+        });
+        buttonShareEmail.div.style.justifySelf = 'end';
+        buttonShareEmail.div.style.alignSelf = 'center';
+        buttonShareEmail.div.style.margin = '14px 6px 6px 6px';
+        divInputShareEmail.appendChild(buttonShareEmail.div);
+    };
+
+    checkInputShareEmail() {
+        let inputEmail = String(this.inputEmail.input.value).trim();
+        let divInputEmailValidate = document.getElementById('divInputShareEmailValidate');
+        if (inputEmail == '' || inputEmail == 'null' || inputEmail == 'undefined') {
+            divInputEmailValidate.innerText = 'Xin nhập email để gửi tóm tắt trên!';
+            divInputEmailValidate.style.display = 'block';
+            return { success: false, };
+        }
+        let emailPart = inputEmail.split(',');
+        for (let i = 0; i < emailPart.length; i++) {
+            let anEmail = emailPart[i].trim();
+            let anEmailValidateResult = Common.validateEmail(anEmail);
+            if (anEmailValidateResult == false) {
+                divInputEmailValidate.innerText = 'Có ít nhất 1 email không đúng định dạng.';
+                divInputEmailValidate.style.display = 'block';
+                return { success: false, };
+            }
+            emailPart[i] = anEmail;
+        }
+        divInputEmailValidate.style.display = 'none';
+        return {
+            success: false,
+            email: emailPart.join(','),
+        };
+    };
+
+    async sendShareEmail(submission, email) {
+        let sendData = {
+            submission,
+            email,
+        };
+        let response = await Common.sendToBackend('/api/submission/share/email', sendData);
     };
 };

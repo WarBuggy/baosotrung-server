@@ -109,8 +109,8 @@ module.exports = function (app) {
     };
     //#endregion
 
-    //#region /api/alert
-    app.post('/api/alert', async function (request, response) {
+    //#region /api/submission/create
+    app.post('/api/submission/create', async function (request, response) {
         let requestIp = common.getReadableIP(request);
         let purpose = 'creating user submission';
         common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
