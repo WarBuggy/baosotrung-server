@@ -67,7 +67,7 @@ class FormatReceipt {
         let introText = this.createIntroText(submissionCreateDate, submissionCreateHour);
         let divIntroText = '<div>' + introText + '</div>';
         let introAnchorText = "<body style='width: 100%;'>";
-        let html = this.html.replace(introAnchorText, anchorText + divIntroText);
+        let html = this.html.replace(introAnchorText, introAnchorText + divIntroText);
         let tableAnchorText = "<table class='web'>";
         html = this.html.replace(tableAnchorText, "<table class='email'>");
         return html;
