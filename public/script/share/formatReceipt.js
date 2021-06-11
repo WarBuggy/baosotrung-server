@@ -68,7 +68,7 @@ class FormatReceipt {
         let divIntroText = '<div>' + introText + '</div>';
         let introAnchorText = "<body style='width: 100%;'>";
         let html = this.html.replace(introAnchorText, introAnchorText + divIntroText);
-        html = this.html.replace(/<table class='web'/g, "<table class='email'>");
+        html = this.html.replace(/<table class='web'>/g, "<table class='email'>");
         return html;
     };
 
