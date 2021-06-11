@@ -21,11 +21,22 @@ class FormatReceipt {
                         border-collapse: collapse;
                     }
                     th, td { padding: 2px; }
+                    table.web {
+                        width: 290px; 
+                        margin-left: auto; 
+                        margin-right: auto; 
+                        margin-bottom: 32px;
+                    }
+                    
+                    table.email {
+                        width: 290px; 
+                        margin-bottom: 32px;
+                    }
                 </style>
             </head>
             <body style='width: 100%;'>
                 |<|tables|>|
-            <table style='width: 290px; margin-left: auto; margin-right: auto; margin-bottom: 32px;'>
+            <table class='web'>
                 <tr><td colspan='2'>Phương thức thông báo khi trúng</td></tr>
                 <tr><td>Email</td><td>|<|submissionEmail|>|</td></tr>
             </table>
@@ -36,7 +47,7 @@ class FormatReceipt {
         </html>
         `;
         this.templateTableDate = `
-            <table style='width: 290px; margin-left: auto; margin-right: auto; margin-bottom: 32px;'>
+            <table class='web'>
                 <tr><td colspan='2'>Ngày xổ |<|callDate|>|</td></tr>
                 |<|ticketType|>|
             </table>
@@ -55,8 +66,10 @@ class FormatReceipt {
     createEmailHtml(submissionCreateDate, submissionCreateHour) {
         let introText = this.createIntroText(submissionCreateDate, submissionCreateHour);
         let divIntroText = '<div>' + introText + '</div>';
-        let anchorText = "<body style='width: 100%;'>";
-        let html = this.html.replace(anchorText, anchorText + divIntroText);
+        let introAnchorText = "<body style='width: 100%;'>";
+        let html = this.html.replace(introAnchorText, anchorText + divIntroText);
+        let tableAnchorText = "<table class='web'>";
+        html = this.html.replace(tableAnchorText, "<table class='email'>");
         return html;
     };
 
