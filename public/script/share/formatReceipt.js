@@ -1,5 +1,10 @@
 class FormatReceipt {
     constructor(submissionDetail) {
+        this.introText = `
+        Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi! Thông tin các vé bạn gửi đã được ghi nhận thành công.<br />
+        Bạn sẽ nhận được thông báo nếu trúng số không lâu sau khi quá trình xổ số kết thúc.<br /><br />
+        Xin tóm tắt lại thông tin bạn đã gửi vào lúc |<|hour|>| ngày |<|date|>|:
+        `;
         let templateTableMain = `
         <html style='width: 100%;'>
             <head>

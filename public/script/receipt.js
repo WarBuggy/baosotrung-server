@@ -32,8 +32,16 @@ class Receipt {
         };
         let response = await Common.sendToBackend('/api/submission', sendData);
         let formatReceipt = new FormatReceipt(response.submissionDetail);
+        this.showIntroText(formatReceipt.introText,
+            response.submissionCreateDate, response.submissionCreateHour);
         this.showSummaryAndShare();
         document.getElementById('divSummary').innerHTML = formatReceipt.html;
+    };
+
+    showIntroText(originalIntroText, date, hour) {
+        let introText = originalIntroText.replace('|<|hour|>|', hour);
+        introText = introText.replace('|<|date|>|', date);
+        document.getElementById('divIntroText').innerHTML = introText;
     };
 
     handleShareButton(submission) {
