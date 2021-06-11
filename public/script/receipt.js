@@ -76,7 +76,6 @@ class Receipt {
 
         document.getElementById('divShareEmail').onclick = function () {
             let divInputShareEmail = document.getElementById('divInputShareEmail');
-            console.log(divInputShareEmail.style.display);
             if (divInputShareEmail.style.display == 'none') {
                 divInputShareEmail.style.display = 'grid';
             } else {
@@ -128,7 +127,7 @@ class Receipt {
         }
         divInputEmailValidate.style.display = 'none';
         return {
-            success: false,
+            success: true,
             email: emailPart.join(','),
         };
     };
