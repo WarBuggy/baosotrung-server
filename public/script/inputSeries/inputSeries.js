@@ -12,7 +12,6 @@ class InputSeries {
         this.createInputRadio();
         this.createDivRadioValidate();
         this.inputSeries = new InputNumber(null, null, 'Số vé');
-        this.inputSeries.div.style.marginTop = '8px';
         this.inputSeries.input.min = 0;
         this.div.appendChild(this.inputSeries.div);
         this.createDivSeriesValidate();
@@ -135,6 +134,7 @@ class InputSeries {
             aLabelPublisher.htmlFor = aRadioPublisherId;
             aLabelPublisher.innerText = aPublisher.name;
             let aDivPublisher = document.createElement('div');
+            aDivPublisher.style.marginBottom = '8px';
             aDivPublisher.appendChild(aRadioPublisher);
             aDivPublisher.appendChild(aLabelPublisher);
             aDivPublisherGrid.appendChild(aDivPublisher);

@@ -1,7 +1,7 @@
 class InputSeriesManager {
     constructor() {
         this.inputSeries = [];
-        this.alertDetail = {
+        this.submissionDetail = {
             email: null,
             sms: null,
         };
@@ -9,7 +9,7 @@ class InputSeriesManager {
         this.createControlButton();
         this.createDeleteControlButton();
         this.insertAnInputSeries();
-        this.createInputAlertEmail();
+        this.createInputSubmissionEmail();
         this.createButtonSendInfo();
     };
 
@@ -120,15 +120,15 @@ class InputSeriesManager {
 
     onButtonSendClicked() {
         let inputSeriesOk = this.validateInputSeries();
-        let alertEmailOk = this.validateAlertEmail();
-        let allOk = inputSeriesOk && alertEmailOk;
+        let submissionEmailOk = this.validateSubmissionEmail();
+        let allOk = inputSeriesOk && submissionEmailOk;
         if (inputSeriesOk == false) {
             return;
         }
         let parent = this;
-        if (alertEmailOk == false) {
+        if (submissionEmailOk == false) {
             this.scrollToBottom(function () {
-                parent.inputAlertEmail.input.focus();
+                parent.inputSubmissionEmail.input.focus();
             });
         }
         if (allOk != true) {
@@ -137,17 +137,22 @@ class InputSeriesManager {
         this.sendData();
     };
 
-    createInputAlertEmail() {
-        let divAlertEmailOuter = document.getElementById('divAlertEmailOuter');
-        this.inputAlertEmail = new InputText('inputAlertEmail', null, 'Email', 'Email');
-        this.inputAlertEmail.input.setAttribute('autocorrect', 'off');
-        this.inputAlertEmail.input.setAttribute('autocapitalize', 'none');
-        this.inputAlertEmail.input.setAttribute('autocomplete', 'none');
-        divAlertEmailOuter.appendChild(this.inputAlertEmail.div);
-        this.divAlertEmailValidate = document.createElement('div');
-        this.divAlertEmailValidate.classList.add('validate');
-        this.divAlertEmailValidate.style.display = 'none';
-        divAlertEmailOuter.appendChild(this.divAlertEmailValidate);
+    createInputSubmissionEmail() {
+        let divSubmissionEmailOuter = document.getElementById('divSubmissionEmailOuter');
+        this.inputSubmissionEmail = new InputText('inputSubmissionEmail', null, 'Email', 'Email');
+        this.inputSubmissionEmail.input.setAttribute('autocorrect', 'off');
+        this.inputSubmissionEmail.input.setAttribute('autocapitalize', 'none');
+        this.inputSubmissionEmail.input.setAttribute('autocomplete', 'none');
+        divSubmissionEmailOuter.appendChild(this.inputSubmissionEmail.div);
+        let localStorageSubmissionEmail = Common.loadFromStorage('index_submissionEmail');
+        if (localStorageSubmissionEmail != null) {
+            this.inputSubmissionEmail.input.value = localStorageSubmissionEmail;
+        }
+
+        this.divSubmissionEmailValidate = document.createElement('div');
+        this.divSubmissionEmailValidate.classList.add('validate');
+        this.divSubmissionEmailValidate.style.display = 'none';
+        divSubmissionEmailOuter.appendChild(this.divSubmissionEmailValidate);
     };
 
     createButtonSendInfo() {
@@ -170,38 +175,38 @@ class InputSeriesManager {
         }
     };
 
-    validateAlertEmail() {
+    validateSubmissionEmail() {
         let inputEmailString = 'Xin nhập email để nhận thông báo!';
         let inputEmailInvalid = 'Email không đúng định dạng!';
-        let radioAlertEmail = document.getElementById('radioAlertEmail');
+        let radioSubmissionEmail = document.getElementById('radioSubmissionEmail');
         let email = null;
-        if (radioAlertEmail.checked == true) {
-            email = this.inputAlertEmail.input.value;
+        if (radioSubmissionEmail.checked == true) {
+            email = this.inputSubmissionEmail.input.value;
             if (email == null) {
-                this.showAlertEmailValidate(inputEmailString);
+                this.showSubmissionEmailValidate(inputEmailString);
                 return false;
             }
             email = email.toString().trim().toLowerCase();
             if (email == '') {
-                this.showAlertEmailValidate(inputEmailString);
+                this.showSubmissionEmailValidate(inputEmailString);
                 return false;
             }
             if (Common.validateEmail(email) == false) {
-                this.showAlertEmailValidate(inputEmailInvalid);
+                this.showSubmissionEmailValidate(inputEmailInvalid);
                 return false;
             }
         }
-        this.alertDetail.email = email;
-        this.inputAlertEmail.setStandardStyle();
-        this.divAlertEmailValidate.style.display = 'none';
+        this.submissionDetail.email = email;
+        this.inputSubmissionEmail.setStandardStyle();
+        this.divSubmissionEmailValidate.style.display = 'none';
         return true;
     }
 
-    showAlertEmailValidate(text) {
-        this.alertDetail.email = null;
-        this.inputAlertEmail.setErrorStyle();
-        this.divAlertEmailValidate.innerText = text;
-        this.divAlertEmailValidate.style.display = 'block';
+    showSubmissionEmailValidate(text) {
+        this.submissionDetail.email = null;
+        this.inputSubmissionEmail.setErrorStyle();
+        this.divSubmissionEmailValidate.innerText = text;
+        this.divSubmissionEmailValidate.style.display = 'block';
     };
 
     validateInputSeries() {
@@ -231,6 +236,7 @@ class InputSeriesManager {
     };
 
     async sendData() {
+        this.saveInputSeriesManagerToLocalStorage();
         let seriesData = [];
         for (let i = 0; i < this.inputSeries.length; i++) {
             let anInputSeries = this.inputSeries[i];
@@ -244,13 +250,20 @@ class InputSeriesManager {
         let sendData = {
             count: this.inputSeries.length,
             seriesString,
-            email: this.alertDetail.email,
-            sms: this.alertDetail.sms,
+            email: this.submissionDetail.email,
+            sms: this.submissionDetail.sms,
         };
         try {
             let response = await Common.sendToBackend('/api/submission/create', sendData);
             window.location.href = '/receipt.html?submission=' + response.submission;
         } catch (error) {
         }
+    };
+
+    saveInputSeriesManagerToLocalStorage() {
+        let object = {
+            index_submissionEmail: this.submissionDetail.email,
+        };
+        Common.saveToStorage(object);
     };
 };

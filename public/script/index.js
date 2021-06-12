@@ -1,5 +1,6 @@
 window.addEventListener('load', async function () {
     window.touchDevice = isTouchDevice();
+    new Header();
     try {
         let coreDataResult = await Common.sendToBackend('/api/data/core');
         window.coreTicketData = coreDataResult.data;
@@ -13,4 +14,3 @@ function isTouchDevice() {
         (navigator.maxTouchPoints > 0) ||
         (navigator.msMaxTouchPoints > 0));
 };
-

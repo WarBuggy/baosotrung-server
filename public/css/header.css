@@ -30,4 +30,5 @@ div.header-banner {
   background-position: center;
   margin-left: auto;
   margin-right: auto;
+  cursor: pointer;
 }

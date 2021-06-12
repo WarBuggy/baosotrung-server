@@ -1,4 +1,5 @@
 window.addEventListener('load', function () {
+    new Header();
     new Receipt();
 });
 
@@ -63,10 +64,6 @@ class Receipt {
         };
 
         let parent = this;
-        let copyClipboardCallback = function () {
-            parent.showTickBackgroundImage('divCopyLink', parent.copyTimeoutId,
-                'res/image/required/share_link.png');
-        };
         document.getElementById('divCopyLink').onclick = function () {
             Common.copyTextToClipboard(link, function () {
                 window.clearTimeout(parent.copyTimeoutId);
@@ -104,6 +101,10 @@ class Receipt {
             };
         });
         divInputShareEmail.appendChild(this.inputEmail.div);
+        let localStorageShareEmail = Common.loadFromStorage('receipt_shareEmail');
+        if (localStorageShareEmail != null) {
+            this.inputEmail.input.value = localStorageShareEmail;
+        }
 
         let buttonShareEmail = new Button('Gửi', false, false, function () {
             parent.onButtonShareEmailClicked(submission);
@@ -119,6 +120,9 @@ class Receipt {
         if (checkResult.success == false) {
             return;
         }
+        Common.saveToStorage({
+            receipt_shareEmail: checkResult.email,
+        });
         this.sendShareEmail(submission, checkResult.email);
     };
 

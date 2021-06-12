@@ -166,4 +166,23 @@ class Common {
     };
     // end of copy
     //#endregion
+
+    static saveToStorage(object) {
+        if (typeof (Storage) === "undefined") {
+            return;
+        }
+        let keyList = Object.keys(object);
+        for (let i = 0; i < keyList.length; i++) {
+            let aKey = keyList[i];
+            let aValue = object[aKey];
+            localStorage.setItem(aKey, aValue);
+        }
+    };
+
+    static loadFromStorage(key) {
+        if (typeof (Storage) === "undefined") {
+            return;
+        }
+        return localStorage.getItem(key);
+    }
 };

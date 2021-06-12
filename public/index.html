@@ -39,17 +39,6 @@
 </head>
 
 <body>
-    <!-- Menu and header -->
-    <div id='divMainTop' class='header-top'>
-        <div id='divMainTopMenu' class='header-top-menu'></div>
-        <div id='divMainBanner' class='header-banner'></div>
-        <!--div id='divMainTopIntro' class='main-top-intro'>
-            <p>Intro text here 1</p>
-            <p>Intro text line 2</p>
-            <p>Intro text line 3</p>
-        </div-->
-    </div>
-    <!-- End of menu and header -->
     <div class='content-root'>
         <div>
             <div id='divInputSeriesParent' class='input-series-parent'></div>
@@ -58,14 +47,17 @@
         </div>
         <div id='divInputDetail' class='input-detail-parent'>
             <div style='padding: 12px 12px 4px 12px;'>Khi trúng số, hãy gửi thông báo đến</div>
-            <input id='radioAlertEmail' type='checkbox' name='alertMethod' style='margin-bottom: 8px;' disabled='true'
-                checked>
-            <label for='radioAlertEmail' style='color: gray;'>Email</label>
-            <div id='divAlertEmailOuter'></div>
-            <input id='radioAlertZalo' type='checkbox' name='alertMethod' disabled='true' style='margin-bottom: 8px;'>
-            <label for='radioAlertZalo' style='color: gray;'>Zalo (Đang phát triển)</label>
-            <!--input id='radioAlertSMS' type='checkbox' name='alertMethod' disabled='true' style='margin-bottom: 8px;'>
-        <label for='radioAlertSMS' style='color: gray;'>SMS (Đang phát triển)</label-->
+            <input id='radioSubmissionEmail' type='checkbox' name='submissionMethod' style='margin-bottom: 8px;'
+                disabled='true' checked>
+            <label for='radioSubmissionEmail' style='color: gray;'>Email</label>
+            <div id='divSubmissionEmailOuter'></div>
+            <!--
+            <input id='radioSubmissionZalo' type='checkbox' name='submissionMethod' disabled='true' style='margin-bottom: 8px;'>
+            <label for='radioSubmissionZalo' style='color: gray;'>Zalo (Đang phát triển)</label>
+            -->
+            <input id='radioSubmissionSMS' type='checkbox' name='submissionMethod' disabled='true'
+                style='margin-bottom: 8px;'>
+            <label for='radioSubmissionSMS' style='color: gray;'>SMS (Đang phát triển)</label>
         </div>
         <div id='divSendInfoOuter' class='input-series-send-outer'></div>
     </div>
