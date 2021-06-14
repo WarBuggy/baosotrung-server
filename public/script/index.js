@@ -7,6 +7,7 @@ window.addEventListener('load', async function () {
         window.inputSeriesManager = new InputSeriesManager();
     } catch (error) {
     }
+    Common.savePageTraffic(1);
 });
 
 function isTouchDevice() {

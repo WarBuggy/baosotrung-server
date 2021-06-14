@@ -1,6 +1,7 @@
 window.addEventListener('load', function () {
     new Header();
     new Receipt();
+    Common.savePageTraffic(1);
 });
 
 class Receipt {

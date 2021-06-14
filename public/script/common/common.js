@@ -184,5 +184,12 @@ class Common {
             return;
         }
         return localStorage.getItem(key);
-    }
+    };
+
+    static savePageTraffic(pageId) {
+        let sendData = {
+            pageId,
+        };
+        Common.sendToBackend('/api/traffic/page/save', sendData);
+    };
 };

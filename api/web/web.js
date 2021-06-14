@@ -440,4 +440,33 @@ module.exports = function (app) {
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
     });
     //#endregion
+
+    app.post('/api/traffic/page/save', async function (request, response) {
+        let requestIp = common.getReadableIP(request);
+        let purpose = 'save page traffic';
+        common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
+        let pageId = request.body.pageId;
+        let params = [
+            requestIp,
+            pageId,
+        ];
+        let logInfo = {
+            username: '',
+            source: '`baosotrung_data`.`SP_SAVE_PAGE_TRAFFIC`',
+            userIP: requestIp,
+        };
+        let result = await db.query(params, logInfo);
+        if (result.resultCode != 0) {
+            response.status(result.resultCode);
+            response.json({ success: false, });
+            common.consoleLogError('Error when ' + purpose + '. Error code ' + errorCode + '.');
+            return;
+        }
+        let resJson = {
+            success: true,
+            result: 0,
+        };
+        response.json(resJson);
+        common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+    });
 };
