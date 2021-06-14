@@ -38,5 +38,6 @@ function prepareHttpServer() {
     http.createServer(app).listen(systemConfig.httpPort, function () {
         common.consoleLog('HTTP Server started on port ' + systemConfig.httpPort + '.');
         require('./api/web/web.js')(app);
+        require('./api/web/webhook.js')(app);
     });
 };
