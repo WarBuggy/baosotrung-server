@@ -1,3 +1,5 @@
+const common = require('../../common/common.js');
+
 module.exports = function (app) {
     app.get('/api/webhook/zalo/oa', async function (request, response) {
         // let requestIp = common.getReadableIP(request);
