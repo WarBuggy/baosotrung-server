@@ -10,6 +10,7 @@ dayjs.extend(dayjsCustomParseFormat);
 
 module.exports = function (app) {
     //#region /api/data/core 
+    // get core data for index.html
     app.post('/api/data/core', function (request, response) {
         let requestIp = common.getReadableIP(request);
         let purpose = 'front end core data';
@@ -111,6 +112,7 @@ module.exports = function (app) {
     //#endregion
 
     //#region /api/submission/create
+    // create user submission (index.html)
     app.post('/api/submission/create', async function (request, response) {
         let requestIp = common.getReadableIP(request);
         let purpose = 'creating user submission';
@@ -291,6 +293,7 @@ module.exports = function (app) {
     //#endregion
 
     //#region /api/submission
+    // retreive user submission info (receipt.html)
     app.post('/api/submission', async function (request, response) {
         let requestIp = common.getReadableIP(request);
         let purpose = 'retreive user submission';
@@ -409,6 +412,7 @@ module.exports = function (app) {
     //#endregion
 
     //#region /api/submission/share/email
+    // send user submission info to email(s) (receipt.html)
     app.post('/api/submission/share/email', async function (request, response) {
         let requestIp = common.getReadableIP(request);
         let purpose = 'share submission detail via email';
@@ -441,6 +445,8 @@ module.exports = function (app) {
     });
     //#endregion
 
+    //#region /api/traffic/page/save
+    // Save page traffic (multiple pages)
     app.post('/api/traffic/page/save', async function (request, response) {
         let requestIp = common.getReadableIP(request);
         let purpose = 'save page traffic';
@@ -469,4 +475,5 @@ module.exports = function (app) {
         response.json(resJson);
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
     });
+    //#endregion
 };
