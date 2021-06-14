@@ -2,7 +2,7 @@ const common = require('../../common/common.js');
 
 module.exports = function (app) {
     app.get('/api/webhook/zalo/oa', async function (request, response) {
-        // let requestIp = common.getReadableIP(request);
+        let requestIp = common.getReadableIP(request);
         // let purpose = 'save page traffic';
         common.consoleLog('(' + requestIp + ') Received Zalo OA webhook.');
         // let pageId = request.body.pageId;
