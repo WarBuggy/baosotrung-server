@@ -304,8 +304,6 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId, checkTod
     common.consoleLog('New data found for ' + publisher.name + ', ' + providerData.name + '.' +
         'Begin to parse feed data...',
         providerData.consoleColor + '\x1b[4m', feededTime);
-    console.log(feed.items[0].link);
-    console.log(feed.items[0].contentSnippet);
     let parseData = providerData.parseFunction(feed);
     let result = ticketTypeData.createResultData(parseData, publisher, providerData);
     if (result == null) {

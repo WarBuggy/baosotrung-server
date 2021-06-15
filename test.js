@@ -7,14 +7,14 @@ start();
 
 
 async function start() {
-    // let prepareDbConnectionResult = await prepareDbConnection();
-    // if (prepareDbConnectionResult == false) {
-    //     return;
-    // }
+    let prepareDbConnectionResult = await prepareDbConnection();
+    if (prepareDbConnectionResult == false) {
+        return;
+    }
     // rssCrawler.test();
     // testSeries();
-    // rssCrawler.crawlResultOfDate('2021-05-07');
-    testNumberToWordVN();
+    rssCrawler.crawlResultOfDate('2021-06-12');
+    // testNumberToWordVN();
 };
 
 async function prepareDbConnection() {
