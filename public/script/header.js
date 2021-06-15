@@ -20,6 +20,7 @@ class Header {
         let divMainTopMenu = document.createElement('div');
         divMainTopMenu.id = 'divMainTopMenu';
         divMainTopMenu.classList.add('header-top-menu');
+        divMainTopMenu.innerText = 'Phiên bản thử nghiệm';
         divMainTop.appendChild(divMainTopMenu);
 
         let aHomepage = document.createElement('a');

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <!-- Link preview -->
+    <meta name="description" content="Kết quả xổ số các miền trong vòng 30 ngày gần nhất.">
+    <meta name="keywords" content="kết quả,xổ số kiến thiết,vé số,dò số,sổ dò, giấy dò">
+    <meta property="og:image" content="https://baotrungso.com/res/image/required/favicon/android-chrome-192x192.png" />
+    <link rel="image_src" href="res/image/required/favicon/android-chrome-192x192.png" />
+    <!-- View port meta-->
+    <meta name="viewport"
+        content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="full-screen" content="yes" />
+    <meta name="screen-orientation" content="landscape" />
+    <!-- favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="res/image/required/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="res/image/required/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="res/image/required/favicon/favicon-16x16.png">
+    <link rel="manifest" href="res/image/required/favicon/site.webmanifest">
+    <title>Sổ dò vé số các miền</title>
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="css/button.css" />
+    <link rel="stylesheet" type="text/css" href="css/general.css" />
+    <link rel="stylesheet" type="text/css" href="css/resultLog.css" />
+    <!-- COMMON SCRIPT -->
+    <script src="script/common/backendURL.js?version=1.0"></script>
+    <script src="script/common/common.js?version=1.0"></script>
+    <script src="script/common/inputNumber.js?version=1.0"></script>
+    <script src="script/common/button.js?version=0.1"></script>
+    <!-- SCRIPT -->
+    <script src="script/header.js?version=0.1"></script>
+    <script src="script/resultLog.js?version=0.1"></script>
+</head>
+
+<body>
+    <div class='content-root'>
+        <div>
+            <div id='divInputSeriesParent' class='input-series-parent'></div>
+            <div id='divInputSeriesControlGrid' class='input-series-control-grid'></div>
+            <div id='divInputSeriesConfirmDelete' class='input-series-control-delete'></div>
+        </div>
+        <div id='divInputDetail' class='input-detail-parent'>
+            <div style='padding: 12px 12px 4px 12px;'>Khi trúng số, hãy gửi thông báo đến</div>
+            <input id='radioSubmissionEmail' type='checkbox' name='submissionMethod' style='margin-bottom: 8px;'
+                disabled='true' checked>
+            <label for='radioSubmissionEmail' style='color: gray;'>Email</label>
+            <div id='divSubmissionEmailOuter'></div>
+            <!--
+            <input id='radioSubmissionZalo' type='checkbox' name='submissionMethod' disabled='true' style='margin-bottom: 8px;'>
+            <label for='radioSubmissionZalo' style='color: gray;'>Zalo (Đang phát triển)</label>
+            -->
+            <input id='radioSubmissionSMS' type='checkbox' name='submissionMethod' disabled='true'
+                style='margin-bottom: 8px;'>
+            <label for='radioSubmissionSMS' style='color: gray;'>SMS (Đang phát triển)</label>
+        </div>
+        <div id='divSendInfoOuter' class='input-series-send-outer'></div>
+    </div>
+</body>
+
+</html>
