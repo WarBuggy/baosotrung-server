@@ -389,9 +389,7 @@ function createInsertResultDetailQuery(result) {
 
 async function writeResultToDB(result, ticketType, prizeFormat,
     publisherId, rssProviderId, feedPubDay) {
-    console.log(ticketType, prizeFormat, publisherId, rssProviderId);
     let date = feedPubDay.format(systemConfig.dayjsFormatDateOnly);
-    console.log([ticketType, prizeFormat,]);
     let resultId = await findPublisherResult(ticketType, publisherId, date);
     let insertQuery = createInsertResultDetailQuery(result);
     let params = [
@@ -472,35 +470,41 @@ async function crawlSpecificType(crawlObject, typeObject) {
     }
 };
 
-async function crawlSpecificPublisher(typeObject, publisherObject,
+function crawlSpecificPublisher(typeObject, publisherObject,
     rssProviderObject, rssProviderId, date) {
-    let targetString = publisherObject.base.name + ', ' + typeObject.base.name;
-    common.consoleLog('Begin to crawl ' + targetString + '...');
-    Https.get(publisherObject.url, function (response) {
-        let data = '';
-        response.on('data', function (chunk) {
-            data = data + chunk;
+    return new Promise(function (resolve) {
+        let targetString = publisherObject.base.name + ', ' + typeObject.base.name;
+        common.consoleLog('Begin to crawl ' + targetString + '...');
+        Https.get(publisherObject.url, function (response) {
+            let data = '';
+            response.on('data', function (chunk) {
+                data = data + chunk;
+            });
+            response.on('end', async function () {
+                let parseData =
+                    rssProviderObject.parseSpecificFunction(data.toString());
+                let result =
+                    typeObject.base.createResultData(parseData, publisherObject.base, rssProviderObject);
+                if (result == null) {
+                    common.consoleLogError('Error when creating result data for ' + targetString + '.');
+                    resolve();
+                    return;
+                }
+                let writeResult =
+                    await writeResultToDB(result, publisherObject.base.type, typeObject.base.defaultPrize,
+                        publisherObject.id, rssProviderId, date);
+                if (writeResult == false) {
+                    common.consoleLogError('Error when writing result to DB for ' + targetString + '.');
+                    resolve();
+                    return;
+                }
+                common.consoleLog('Finish crawling and writing to DB ' + targetString + '.');
+                resolve();
+            });
+        }).on('error', (error) => {
+            common.consoleLogError('Error when crawling ' + targetString + '. Error: ' + error);
+            resolve();
         });
-        response.on('end', async function () {
-            let parseData =
-                rssProviderObject.parseSpecificFunction(data.toString());
-            let result =
-                typeObject.base.createResultData(parseData, publisherObject.base, rssProviderObject);
-            if (result == null) {
-                common.consoleLogError('Error when creating result data for ' + targetString + '.');
-                return;
-            }
-            let writeResult =
-                await writeResultToDB(result, publisherObject.base.type, typeObject.base.defaultPrize,
-                    publisherObject.id, rssProviderId, date);
-            if (writeResult == false) {
-                common.consoleLogError('Error when writing result to DB for ' + targetString + '.');
-                return;
-            }
-            common.consoleLog('Finish crawling and writing to DB ' + targetString + '.');
-        });
-    }).on('error', (error) => {
-        common.consoleLogError('Error when crawling ' + targetString + '. Error: ' + error);
     });
 };
 //#endregion
