@@ -4,6 +4,7 @@ const rssCrawler = require('./rss/crawler/crawler.js');
 const series = require('./core/series.js');
 
 start();
+return;
 
 
 async function start() {
@@ -15,8 +16,8 @@ async function start() {
     // testSeries();
     // testNumberToWordVN();
     await rssCrawler.crawlSpecificDateFromConfig();
-    console.log('test done');
-    return;
+
+    await db.closeConnection();
 };
 
 async function prepareDbConnection() {

@@ -69,11 +69,13 @@ module.exports = {
 
     closeConnection: function () {
         if (connection == null) {
+            common.consoleLog('Database connection does not exist.');
             return;
         }
         return new Promise(function (resolve) {
             try {
                 connection.end();
+                common.consoleLog('Database connection was closed successfully.');
                 resolve();
             } catch (closingError) {
                 common.consoleLogError('Error while closing database connection:\n' + closingError + '.');
