@@ -59,13 +59,9 @@ module.exports = {
     },
 
     crawlSpecificDateFromConfig: async function () {
-        try {
-            for (let i = 0; i < crawlerConfig.crawlSpecificDate.length; i++) {
-                let aSpecificDate = crawlerConfig.crawlSpecificDate[i];
-                await module.exports.crawlSpecificDate(aSpecificDate);
-            }
-        } catch (error) {
-            console.log(error);
+        for (let i = 0; i < crawlerConfig.crawlSpecificDate.length; i++) {
+            let aSpecificDate = crawlerConfig.crawlSpecificDate[i];
+            await module.exports.crawlSpecificDate(aSpecificDate);
         }
     },
 };
