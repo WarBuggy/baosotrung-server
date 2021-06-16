@@ -321,8 +321,8 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId, checkTod
     if (result == null) {
         return false;
     }
-    let writeResult = await writeResultToDB(result, ticketTypeData, publisher, publisher.id,
-        rssProviderId, feedPubDay);
+    let writeResult = await writeResultToDB(result, publisher.type, ticketTypeData.defaultPrize,
+        publisher.id, rssProviderId, feedPubDay);
     if (writeResult == false) {
         return false;
     }
@@ -387,11 +387,11 @@ function createInsertResultDetailQuery(result) {
     return insertQuery;
 };
 
-async function writeResultToDB(result, ticketTypeData, publisher, publisherId,
-    rssProviderId, feedPubDay) {
-    let ticketType = publisher.type;
-    let prizeFormat = ticketTypeData.defaultPrize;
+async function writeResultToDB(result, ticketType, prizeFormat,
+    publisherId, rssProviderId, feedPubDay) {
+    console.log(ticketType, prizeFormat, publisherId, rssProviderId);
     let date = feedPubDay.format(systemConfig.dayjsFormatDateOnly);
+    console.log([ticketType, prizeFormat,]);
     let resultId = await findPublisherResult(ticketType, publisherId, date);
     let insertQuery = createInsertResultDetailQuery(result);
     let params = [
@@ -491,8 +491,8 @@ async function crawlSpecificPublisher(typeObject, publisherObject,
                 return;
             }
             let writeResult =
-                await writeResultToDB(result,
-                    typeObject.base, publisherObject, publisherObject.id, rssProviderId, date);
+                await writeResultToDB(result, publisherObject.base.type, typeObject.base.defaultPrize,
+                    publisherObject.id, rssProviderId, date);
             if (writeResult == false) {
                 common.consoleLogError('Error when writing result to DB for ' + targetString + '.');
                 return;
