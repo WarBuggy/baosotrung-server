@@ -14,7 +14,12 @@ async function start() {
     // rssCrawler.test();
     // testSeries();
     // testNumberToWordVN();
-    rssCrawler.crawlSpecificDateFromConfig();
+    try {
+        rssCrawler.crawlSpecificDateFromConfig();
+    } catch (error) {
+        console.log('test');
+        console.log(error);
+    }
 };
 
 async function prepareDbConnection() {
