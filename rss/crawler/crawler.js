@@ -55,7 +55,7 @@ module.exports = {
     },
 
     crawlSpecificDateFromConfig: async function () {
-        for (let i = 0; crawlerConfig.crawlSpecificDate.length; i++) {
+        for (let i = 0; i < crawlerConfig.crawlSpecificDate.length; i++) {
             let aSpecificDate = crawlerConfig.crawlSpecificDate[i];
             await module.exports.crawlSpecificDate(aSpecificDate);
         }
@@ -321,7 +321,8 @@ async function crawlAProvider(ticketTypeData, publisher, rssProviderId, checkTod
     if (result == null) {
         return false;
     }
-    let writeResult = await writeResultToDB(result, ticketTypeData, publisher, rssProviderId, feedPubDay);
+    let writeResult = await writeResultToDB(result, ticketTypeData, publisher, publisher.id,
+        rssProviderId, feedPubDay);
     if (writeResult == false) {
         return false;
     }
@@ -386,10 +387,10 @@ function createInsertResultDetailQuery(result) {
     return insertQuery;
 };
 
-async function writeResultToDB(result, ticketTypeData, publisher, rssProviderId, feedPubDay) {
+async function writeResultToDB(result, ticketTypeData, publisher, publisherId,
+    rssProviderId, feedPubDay) {
     let ticketType = publisher.type;
     let prizeFormat = ticketTypeData.defaultPrize;
-    let publisherId = publisher.id;
     let date = feedPubDay.format(systemConfig.dayjsFormatDateOnly);
     let resultId = await findPublisherResult(ticketType, publisherId, date);
     let insertQuery = createInsertResultDetailQuery(result);
@@ -491,7 +492,7 @@ async function crawlSpecificPublisher(typeObject, publisherObject,
             }
             let writeResult =
                 await writeResultToDB(result,
-                    typeObject.base, publisherObject, rssProviderId, date);
+                    typeObject.base, publisherObject, publisherObject.id, rssProviderId, date);
             if (writeResult == false) {
                 common.consoleLogError('Error when writing result to DB for ' + targetString + '.');
                 return;
