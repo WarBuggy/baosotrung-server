@@ -13,8 +13,8 @@ async function start() {
     }
     // rssCrawler.test();
     // testSeries();
-    rssCrawler.crawlResultOfDate('2021-06-12');
     // testNumberToWordVN();
+    rssCrawler.crawlSpecificDateFromConfig();
 };
 
 async function prepareDbConnection() {

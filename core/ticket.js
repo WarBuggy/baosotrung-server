@@ -18,6 +18,9 @@ module.exports = {
             // when input series
             maxInputSeriesTimeAllow: '16:35:00',
             seriesLength: 6,
+            singleCrawl: {
+                rssProvider: 1,
+            },
         },
         2: {
             name: 'Miền Trung',

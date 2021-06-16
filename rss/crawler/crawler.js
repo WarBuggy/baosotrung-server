@@ -7,6 +7,7 @@ const db = require('../../db/db.js');
 const mailer = require('../../mailer/mailer.js');
 const series = require('../../core/series.js');
 
+const Https = require('https');
 const RssParser = require('rss-parser');
 const schedule = require('node-schedule');
 const dayjs = require('dayjs');
@@ -32,20 +33,31 @@ module.exports = {
         });
     },
 
-    crawlResultOfDate: function (dateString) {
+    crawlSpecificDate: async function (dateString) {
         let date = dayjs(dateString);
-        let crawlData = createBaseCrawlDataObject(date, false, false, false);
-        addTicketData(crawlData);
-        addPublisherData(crawlData);
-        let typeId = Object.keys(crawlData.ticketType);
-        for (let i = 0; i < typeId.length; i++) {
-            let aTypeId = typeId[i];
-            let aTicketTypeData = crawlData.ticketType[aTypeId];
-            let publisherId = Object.keys(aTicketTypeData.publisher);
-            if (publisherId.length < 1) {
+        if (!date.isValid()) {
+            common.consoleLog('Crawl a specific date received invalid date string (' + dateString + ').');
+            return;
+        }
+        let formatDateString = date.format(systemConfig.dayjsFormatDateOnly);
+        common.consoleLog('Begin to crawl result of ' + formatDateString + '.');
+        let crawlObject = createSpecificCrawlDataObject(date);
+        addSpecificCrawPublisher(crawlObject);
+        for (let i = 0; i < crawlObject.typeList.length; i++) {
+            let aType = crawlObject.typeList[i];
+            let typeObject = crawlObject.ticketType[aType];
+            if (typeObject.publisherList.length < 1) {
                 continue;
             }
-            crawlATicketType(crawlData, aTicketTypeData);
+            await crawlSpecificType(crawlObject, typeObject);
+        }
+        common.consoleLog('Finish crawling result of ' + formatDateString + '.');
+    },
+
+    crawlSpecificDateFromConfig: async function () {
+        for (let i = 0; crawlerConfig.crawlSpecificDate.length; i++) {
+            let aSpecificDate = crawlerConfig.crawlSpecificDate[i];
+            await module.exports.crawlSpecificDate(aSpecificDate);
         }
     },
 };
@@ -403,3 +415,92 @@ async function writeResultToDB(result, ticketTypeData, publisher, rssProviderId,
     return true;
 };
 //#endregion
+
+//#region Function to crawl a specific date
+
+function createSpecificCrawlDataObject(date) {
+    let result = {
+        date,
+        vnDateString: date.format(systemConfig.dayjsVNFormatDateOnly),
+        dayOfWeek: date.day(),
+        typeList: Object.keys(ticketCoreData.type),
+        ticketType: {},
+    };
+    for (let i = 0; i < result.typeList.length; i++) {
+        let aType = result.typeList[i];
+        result.ticketType[aType] = {
+            base: ticketCoreData.type[aType],
+            publisherList: [],
+            id: aType,
+        };
+    }
+    return result;
+};
+
+function addSpecificCrawPublisher(crawlObject) {
+    let publisherList = Object.keys(ticketCoreData.publisher);
+    for (let i = 0; i < publisherList.length; i++) {
+        let aPublisherId = publisherList[i];
+        let aPublisher = ticketCoreData.publisher[aPublisherId];
+        let publisherType = aPublisher.type;
+        if (!aPublisher.callDay.includes(crawlObject.dayOfWeek)) {
+            continue;
+        }
+        if (!crawlObject.typeList.includes(String(publisherType))) {
+            continue;
+        }
+        let publisherObject = {
+            id: aPublisherId,
+            base: aPublisher,
+        }
+        crawlObject.ticketType[publisherType].publisherList.push(publisherObject);
+    }
+};
+
+async function crawlSpecificType(crawlObject, typeObject) {
+    for (let i = 0; i < typeObject.publisherList.length; i++) {
+        let aPublisherObject = typeObject.publisherList[i];
+        let singleCrawlRssProviderId = typeObject.base.singleCrawl.rssProvider;
+        let rssProviderObject = rssProvider.provider[singleCrawlRssProviderId];
+        let rssURLKey = aPublisherObject.base.rssURLKey[singleCrawlRssProviderId];
+        aPublisherObject.url =
+            rssProviderObject.specificDateURLFunction(rssURLKey, crawlObject.vnDateString);
+        await crawlSpecificPublisher(typeObject, aPublisherObject,
+            rssProviderObject, singleCrawlRssProviderId, crawlObject.date);
+        await common.sleep(5000);
+    }
+};
+
+async function crawlSpecificPublisher(typeObject, publisherObject,
+    rssProviderObject, rssProviderId, date) {
+    let targetString = publisherObject.base.name + ', ' + typeObject.base.name;
+    common.consoleLog('Begin to crawl ' + targetString + '...');
+    Https.get(publisherObject.url, function (response) {
+        let data = '';
+        response.on('data', function (chunk) {
+            data = data + chunk;
+        });
+        response.on('end', function () {
+            let parseData =
+                rssProviderObject.parseSpecificFunction(data.toString());
+            let result =
+                typeObject.base.createResultData(parseData, publisherObject.base, rssProviderObject);
+            if (result == null) {
+                common.consoleLogError('Error when creating result data for ' + targetString + '.');
+                return;
+            }
+            let writeResult =
+                await writeResultToDB(result,
+                    typeObject.base, publisherObject, rssProviderId, date);
+            if (writeResult == false) {
+                common.consoleLogError('Error when writing result to DB for ' + targetString + '.');
+                return;
+            }
+            common.consoleLog('Finish crawling and writing to DB ' + targetString + '.');
+        });
+    }).on('error', (error) => {
+        common.consoleLogError('Error when crawling ' + targetString + '. Error: ' + error);
+    });
+};
+//#endregion
+
