@@ -480,7 +480,7 @@ async function crawlSpecificPublisher(typeObject, publisherObject,
         response.on('data', function (chunk) {
             data = data + chunk;
         });
-        response.on('end', function () {
+        response.on('end', async function () {
             let parseData =
                 rssProviderObject.parseSpecificFunction(data.toString());
             let result =
