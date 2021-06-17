@@ -165,7 +165,7 @@ function createResultObject(array2Digit, array3Digit,
 function findStringInHtml(htmlString, stringExpression, digit) {
     let result = [];
     let subString = htmlString.match(stringExpression);
-    if (subString.length >= 1) {
+    if (subString != null && subString.length >= 1) {
         result = subString[0].match(digit);
     }
     return result;

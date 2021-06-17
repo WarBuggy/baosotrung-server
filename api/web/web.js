@@ -525,7 +525,7 @@ module.exports = function (app) {
             return;
         }
 
-        targetDateString = '2019-02-22';
+        targetDateString = '1999-02-22';
         let secondTime = false;
         let result = await findResultOfDate(ticketType, targetDateString, requestIp);
         if (result.resultCode != 0) {
