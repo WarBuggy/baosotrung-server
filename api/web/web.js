@@ -504,10 +504,10 @@ module.exports = function (app) {
         let targetDate = findDateOf(week, dayOfWeek, today, todayDayOfWeek);
         let targetDateString = targetDate.format(systemConfig.dayjsFormatDateOnly);
         let vnDateString = targetDate.format(systemConfig.dayjsVNFormatDateOnly);
-
-        console.log([targetDateString, vnDateString, todayCrawlTimeString]);
-
         let targetDateFullString = targetDate.format(systemConfig.dayjsFormatFull);
+
+        console.log([targetDateString, vnDateString, todayCrawlTimeString, targetDateFullString]);
+
         if (targetDateFullString >= todayCrawlTimeString) {
             let resJson = {
                 success: true,

@@ -8,7 +8,7 @@ class ResultLog {
     constructor() {
         this.data = {
             ticketType: 1,
-            dayOfWeek: 6,
+            dayOfWeek: 4,
             week: 0,
         };
         this.getData();
