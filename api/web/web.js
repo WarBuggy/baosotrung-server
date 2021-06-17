@@ -499,16 +499,20 @@ module.exports = function (app) {
         if (!['0', '1', '2', '3', '4', '5', '6'].includes(dayOfWeek)) {
             dayOfWeek = todayDayOfWeek;
         }
-        let todayCrawlTimeString = today.format(systemConfig.dayjsFormatDateOnly) + ' ' +
-            coreTicketData.type[ticketType].crawlTime;
+        let todayDateString = today.format(systemConfig.dayjsFormatDateOnly);
+        let todayCrawlTimeString = todayDateString + ' ' + coreTicketData.type[ticketType].crawlTime;
         let targetDate = findDateOf(week, dayOfWeek, today, todayDayOfWeek);
         let targetDateString = targetDate.format(systemConfig.dayjsFormatDateOnly);
         let vnDateString = targetDate.format(systemConfig.dayjsVNFormatDateOnly);
         let targetDateFullString = targetDate.format(systemConfig.dayjsFormatFull);
+        let tomorrow = today.add(1, 'day');
+        let tomorrowFullString = tomorrow.format(systemConfig.dayjsFormatDateOnly) +
+            ' 00:00:00';
 
         console.log([targetDateString, vnDateString, todayCrawlTimeString, targetDateFullString]);
 
-        if (targetDateFullString >= todayCrawlTimeString) {
+        if (targetDateFullString >= tomorrowFullString ||
+            (targetDateString == todayDateString && targetDateFullString <= todayCrawlTimeString)) {
             let resJson = {
                 success: true,
                 result: 0,
