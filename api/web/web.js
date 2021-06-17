@@ -525,6 +525,7 @@ module.exports = function (app) {
             return;
         }
 
+        targetDateString = '2018-04-23';
         let secondTime = false;
         let result = await findResultOfDate(ticketType, targetDateString, requestIp);
         if (result.resultCode != 0) {
@@ -541,7 +542,7 @@ module.exports = function (app) {
             common.consoleLogError('Error when ' + purpose + '. Error code ' + errorCode + '.');
             return;
         }
-
+        console.log(result.sqlResults[1]);
         if (result.sqlResults[1] == null || result.sqlResults[1].length < 1) {
             common.consoleLog('Could not find result of date ' + targetDateString + '. Try to crawl from source...');
             let rssCrawler = require('../../rss/crawler/crawler.js');
@@ -603,6 +604,10 @@ module.exports = function (app) {
         };
         let result = await db.query(params, logInfo);
         return result;
+    };
+
+    function processDbData(data) {
+
     };
     //#endregion
 };
