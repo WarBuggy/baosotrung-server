@@ -525,6 +525,7 @@ module.exports = function (app) {
             return;
         }
 
+        let secondTime = false;
         let result = await findResultOfDate(ticketType, targetDateString, requestIp);
         if (result.resultCode != 0) {
             let errorCode = result.resultCode;
@@ -534,7 +535,7 @@ module.exports = function (app) {
                 vnDateString,
                 data: null,
                 code: errorCode,
-                secondTime: false,
+                secondTime,
             };
             response.json(resJson);
             common.consoleLogError('Error when ' + purpose + '. Error code ' + errorCode + '.');
@@ -545,6 +546,7 @@ module.exports = function (app) {
             common.consoleLog('Could not find result of date ' + targetDateString + '. Try to crawl from source...');
             let rssCrawler = require('../../rss/crawler/crawler.js');
             await rssCrawler.crawlSpecificDate(targetDateString);
+            secondTime = true;
         }
 
         result = await findResultOfDate(ticketType, targetDateString, requestIp);
@@ -556,7 +558,7 @@ module.exports = function (app) {
                 vnDateString,
                 data: null,
                 code: errorCode,
-                secondTime: true,
+                secondTime,
             };
             response.json(resJson);
             common.consoleLogError('Error when ' + purpose + ' (second time). Error code ' + errorCode + '.');
@@ -569,7 +571,7 @@ module.exports = function (app) {
             vnDateString,
             data: result.sqlResults[1],
             code: 0,
-            secondTime: true,
+            secondTime,
         };
         response.json(resJson);
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
