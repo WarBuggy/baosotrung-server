@@ -1,11 +1,11 @@
 const systemConfig = require('../../systemConfig.js');
 const coreTicketData = require('../../core/ticket.js');
-const dayjs = require('dayjs');
-const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
 const common = require('../../common/common.js');
 const db = require('../../db/db.js');
 const cryptoAES256CBC = require('../../common/crypto/crypto.js')['aes-256-cbc'];
 const mailer = require('../../mailer/mailer.js');
+const dayjs = require('dayjs');
+const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(dayjsCustomParseFormat);
 
 module.exports = function (app) {
@@ -463,7 +463,8 @@ module.exports = function (app) {
         };
         let result = await db.query(params, logInfo);
         if (result.resultCode != 0) {
-            response.status(result.resultCode);
+            let errorCode = result.resultCode;
+            response.status(errorCode);
             response.json({ success: false, });
             common.consoleLogError('Error when ' + purpose + '. Error code ' + errorCode + '.');
             return;
@@ -475,5 +476,125 @@ module.exports = function (app) {
         response.json(resJson);
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
     });
+    //#endregion
+
+    //#region /api/result-log/data
+    app.post('/api/result-log/data', async function (request, response) {
+        let requestIp = common.getReadableIP(request);
+        let purpose = 'retreive data for result log page';
+        common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
+        let ticketType = String(request.body.ticketType);
+        let dayOfWeek = String(request.body.dayOfWeek);
+        let week = String(request.body.week);
+
+        let ticketTypeList = Object.keys(coreTicketData.type);
+        if (!ticketTypeList.includes(ticketType)) {
+            ticketType = ticketTypeList[0];
+        }
+        if (!['0', '1', '2', '3'].includes(week)) {
+            week = '0';
+        }
+        let today = dayjs();
+        let todayDayOfWeek = String(today.day());
+        if (!['0', '1', '2', '3', '4', '5', '6'].includes(dayOfWeek)) {
+            dayOfWeek = todayDayOfWeek;
+        }
+        let targetDateString = today.format(systemConfig.dayjsFormatDateOnly);
+        let todayCrawlTimeString = + targetDateString + ' ' +
+            coreTicketData.type[ticketType].crawlTime;
+        let targetDate = findDateOf(week, dayOfWeek, today, todayDayOfWeek);
+        let vnDateString = targetDate.format(systemConfig.dayjsVNFormatDateOnly)
+
+        let targetDateFullString = targetDate.format(systemConfig.dayjsFormatFull);
+        if (targetDateFullString >= todayCrawlTimeString) {
+            let resJson = {
+                success: true,
+                result: 0,
+                vnDateString,
+                data: null,
+                code: 1,
+            };
+            response.json(resJson);
+            common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+            return;
+        }
+
+        let result = await findResultOfDate(ticketType, targetDateString);
+        if (result.resultCode != 0) {
+            let errorCode = result.resultCode;
+            let resJson = {
+                success: true,
+                result: 0,
+                vnDateString,
+                data: null,
+                code: errorCode,
+                secondTime: false,
+            };
+            response.json(resJson);
+            common.consoleLogError('Error when ' + purpose + '. Error code ' + errorCode + '.');
+            return;
+        }
+
+        if (result.sqlResults[1] == null || result.sqlResults[1].length < 1) {
+            common.consoleLog('Could not find result of date ' + targetDateString + '. Try to crawl from source...');
+            let rssCrawler = require('../../rss/crawler/crawler.js');
+            await rssCrawler.crawlSpecificDate(targetDateString);
+        }
+
+        result = await findResultOfDate(ticketType, targetDateString);
+        if (result.resultCode != 0) {
+            let errorCode = result.resultCode;
+            let resJson = {
+                success: true,
+                result: 0,
+                vnDateString,
+                data: null,
+                code: errorCode,
+                secondTime: true,
+            };
+            response.json(resJson);
+            common.consoleLogError('Error when ' + purpose + ' (second time). Error code ' + errorCode + '.');
+            return;
+        }
+
+        let resJson = {
+            success: true,
+            result: 0,
+            vnDateString,
+            data: result.sqlResults[1],
+            code: 0,
+            secondTime: true,
+        };
+        response.json(resJson);
+        common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+    });
+
+    function findDateOf(week, dayOfWeek, today, todayDayOfWeek) {
+        let targetDay = today.add(((-7) * week), 'day');
+        if (dayOfWeek == 0) {
+            dayOfWeek = 7;
+        }
+        if (todayDayOfWeek == 0) {
+            todayDayOfWeek = 7
+        }
+        let diff = dayOfWeek - todayDayOfWeek;
+        targetDay = targetDay.add(diff, 'day');
+        return targetDay;
+    };
+
+    async function findResultOfDate(ticketType, dateString) {
+        let params = [
+            requestIp,
+            ticketType,
+            dateString,
+        ];
+        let logInfo = {
+            username: '',
+            source: '`baosotrung_data`.`SP_FIND_RESULT_OF_DATE`',
+            userIP: requestIp,
+        };
+        let result = await db.query(params, logInfo);
+        return result;
+    };
     //#endregion
 };

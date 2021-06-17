@@ -5,9 +5,10 @@ window.addEventListener('load', async function () {
         let coreDataResult = await Common.sendToBackend('/api/data/core');
         window.coreTicketData = coreDataResult.data;
         window.inputSeriesManager = new InputSeriesManager();
+        Common.savePageTraffic(1);
     } catch (error) {
+        console.log(error);
     }
-    Common.savePageTraffic(1);
 });
 
 function isTouchDevice() {

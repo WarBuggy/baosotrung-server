@@ -3,9 +3,16 @@ const common = require('./common/common.js');
 const rssCrawler = require('./rss/crawler/crawler.js');
 const series = require('./core/series.js');
 
-start();
-return;
+const dayjs = require('dayjs');
+const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(dayjsCustomParseFormat);
 
+let today = dayjs();
+let todayDayOfWeek = String(today.day());
+
+findDateOf(0, 4, today, todayDayOfWeek);
+findDateOf(1, 2, today, todayDayOfWeek);
+findDateOf(3, 0, today, todayDayOfWeek);
 
 async function start() {
     let prepareDbConnectionResult = await prepareDbConnection();
@@ -159,4 +166,18 @@ function testNumberToWordVN() {
     console.log(common.numberToWordVN(123000006));
     console.log(common.numberToWordVN(4123000006));
     console.log(common.numberToWordVN(4123004306));
+};
+
+function findDateOf(week, dayOfWeek, today, todayDayOfWeek) {
+    let targetDay = today.add(((-7) * week), 'day');
+    if (dayOfWeek == 0) {
+        dayOfWeek = 7;
+    }
+    if (todayDayOfWeek == 0) {
+        todayDayOfWeek = 7
+    }
+    let diff = dayOfWeek - todayDayOfWeek;
+    targetDay = targetDay.add(diff, 'day');
+    console.log(week + ', ' + dayOfWeek + ': ' + targetDay.format('YYYY-MM-DD'))
+    return targetDay;
 };

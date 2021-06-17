@@ -1,0 +1,79 @@
+div.result-log-ticket-type {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+}
+
+div.result-log-ticket-type-item {
+  font-size: 12pt;
+  color: black;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 8px;
+}
+
+.result-log-ticket-type-item:hover {
+  text-decoration: underline;
+}
+
+.result-log-ticket-type-item.click {
+  font-weight: 400;
+  text-decoration: underline;
+  background-color: lightgray;
+}
+
+.result-log-ticket-type-item.disable {
+  display: none;
+}
+
+div.result-log-day-of-week {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto;
+  justify-content: space-between;
+}
+
+div.result-log-day-of-week-item {
+  font-size: 11pt;
+  color: black;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 8px;
+}
+
+.result-log-day-of-week-item:hover {
+  text-decoration: underline;
+}
+
+.result-log-day-of-week-item.click {
+  font-weight: 400;
+  text-decoration: underline;
+  background-color: lightgray;
+}
+
+div.result-log-week {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr auto 1fr auto;
+  justify-content: space-between;
+  align-items: center;
+}
+
+div.result-log-week-item {
+  font-size: 11pt;
+  color: black;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 8px;
+  text-align: center;
+}
+
+.result-log-week-item:hover {
+  text-decoration: underline;
+}
+
+.result-log-week-item.click {
+  font-weight: 400;
+  text-decoration: underline;
+  background-color: lightgray;
+}

@@ -27,7 +27,6 @@
     <!-- COMMON SCRIPT -->
     <script src="script/common/backendURL.js?version=1.0"></script>
     <script src="script/common/common.js?version=1.0"></script>
-    <script src="script/common/inputNumber.js?version=1.0"></script>
     <script src="script/common/button.js?version=0.1"></script>
     <!-- SCRIPT -->
     <script src="script/header.js?version=0.1"></script>
@@ -36,26 +35,39 @@
 
 <body>
     <div class='content-root'>
-        <div>
-            <div id='divInputSeriesParent' class='input-series-parent'></div>
-            <div id='divInputSeriesControlGrid' class='input-series-control-grid'></div>
-            <div id='divInputSeriesConfirmDelete' class='input-series-control-delete'></div>
+        <div class='result-log-ticket-type'>
+            <div class='result-log-ticket-type-item' ticket-type='1'>Miền Nam</div>
+            <div class='result-log-ticket-type-item disable' style='justify-self: center;'>
+                Miền Trung
+            </div>
+            <div class='result-log-ticket-type-item disable'>Miền Bắc</div>
         </div>
-        <div id='divInputDetail' class='input-detail-parent'>
-            <div style='padding: 12px 12px 4px 12px;'>Khi trúng số, hãy gửi thông báo đến</div>
-            <input id='radioSubmissionEmail' type='checkbox' name='submissionMethod' style='margin-bottom: 8px;'
-                disabled='true' checked>
-            <label for='radioSubmissionEmail' style='color: gray;'>Email</label>
-            <div id='divSubmissionEmailOuter'></div>
-            <!--
-            <input id='radioSubmissionZalo' type='checkbox' name='submissionMethod' disabled='true' style='margin-bottom: 8px;'>
-            <label for='radioSubmissionZalo' style='color: gray;'>Zalo (Đang phát triển)</label>
-            -->
-            <input id='radioSubmissionSMS' type='checkbox' name='submissionMethod' disabled='true'
-                style='margin-bottom: 8px;'>
-            <label for='radioSubmissionSMS' style='color: gray;'>SMS (Đang phát triển)</label>
+        <div class='result-log-day-of-week'>
+            <div class='result-log-day-of-week-item' day-of-week='1' style='justify-self: start;'>T2</div>
+            <div class='result-log-day-of-week-item' day-of-week='2'>T3</div>
+            <div class='result-log-day-of-week-item' day-of-week='3'>T4</div>
+            <div class='result-log-day-of-week-item' day-of-week='4'>T5</div>
+            <div class='result-log-day-of-week-item' day-of-week='5'>T6</div>
+            <div class='result-log-day-of-week-item' day-of-week='6'>T7</div>
+            <div class='result-log-day-of-week-item' day-of-week='0' style='justify-self: end;'>CN</div>
         </div>
-        <div id='divSendInfoOuter' class='input-series-send-outer'></div>
+        <div class='result-log-week'>
+            <div class='result-log-week-item' week='0' style='justify-self: start; text-align: left;'>
+                Tuần này
+            </div>
+            <div></div>
+            <div class='result-log-week-item' week='1'>
+                Tuần trước
+            </div>
+            <div></div>
+            <div class=' result-log-week-item' week='2'>
+                2 tuần trước
+            </div>
+            <div></div>
+            <div class='result-log-week-item' week='3' style='justify-self: end; text-align: right;'>
+                3 tuần trước
+            </div>
+        </div>
     </div>
 </body>
 
