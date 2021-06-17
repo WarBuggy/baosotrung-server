@@ -33,7 +33,7 @@ module.exports = {
         });
     },
 
-    crawlSpecificDate: async function (dateString) {
+    crawlSpecificDate: async function (dateString, delayTime) {
         try {
             let date = dayjs(dateString);
             if (!date.isValid()) {
@@ -50,7 +50,7 @@ module.exports = {
                 if (typeObject.publisherList.length < 1) {
                     continue;
                 }
-                await crawlSpecificType(crawlObject, typeObject);
+                await crawlSpecificType(crawlObject, typeObject, delayTime);
             }
             common.consoleLog('Finish crawling result of ' + formatDateString + '.');
         } catch (error) {
@@ -61,7 +61,7 @@ module.exports = {
     crawlSpecificDateFromConfig: async function () {
         for (let i = 0; i < crawlerConfig.crawlSpecificDate.length; i++) {
             let aSpecificDate = crawlerConfig.crawlSpecificDate[i];
-            await module.exports.crawlSpecificDate(aSpecificDate);
+            await module.exports.crawlSpecificDate(aSpecificDate, 5000);
         }
     },
 };
@@ -460,7 +460,8 @@ function addSpecificCrawPublisher(crawlObject) {
     }
 };
 
-async function crawlSpecificType(crawlObject, typeObject) {
+async function crawlSpecificType(crawlObject, typeObject, delayTime) {
+    delayTime = Math.max(delayTime, 300);
     try {
         for (let i = 0; i < typeObject.publisherList.length; i++) {
             let aPublisherObject = typeObject.publisherList[i];
@@ -471,7 +472,7 @@ async function crawlSpecificType(crawlObject, typeObject) {
                 rssProviderObject.specificDateURLFunction(rssURLKey, crawlObject.vnDateString);
             await crawlSpecificPublisher(typeObject, aPublisherObject,
                 rssProviderObject, singleCrawlRssProviderId, crawlObject.date);
-            await common.sleep(5000);
+            await common.sleep(delayTime);
         }
     } catch (error) {
         common.consoleLogError('Error when crawling a specific type (' +
