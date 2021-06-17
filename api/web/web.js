@@ -508,6 +508,7 @@ module.exports = function (app) {
         let tomorrow = today.add(1, 'day');
         let tomorrowFullString = tomorrow.format(systemConfig.dayjsFormatDateOnly) +
             ' 00:00:00';
+        let secondTime = false;
 
         console.log([targetDateString, vnDateString, todayCrawlTimeString, targetDateFullString]);
 
@@ -519,6 +520,7 @@ module.exports = function (app) {
                 vnDateString,
                 data: null,
                 code: 1,
+                secondTime,
             };
             response.json(resJson);
             common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
@@ -526,7 +528,6 @@ module.exports = function (app) {
         }
 
         targetDateString = '1999-02-22';
-        let secondTime = false;
         let result = await findResultOfDate(ticketType, targetDateString, requestIp);
         if (result.resultCode != 0) {
             let errorCode = result.resultCode;

@@ -17,5 +17,12 @@ class ResultLog {
     async getData() {
         let response = await Common.sendToBackend('/api/result-log/data', this.data);
         console.log(response);
+        // check if code is not 0 -> error
+
+        // if response.data.length < 1
+        // code = 1 ->  'Kết quả xổ số chưa có'
+        // else -> 'Không tìm được kết quả'
+
+        // else display data
     };
 };
