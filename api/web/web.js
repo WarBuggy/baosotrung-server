@@ -499,11 +499,13 @@ module.exports = function (app) {
         if (!['0', '1', '2', '3', '4', '5', '6'].includes(dayOfWeek)) {
             dayOfWeek = todayDayOfWeek;
         }
-        let targetDateString = today.format(systemConfig.dayjsFormatDateOnly);
-        let todayCrawlTimeString = + targetDateString + ' ' +
+        let todayCrawlTimeString = today.format(systemConfig.dayjsFormatDateOnly) + ' ' +
             coreTicketData.type[ticketType].crawlTime;
         let targetDate = findDateOf(week, dayOfWeek, today, todayDayOfWeek);
-        let vnDateString = targetDate.format(systemConfig.dayjsVNFormatDateOnly)
+        let targetDateString = targetDate.format(systemConfig.dayjsFormatDateOnly);
+        let vnDateString = targetDate.format(systemConfig.dayjsVNFormatDateOnly);
+
+        console.log([targetDateString, vnDateString, todayCrawlTimeString]);
 
         let targetDateFullString = targetDate.format(systemConfig.dayjsFormatFull);
         if (targetDateFullString >= todayCrawlTimeString) {
