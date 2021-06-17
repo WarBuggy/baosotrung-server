@@ -519,7 +519,7 @@ module.exports = function (app) {
             return;
         }
 
-        let result = await findResultOfDate(ticketType, targetDateString);
+        let result = await findResultOfDate(ticketType, targetDateString, requestIp);
         if (result.resultCode != 0) {
             let errorCode = result.resultCode;
             let resJson = {
@@ -541,7 +541,7 @@ module.exports = function (app) {
             await rssCrawler.crawlSpecificDate(targetDateString);
         }
 
-        result = await findResultOfDate(ticketType, targetDateString);
+        result = await findResultOfDate(ticketType, targetDateString, requestIp);
         if (result.resultCode != 0) {
             let errorCode = result.resultCode;
             let resJson = {
@@ -582,7 +582,7 @@ module.exports = function (app) {
         return targetDay;
     };
 
-    async function findResultOfDate(ticketType, dateString) {
+    async function findResultOfDate(ticketType, dateString, requestIp) {
         let params = [
             requestIp,
             ticketType,

@@ -1,5 +1,3 @@
-const common = require("../../common/common");
-
 window.addEventListener('load', function () {
     new Header();
     new ResultLog();
@@ -17,7 +15,7 @@ class ResultLog {
     };
 
     async getData() {
-        let response = await Common.sendToBackend('/api/result-log/data', sendData);
+        let response = await Common.sendToBackend('/api/result-log/data', this.data);
         console.log(response);
     };
 };
