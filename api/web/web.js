@@ -510,8 +510,6 @@ module.exports = function (app) {
             ' 00:00:00';
         let secondTime = false;
 
-        console.log([targetDateString, vnDateString, todayCrawlTimeString, targetDateFullString]);
-
         if (targetDateFullString >= tomorrowFullString ||
             (targetDateString == todayDateString && targetDateFullString <= todayCrawlTimeString)) {
             let resJson = {
@@ -521,6 +519,9 @@ module.exports = function (app) {
                 data: null,
                 code: 1,
                 secondTime,
+                ticketType,
+                week,
+                dayOfWeek,
             };
             response.json(resJson);
             common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
@@ -538,6 +539,9 @@ module.exports = function (app) {
                 data: null,
                 code: errorCode,
                 secondTime,
+                ticketType,
+                week,
+                dayOfWeek,
             };
             response.json(resJson);
             common.consoleLogError('Error when ' + purpose + '. Error code ' + errorCode + '.');
@@ -560,6 +564,9 @@ module.exports = function (app) {
                 data: null,
                 code: errorCode,
                 secondTime,
+                ticketType,
+                week,
+                dayOfWeek,
             };
             response.json(resJson);
             common.consoleLogError('Error when ' + purpose + ' (second time). Error code ' + errorCode + '.');
@@ -573,6 +580,9 @@ module.exports = function (app) {
             data: result.sqlResults[1],
             code: 0,
             secondTime,
+            ticketType,
+            week,
+            dayOfWeek,
         };
         response.json(resJson);
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
