@@ -616,14 +616,19 @@ module.exports = function (app) {
     };
 
     function processDbData(data) {
-        result = {};
+        result = {
+            prizeFormatList: [],
+        };
         const prizeData = require('../../core/prize.js');
         const publisherData = coreTicketData.publisher;
         for (let i = 0; i < data.length; i++) {
             let aRecord = data[i];
             let publisherId = aRecord.publisher;
             let prizeId = aRecord.prize;
-            let prizeFormatId = aRecord.prize_format;
+            let prizeFormatId = String(aRecord.prize_format);
+            if (!result.prizeFormatList.includes(prizeFormatId)) {
+                result.prizeFormatList.push(prizeFormatId);
+            }
             let publisherName = publisherData[publisherId].name;
             let publisherResult = result[publisherName];
             if (publisherResult == null) {
