@@ -128,6 +128,37 @@ class ResultLog {
     };
 
     displayData(data) {
+        let publisherList = Object.keys(data.publisherList);
+        let divData = document.getElementById('divData');
+        this.createDivDataPublisherNameRow(publisherList, divData);
+        for (let i = 0; i < data.prizeList.length; i++) {
+            let prizeObject = data.prizeList[i];
+            let prizeResultLogName = prizeObject.resultLogName;
+            let divPrizeResultLogName = document.createElement('div');
+            divPrizeResultLogName.classList.add('result-log-prize-name');
+            divPrizeResultLogName.innerText = prizeResultLogName;
+            divData.appendChild(divPrizeResultLogName);
+            for (let j = 0; j < publisherList.length; j++) {
+                let publisherName = publisherList[j];
+                let series = data.publisherList[publisherName][prizeResultLogName];
+                let divSeries = document.createElement('div');
+                divSeries.classList.add('result-log-series');
+                divSeries.innerText = series.join('\n');
+                divData.appendChild(divSeries);
+            }
+        }
+    };
 
+    createDivDataPublisherNameRow(publisherList, divData) {
+        divData.appendChild(document.createElement('div'));
+        let gridTemplateColumns = 'auto';
+        for (let i = 0; i < publisherList.length; i++) {
+            gridTemplateColumns = gridTemplateColumns + ' 1fr';
+            let divPublisherName = document.createElement('div');
+            divPublisherName.classList.add('result-log-publisher-name');
+            divPublisherName.innerText = publisherList[i];
+            divData.appendChild(divPublisherName);
+        }
+        divData.style.gridTemplateColumns = gridTemplateColumns;
     };
 };

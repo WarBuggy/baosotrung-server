@@ -119,3 +119,23 @@ div.result-log-message {
   font-size: 12pt;
   color: red;
 }
+
+div.result-log-publisher-name {
+  font-size: 10pt;
+  font-weight: 700;
+  justify-self: end;
+  text-align: right;
+}
+
+div.result-log-prize-name {
+  font-size: 12pt;
+  font-weight: 700;
+  justify-self: center;
+}
+
+div.result-log-series {
+  font-size: 12pt;
+  font-weight: 700;
+  justify-self: end;
+  text-align: right;
+}
