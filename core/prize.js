@@ -112,6 +112,6 @@ module.exports = {
         },
     },
     sortPrize: function (prize1, prize2) {
-        return prize1.sortValue - prize2, sortValue;
+        return prize1.sortValue - prize2.sortValue;
     },
 };
