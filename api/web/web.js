@@ -571,12 +571,12 @@ module.exports = function (app) {
             common.consoleLogError('Error when ' + purpose + ' (second time). Error code ' + errorCode + '.');
             return;
         }
-
+        let data = processDbData(result.sqlResults[1]);
         let resJson = {
             success: true,
             result: 0,
             vnDateString,
-            data: result.sqlResults[1],
+            data,
             code: 0,
             secondTime,
             ticketType,
@@ -616,7 +616,33 @@ module.exports = function (app) {
     };
 
     function processDbData(data) {
-
+        result = {};
+        const prizeData = require('../../core/prize.js');
+        const publisherData = coreTicketData.publisher;
+        for (let i = 0; i < data.length; i++) {
+            let aRecord = data[i];
+            let publisherId = aRecord.publisher;
+            let prizeId = aRecord.prize;
+            let prizeFormatId = aRecord.prize_format;
+            let publisherName = publisherData[publisherId].name;
+            let publisherResult = result[publisherName];
+            if (publisherResult == null) {
+                publisherResult = {};
+                result[publisherName] = publisherResult;
+            }
+            let prizeName = prizeData[prizeFormatId][prizeId].name;
+            let prizeResult = publisherResult[prizeName];
+            if (prizeResult == null) {
+                prizeResult = {
+                    data: prizeData[prizeFormatId][prizeId],
+                    series: [],
+                };
+                publisherResult[prizeName] = prizeResult;
+            }
+            let aSeries = aRecord.series;
+            prizeResult.series.push(aSeries);
+        }
+        return result;
     };
     //#endregion
 };
