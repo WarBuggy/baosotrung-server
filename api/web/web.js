@@ -623,12 +623,16 @@ module.exports = function (app) {
         const publisherData = coreTicketData.publisher;
         for (let i = 0; i < data.length; i++) {
             let aRecord = data[i];
-            let publisherId = aRecord.publisher;
             let prizeId = aRecord.prize;
             let prizeFormatId = String(aRecord.prize_format);
+            let prizeObject = prizeData[prizeFormatId][prizeId];
+            if (prizeObject.showOnResultLog == false) {
+                continue;
+            }
             if (!result.prizeFormatList.includes(prizeFormatId)) {
                 result.prizeFormatList.push(prizeFormatId);
             }
+            let publisherId = aRecord.publisher;
             let publisherName = publisherData[publisherId].name;
             let publisherResult = result[publisherName];
             if (publisherResult == null) {
