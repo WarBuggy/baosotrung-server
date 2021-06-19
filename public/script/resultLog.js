@@ -7,9 +7,9 @@ window.addEventListener('load', function () {
 class ResultLog {
     constructor() {
         this.data = {
-            ticketType: 1,
-            dayOfWeek: 1,
-            week: 3,
+            ticketType: null,
+            dayOfWeek: null,
+            week: null,
         };
         this.addEventListener();
         this.getData();
