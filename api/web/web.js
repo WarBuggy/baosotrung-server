@@ -528,7 +528,6 @@ module.exports = function (app) {
             return;
         }
 
-        targetDateString = '1999-02-22';
         let result = await findResultOfDate(ticketType, targetDateString, requestIp);
         if (result.resultCode != 0) {
             let errorCode = result.resultCode;
