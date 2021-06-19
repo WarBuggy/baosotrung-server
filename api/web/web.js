@@ -645,11 +645,10 @@ module.exports = function (app) {
                 publisherResult = {};
                 result.publisherList[publisherName] = publisherResult;
             }
-            let prizeName = prizeObject.name;
-            let prizeResult = publisherResult[prizeName];
+            let prizeResult = publisherResult[prizeResultLogName];
             if (prizeResult == null) {
                 prizeResult = [];
-                publisherResult[prizeName] = prizeResult;
+                publisherResult[prizeResultLogName] = prizeResult;
             }
             let aSeries = aRecord.series;
             prizeResult.push(aSeries);
