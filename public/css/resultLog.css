@@ -8,7 +8,6 @@ div.result-log-ticket-type-item {
   font-size: 12pt;
   color: black;
   cursor: pointer;
-  font-weight: bold;
   padding: 8px;
   margin: 4px 0px 4px 0px;
 }
@@ -18,7 +17,7 @@ div.result-log-ticket-type-item {
 }
 
 .result-log-ticket-type-item.click {
-  font-weight: 400;
+  font-weight: 700;
   text-decoration: underline;
   background-color: lightgray;
 }
@@ -39,7 +38,6 @@ div.result-log-day-of-week-item {
   font-size: 11pt;
   color: black;
   cursor: pointer;
-  font-weight: bold;
   padding: 8px;
   margin: 4px 0px 4px 0px;
 }
@@ -49,7 +47,7 @@ div.result-log-day-of-week-item {
 }
 
 .result-log-day-of-week-item.click {
-  font-weight: 400;
+  font-weight: 700;
   text-decoration: underline;
   background-color: lightgray;
 }
@@ -66,7 +64,6 @@ div.result-log-week-item {
   font-size: 11pt;
   color: black;
   cursor: pointer;
-  font-weight: bold;
   padding: 8px;
   text-align: center;
   margin: 4px 0px 4px 0px;
@@ -77,7 +74,7 @@ div.result-log-week-item {
 }
 
 .result-log-week-item.click {
-  font-weight: 400;
+  font-weight: 700;
   text-decoration: underline;
   background-color: lightgray;
 }
@@ -109,7 +106,7 @@ div.result-log-date-outer {
 }
 
 div.result-log-date {
-  font-weight: bold;
+  font-weight: 700;
   padding-left: 8px;
 }
 
@@ -118,7 +115,7 @@ div.result-log-data {
   margin-top: 8px;
 }
 div.result-log-message {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 12pt;
   color: red;
 }

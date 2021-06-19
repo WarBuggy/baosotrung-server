@@ -640,10 +640,11 @@ module.exports = function (app) {
                 publisherResult = {};
                 result[publisherName] = publisherResult;
             }
-            let prizeName = prizeData[prizeFormatId][prizeId].name;
-            if (!result.prizeList.includes(prizeName)) {
-                result.prizeList.push(prizeName);
+            let prizeResultLogName = prizeData[prizeFormatId][prizeId].resultLogName;
+            if (!result.prizeList.includes(prizeResultLogName)) {
+                result.prizeList.push(prizeResultLogName);
             }
+            let prizeName = prizeData[prizeFormatId][prizeId].name;
             let prizeResult = publisherResult[prizeName];
             if (prizeResult == null) {
                 prizeResult = {

@@ -36,7 +36,11 @@ class ResultLog {
             'click', 'day-of-week', 'dayOfWeek');
         this.matchDisplayClickWithData('result-log-week-item',
             'click', 'week', 'week');
-        this.displayData(response);
+        document.getElementById('divDate').innerText = response.vnDateString;
+        let checkResult = this.checkResponse(response);
+        if (checkResult == true) {
+            this.displayData(response.data);
+        }
         this.toggleDivLoading(false);
     };
 
@@ -92,25 +96,28 @@ class ResultLog {
         divDateOuter.style.display = 'grid';
     };
 
-    displayData(response) {
+    checkResponse(response) {
         let divData = document.getElementById('divData');
-        document.getElementById('divDate').innerText = response.vnDateString;
         divData.innerHTML = '';
         let code = response.code;
         if (code == 1) {
             let message = 'Chưa có kết quả xổ số cho ngày này. Xin quý khách vui lòng kiểm lại sau!';
             divData.appendChild(this.createDivMessage(message));
-            return;
+            return false;
         }
         if (code != 0) {
             let message = 'Hệ thống gặp lỗi ' + code + '_' + response.secondTime +
                 ' khi truy cập dữ liệu. Xin quý khách vui lòng thử lại sau!';
             divData.appendChild(this.createDivMessage(message));
-            return;
+            return false;
         }
-        // if response.data.length < 1
-        // code = 1 ->  'Kết quả xổ số chưa có'
-        // else -> 'Không tìm được kết quả'
+        if (response.data.length < 1) {
+            let message = 'Hệ thống không thể tìm được kết quả xổ số cho ngày này. ' +
+                'Xin lưu ý hệ thống không lưu kết quả của những năm trước 2010.';
+            divData.appendChild(this.createDivMessage(message));
+            return false;
+        }
+        return true;
     };
 
     createDivMessage(message) {
@@ -118,5 +125,9 @@ class ResultLog {
         div.classList.add('result-log-message');
         div.innerText = message;
         return div;
+    };
+
+    displayData(data) {
+
     };
 };
