@@ -1,5 +1,6 @@
 const systemConfig = require('../../systemConfig.js');
 const coreTicketData = require('../../core/ticket.js');
+const prizeData = require('../../core/prize.js');
 const common = require('../../common/common.js');
 const db = require('../../db/db.js');
 const cryptoAES256CBC = require('../../common/crypto/crypto.js')['aes-256-cbc'];
@@ -618,9 +619,8 @@ module.exports = function (app) {
     function processDbData(data) {
         result = {
             prizeFormatList: [],
-            prizeList: [],
+            prizeList: {},
         };
-        const prizeData = require('../../core/prize.js');
         const publisherData = coreTicketData.publisher;
         for (let i = 0; i < data.length; i++) {
             let aRecord = data[i];
@@ -629,6 +629,10 @@ module.exports = function (app) {
             let prizeObject = prizeData[prizeFormatId][prizeId];
             if (prizeObject.showOnResultLog == false) {
                 continue;
+            }
+            let prizeResultLogName = prizeObject.resultLogName;
+            if (result.prizeList[prizeResultLogName] == null) {
+                result.prizeList[prizeResultLogName] = prizeObject;
             }
             if (!result.prizeFormatList.includes(prizeFormatId)) {
                 result.prizeFormatList.push(prizeFormatId);
@@ -640,23 +644,23 @@ module.exports = function (app) {
                 publisherResult = {};
                 result[publisherName] = publisherResult;
             }
-            let prizeResultLogName = prizeData[prizeFormatId][prizeId].resultLogName;
-            if (!result.prizeList.includes(prizeResultLogName)) {
-                result.prizeList.push(prizeResultLogName);
-            }
-            let prizeName = prizeData[prizeFormatId][prizeId].name;
+            let prizeName = prizeObject.name;
             let prizeResult = publisherResult[prizeName];
             if (prizeResult == null) {
-                prizeResult = {
-                    data: prizeData[prizeFormatId][prizeId],
-                    series: [],
-                };
+                prizeResult = [];
                 publisherResult[prizeName] = prizeResult;
             }
             let aSeries = aRecord.series;
-            prizeResult.series.push(aSeries);
+            prizeResult.push(aSeries);
         }
+        processResultLogPrizeList(result);
         return result;
     };
+
+    function processResultLogPrizeList(result) {
+        let prizeList = Object.values(result.prizeList);
+        prizeList.sort(prizeData.sortPrize);
+        result.prizeList = prizeList;
+    }
     //#endregion
 };

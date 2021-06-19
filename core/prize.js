@@ -8,6 +8,7 @@ module.exports = {
             prizeMoney: 100000,
             smsPrizeMoney: '100K',
             showOnResultLog: true,
+            sortValue: 0,
         },
         7: {
             name: 'Giải 7',
@@ -17,6 +18,7 @@ module.exports = {
             prizeMoney: 200000,
             smsPrizeMoney: '200K',
             showOnResultLog: true,
+            sortValue: 1,
         },
         6: {
             name: 'Giải 6',
@@ -26,6 +28,7 @@ module.exports = {
             prizeMoney: 400000,
             smsPrizeMoney: '400K',
             showOnResultLog: true,
+            sortValue: 2,
         },
         5: {
             name: 'Giải 5',
@@ -35,6 +38,7 @@ module.exports = {
             prizeMoney: 1000000,
             smsPrizeMoney: '1tr',
             showOnResultLog: true,
+            sortValue: 3,
         },
         4: {
             name: 'Giải 4',
@@ -44,6 +48,7 @@ module.exports = {
             prizeMoney: 3000000,
             smsPrizeMoney: '3tr',
             showOnResultLog: true,
+            sortValue: 4,
         },
         3: {
             name: 'Giải 3',
@@ -53,6 +58,7 @@ module.exports = {
             prizeMoney: 10000000,
             smsPrizeMoney: '10tr',
             showOnResultLog: true,
+            sortValue: 6,
         },
         2: {
             name: 'Giải 2',
@@ -62,6 +68,7 @@ module.exports = {
             prizeMoney: 15000000,
             smsPrizeMoney: '15tr',
             showOnResultLog: true,
+            sortValue: 7,
         },
         1: {
             name: 'Giải 1',
@@ -71,6 +78,7 @@ module.exports = {
             prizeMoney: 30000000,
             smsPrizeMoney: '30tr',
             showOnResultLog: true,
+            sortValue: 8,
         },
         0: {
             name: 'Giải ĐB',
@@ -80,6 +88,7 @@ module.exports = {
             prizeMoney: 2000000000,
             smsPrizeMoney: '2 ty',
             showOnResultLog: true,
+            sortValue: 10,
         },
         10: {
             name: 'Giải phụ đặc biệt',
@@ -89,6 +98,7 @@ module.exports = {
             prizeMoney: 50000000,
             smsPrizeMoney: '50tr',
             showOnResultLog: false,
+            sortValue: 9,
         },
         11: {
             name: 'Giải khuyến khích',
@@ -98,6 +108,10 @@ module.exports = {
             prizeMoney: 6000000,
             smsPrizeMoney: '6tr',
             showOnResultLog: false,
+            sortValue: 5,
         },
+    },
+    sortPrize: function (prize1, prize2) {
+        return prize1.sortValue - prize2, sortValue;
     },
 };
