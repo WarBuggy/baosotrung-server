@@ -620,6 +620,7 @@ module.exports = function (app) {
         result = {
             prizeFormatList: [],
             prizeList: {},
+            publisherList: {},
         };
         const publisherData = coreTicketData.publisher;
         for (let i = 0; i < data.length; i++) {
@@ -639,10 +640,10 @@ module.exports = function (app) {
             }
             let publisherId = aRecord.publisher;
             let publisherName = publisherData[publisherId].name;
-            let publisherResult = result[publisherName];
+            let publisherResult = result.publisherList[publisherName];
             if (publisherResult == null) {
                 publisherResult = {};
-                result[publisherName] = publisherResult;
+                result.publisherList[publisherName] = publisherResult;
             }
             let prizeName = prizeObject.name;
             let prizeResult = publisherResult[prizeName];
