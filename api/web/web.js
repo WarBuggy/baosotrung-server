@@ -486,6 +486,7 @@ module.exports = function (app) {
         let ticketType = String(request.body.ticketType);
         let dayOfWeek = String(request.body.dayOfWeek);
         let week = String(request.body.week);
+        console.log([ticketType, week, dayOfWeek]);
 
         let ticketTypeList = Object.keys(coreTicketData.type);
         if (!ticketTypeList.includes(ticketType)) {
@@ -500,6 +501,7 @@ module.exports = function (app) {
         if (!['0', '1', '2', '3', '4', '5', '6'].includes(dayOfWeek)) {
             dayOfWeek = todayDayOfWeek;
         }
+        console.log([ticketType, week, dayOfWeek]);
         let todayDateString = today.format(systemConfig.dayjsFormatDateOnly);
         let todayCrawlTimeString = todayDateString + ' ' + coreTicketData.type[ticketType].crawlTime;
         let targetDate = findDateOf(week, dayOfWeek, today, todayDayOfWeek);
