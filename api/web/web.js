@@ -508,7 +508,7 @@ module.exports = function (app) {
         let tomorrow = today.add(1, 'day');
         let tomorrowFullString = tomorrow.format(systemConfig.dayjsFormatDateOnly) +
             ' 00:00:00';
-        let secondTime = false;
+        let secondTime = 0;
 
         if (targetDateFullString >= tomorrowFullString ||
             (targetDateString == todayDateString && targetDateFullString <= todayCrawlTimeString)) {
@@ -550,7 +550,7 @@ module.exports = function (app) {
             common.consoleLog('Could not find result of date ' + targetDateString + '. Try to crawl from source...');
             let rssCrawler = require('../../rss/crawler/crawler.js');
             await rssCrawler.crawlSpecificDate(targetDateString);
-            secondTime = true;
+            secondTime = 1;
         }
 
         result = await findResultOfDate(ticketType, targetDateString, requestIp);

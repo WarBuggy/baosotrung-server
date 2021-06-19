@@ -99,6 +99,26 @@ svg.result-log-loading {
   margin-bottom: 10px;
 }
 
+div.result-log-date-outer {
+  display: none;
+  font-size: 12pt;
+  grid-template-columns: auto 1fr;
+  justify-items: start;
+  align-items: center;
+  margin-top: 8px;
+}
+
+div.result-log-date {
+  font-weight: bold;
+  padding-left: 8px;
+}
+
 div.result-log-data {
   display: none;
+  margin-top: 8px;
+}
+div.result-log-message {
+  font-weight: bold;
+  font-size: 12pt;
+  color: red;
 }

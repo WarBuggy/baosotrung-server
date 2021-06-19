@@ -36,14 +36,7 @@ class ResultLog {
             'click', 'day-of-week', 'dayOfWeek');
         this.matchDisplayClickWithData('result-log-week-item',
             'click', 'week', 'week');
-        // check if code is not 0 -> error
-
-        // if response.data.length < 1
-        // code = 1 ->  'Kết quả xổ số chưa có'
-        // else -> 'Không tìm được kết quả'
-
-        // else display data
-        document.getElementById('divData').innerText = response;
+        this.displayData(response);
         this.toggleDivLoading(false);
     };
 
@@ -86,12 +79,44 @@ class ResultLog {
     toggleDivLoading(showDivLoading) {
         let divLoading = document.getElementById('divLoading');
         let divData = document.getElementById('divData');
+        let divDateOuter = document.getElementById('divDateOuter');
         if (showDivLoading === true) {
-            divLoading.style.display = 'block';
+            divLoading.style.display = 'grid';
             divData.style.display = 'none';
+            divDateOuter.style.display = 'none';
+
             return;
         }
         divLoading.style.display = 'none';
         divData.style.display = 'grid';
+        divDateOuter.style.display = 'grid';
+    };
+
+    displayData(response) {
+        let divData = document.getElementById('divData');
+        document.getElementById('divDate').innerText = response.vnDateString;
+        divData.innerHTML = '';
+        let code = response.code;
+        if (code == 1) {
+            let message = 'Chưa có kết quả xổ số cho ngày này. Xin quý khách vui lòng kiểm lại sau!';
+            divData.appendChild(this.createDivMessage(message));
+            return;
+        }
+        if (code != 0) {
+            let message = 'Hệ thống gặp lỗi ' + code + '_' + response.secondTime +
+                ' khi truy cập dữ liệu. Xin quý khách vui lòng thử lại sau!';
+            divData.appendChild(this.createDivMessage(message));
+            return;
+        }
+        // if response.data.length < 1
+        // code = 1 ->  'Kết quả xổ số chưa có'
+        // else -> 'Không tìm được kết quả'
+    };
+
+    createDivMessage(message) {
+        let div = document.createElement('div');
+        div.classList.add('result-log-message');
+        div.innerText = message;
+        return div;
     };
 };
