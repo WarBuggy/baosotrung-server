@@ -513,13 +513,16 @@ module.exports = function (app) {
 
         if (targetDateString == todayDateString &&
             targetDateFullString <= todayCrawlTimeString) {
-            if (today == 1) {
+            if (dayOfWeek == 1) {
                 week = week + 1;
             }
-            if (today == 0) {
-                today = 7;
+            if (dayOfWeek == 0) {
+                dayOfWeek = 7;
             }
-            today = today - 1;
+            dayOfWeek = dayOfWeek - 1;
+            targetDate = targetDate.add(-1, 'day');
+            targetDateString = targetDate.format(systemConfig.dayjsFormatDateOnly);
+            vnDateString = targetDate.format(systemConfig.dayjsVNFormatDateOnly);
         } else if (targetDateFullString >= tomorrowFullString) {
             let resJson = {
                 success: true,
