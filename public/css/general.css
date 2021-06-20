@@ -43,7 +43,6 @@ div.content-root {
   min-width: var(--main-min-width);
   margin-right: auto;
   margin-left: auto;
-  margin-top: 10px;
 }
 
 div.validate {

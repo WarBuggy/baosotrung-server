@@ -102,51 +102,78 @@ class ResultLog {
         let code = response.code;
         if (code == 1) {
             let message = 'Chưa có kết quả xổ số cho ngày này. Xin quý khách vui lòng kiểm lại sau!';
-            divData.appendChild(this.createDivMessage(message));
+            divData.appendChild(this.createDivDataMessage(divData, message));
             return false;
         }
         if (code != 0) {
             let message = 'Hệ thống gặp lỗi ' + code + '_' + response.secondTime +
                 ' khi truy cập dữ liệu. Xin quý khách vui lòng thử lại sau!';
-            divData.appendChild(this.createDivMessage(message));
+            divData.appendChild(this.createDivDataMessage(divData, message));
             return false;
         }
         if (response.data.length < 1) {
             let message = 'Hệ thống không thể tìm được kết quả xổ số cho ngày này. ' +
                 'Xin lưu ý hệ thống không lưu kết quả của những năm trước 2010.';
-            divData.appendChild(this.createDivMessage(message));
+            divData.appendChild(this.createDivDataMessage(divData, message));
             return false;
         }
         return true;
     };
 
-    createDivMessage(message) {
+    createDivDataMessage(divData, message) {
         let div = document.createElement('div');
         div.classList.add('result-log-message');
         div.innerText = message;
+        divData.style.border = 'none';
         return div;
     };
 
     displayData(data) {
+        let rowIndex = 0;
         let publisherList = Object.keys(data.publisherList);
         let divData = document.getElementById('divData');
         this.createDivDataPublisherNameRow(publisherList, divData);
         for (let i = 0; i < data.prizeList.length; i++) {
+            let maxCount = 0;
             let prizeObject = data.prizeList[i];
             let prizeResultLogName = prizeObject.resultLogName;
             let divPrizeResultLogName = document.createElement('div');
             divPrizeResultLogName.classList.add('result-log-prize-name');
             divPrizeResultLogName.innerText = prizeResultLogName;
-            divData.appendChild(divPrizeResultLogName);
+            let divPrizeNameOuter =
+                this.createDivGridContainer(divPrizeResultLogName);
+            divPrizeNameOuter.style.backgroundColor = 'lightgray';
+            divData.appendChild(divPrizeNameOuter);
             for (let j = 0; j < publisherList.length; j++) {
                 let publisherName = publisherList[j];
                 let series = data.publisherList[publisherName][prizeResultLogName];
-                let divSeries = document.createElement('div');
-                divSeries.classList.add('result-log-series');
-                divSeries.innerText = series.join('\n');
-                divData.appendChild(divSeries);
+                let seriesCount = series.length;
+                if (seriesCount > maxCount) {
+                    maxCount = seriesCount;
+                }
+                let divSeriesOuter = this.createDivGridContainer();
+                for (let k = 0; k < series.length; k++) {
+                    let aSerial = series[k];
+                    let divSeries = document.createElement('div');
+                    divSeries.classList.add('result-log-series');
+                    divSeries.innerText = aSerial;
+                    divSeriesOuter.appendChild(divSeries);
+                    if (i == 0 || i == data.prizeList.length - 1) {
+                        divSeries.classList.add('special-color');
+                        divPrizeResultLogName.classList.add('special-color');
+                    } else {
+                        let tempRowIndex = rowIndex + k;
+                        if (tempRowIndex % 2 == 0) {
+                            divSeries.classList.add('alternate-color');
+                        }
+                    }
+                }
+                divData.appendChild(divSeriesOuter);
             }
+            rowIndex = rowIndex + maxCount;
         }
+        divData.style.borderRight = '1px solid black';
+        divData.style.borderBottom = '1px solid black';
     };
 
     createDivDataPublisherNameRow(publisherList, divData) {
@@ -157,8 +184,19 @@ class ResultLog {
             let divPublisherName = document.createElement('div');
             divPublisherName.classList.add('result-log-publisher-name');
             divPublisherName.innerText = publisherList[i];
-            divData.appendChild(divPublisherName);
+            let divOuter = this.createDivGridContainer(divPublisherName);
+            divData.appendChild(divOuter);
+            divOuter.style.backgroundColor = 'lightgray';
         }
         divData.style.gridTemplateColumns = gridTemplateColumns;
+    };
+
+    createDivGridContainer(childElement) {
+        let divOuter = document.createElement('div');
+        divOuter.classList.add('grid-container');
+        if (childElement != null) {
+            divOuter.appendChild(childElement);
+        }
+        return divOuter;
     };
 };
