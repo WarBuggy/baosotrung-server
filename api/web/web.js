@@ -511,8 +511,16 @@ module.exports = function (app) {
             ' 00:00:00';
         let secondTime = 0;
 
-        if (targetDateFullString >= tomorrowFullString ||
-            (targetDateString == todayDateString && targetDateFullString <= todayCrawlTimeString)) {
+        if (targetDateString == todayDateString &&
+            targetDateFullString <= todayCrawlTimeString) {
+            if (today == 1) {
+                week = week + 1;
+            }
+            if (today == 0) {
+                today = 7;
+            }
+            today = today - 1;
+        } else if (targetDateFullString >= tomorrowFullString) {
             let resJson = {
                 success: true,
                 result: 0,
