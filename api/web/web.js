@@ -517,7 +517,7 @@ module.exports = function (app) {
                 week = week + 1;
             }
             if (dayOfWeek == 0) {
-                dayOfWeek = 7;
+                dayOfWeek = 6;
             }
             dayOfWeek = dayOfWeek - 1;
             targetDate = targetDate.add(-1, 'day');
