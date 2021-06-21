@@ -115,12 +115,14 @@ div.result-log-date-inner {
 div.result-log-date {
   font-weight: 700;
   padding-left: 8px;
+  user-select: text;
 }
 
 div.result-log-data {
   display: none;
   margin-top: 8px;
   margin-bottom: 32px;
+  user-select: text;
 }
 div.result-log-message {
   font-weight: 700;
