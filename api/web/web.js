@@ -487,6 +487,8 @@ module.exports = function (app) {
         let ticketType = String(request.body.ticketType);
         let dayOfWeek = String(request.body.dayOfWeek);
         let week = String(request.body.week);
+        let dayOfWeekModified = false;
+        let weekModified = false;
 
         let ticketTypeList = Object.keys(coreTicketData.type);
         if (!ticketTypeList.includes(ticketType)) {
@@ -494,11 +496,13 @@ module.exports = function (app) {
         }
         if (!['0', '1', '2', '3'].includes(week)) {
             week = '0';
+            weekModified = true;
         }
         let today = dayjs();
         let todayDayOfWeek = String(today.day());
         if (!['0', '1', '2', '3', '4', '5', '6'].includes(dayOfWeek)) {
             dayOfWeek = todayDayOfWeek;
+            dayOfWeekModified = true;
         }
         let todayDateString = today.format(systemConfig.dayjsFormatDateOnly);
         let todayCrawlTimeString = todayDateString + ' ' + coreTicketData.type[ticketType].crawlTime;
@@ -511,8 +515,9 @@ module.exports = function (app) {
             ' 00:00:00';
         let secondTime = 0;
 
-        if (targetDateString == todayDateString &&
-            targetDateFullString <= todayCrawlTimeString) {
+        if ((targetDateString == todayDateString &&
+            targetDateFullString <= todayCrawlTimeString) &&
+            (dayOfWeekModified || weekModified)) {
             if (dayOfWeek == 1) {
                 week = parseInt(week) + 1;
             }
