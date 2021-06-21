@@ -514,12 +514,12 @@ module.exports = function (app) {
         if (targetDateString == todayDateString &&
             targetDateFullString <= todayCrawlTimeString) {
             if (dayOfWeek == 1) {
-                week = week + 1;
+                week = parseInt(week) + 1;
             }
             if (dayOfWeek == 0) {
                 dayOfWeek = 6;
             }
-            dayOfWeek = dayOfWeek - 1;
+            dayOfWeek = parseInt(dayOfWeek) - 1;
             targetDate = targetDate.add(-1, 'day');
             targetDateString = targetDate.format(systemConfig.dayjsFormatDateOnly);
             vnDateString = targetDate.format(systemConfig.dayjsVNFormatDateOnly);
