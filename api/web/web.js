@@ -515,20 +515,24 @@ module.exports = function (app) {
             ' 00:00:00';
         let secondTime = 0;
 
-        if ((targetDateString == todayDateString &&
-            targetDateFullString <= todayCrawlTimeString) &&
-            (dayOfWeekModified || weekModified)) {
-            if (dayOfWeek == 1) {
-                week = parseInt(week) + 1;
+        let noResultYet = false;
+        if (targetDateString == todayDateString &&
+            targetDateFullString <= todayCrawlTimeString) {
+            if (dayOfWeekModified || weekModified) {
+                if (dayOfWeek == 1) {
+                    week = parseInt(week) + 1;
+                }
+                if (dayOfWeek == 0) {
+                    dayOfWeek = 6;
+                }
+                dayOfWeek = parseInt(dayOfWeek) - 1;
+                targetDate = targetDate.add(-1, 'day');
+                targetDateString = targetDate.format(systemConfig.dayjsFormatDateOnly);
+                vnDateString = targetDate.format(systemConfig.dayjsVNFormatDateOnly);
+            } else {
+                noResultYet = true;
             }
-            if (dayOfWeek == 0) {
-                dayOfWeek = 6;
-            }
-            dayOfWeek = parseInt(dayOfWeek) - 1;
-            targetDate = targetDate.add(-1, 'day');
-            targetDateString = targetDate.format(systemConfig.dayjsFormatDateOnly);
-            vnDateString = targetDate.format(systemConfig.dayjsVNFormatDateOnly);
-        } else if (targetDateFullString >= tomorrowFullString) {
+        } else if (noResultYet == true || targetDateFullString >= tomorrowFullString) {
             let resJson = {
                 success: true,
                 result: 0,
