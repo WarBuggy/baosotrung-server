@@ -532,7 +532,8 @@ module.exports = function (app) {
             } else {
                 noResultYet = true;
             }
-        } else if (noResultYet == true || targetDateFullString >= tomorrowFullString) {
+        }
+        if (noResultYet == true || targetDateFullString >= tomorrowFullString) {
             let resJson = {
                 success: true,
                 result: 0,
