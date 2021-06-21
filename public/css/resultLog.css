@@ -110,12 +110,12 @@ div.result-log-date-inner {
   grid-template-columns: auto 1fr;
   justify-items: start;
   align-items: center;
+  user-select: text;
 }
 
 div.result-log-date {
   font-weight: 700;
   padding-left: 8px;
-  user-select: text;
 }
 
 div.result-log-data {
