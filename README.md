@@ -2,12 +2,11 @@
 
 nginx config
 
-nano /etc/nginx/conf.d/nginx.conf
-include conf.d/http;
+cd /etc/nginx/sites-available
+sudo nano baotrungso.com
+sudo systemctl reload nginx
 
-nano /etc/nginx/conf.d/http
 server {
-listen 80;
 server_name baotrungso.com www.baotrungso.com;
 root /home/hvb/baosotrung-server/public;
 
@@ -16,6 +15,32 @@ root /home/hvb/baosotrung-server/public;
         proxy_set_header   Host $http_host;
         proxy_pass         http://localhost:9067;
     }
+
+    location /sodo {
+        try_files $uri.html $uri =404;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/baotrungso.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/baotrungso.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+if ($host = www.baotrungso.com) {
+        return 301 https://$host$request_uri;
+} # managed by Certbot
+
+    if ($host = baotrungso.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name baotrungso.com www.baotrungso.com;
+    return 404; # managed by Certbot
 
 }
 

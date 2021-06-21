@@ -121,7 +121,7 @@ div.result-log-date {
 div.result-log-data {
   display: none;
   margin-top: 8px;
-  margin-bottom: 32px;
+  margin-bottom: 8px;
   user-select: text;
 }
 div.result-log-message {

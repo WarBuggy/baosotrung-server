@@ -41,7 +41,7 @@ class ResultLog {
         if (checkResult == true) {
             this.displayData(response.data);
         }
-        this.toggleDivLoading(false);
+        this.toggleDivLoading(false, checkResult);
     };
 
     displayClick(divList, div, clickClass) {
@@ -80,20 +80,25 @@ class ResultLog {
         targetDiv.classList.add(clickClassName);
     };
 
-    toggleDivLoading(showDivLoading) {
+    toggleDivLoading(showDivLoading, showDivShare) {
         let divLoading = document.getElementById('divLoading');
         let divData = document.getElementById('divData');
         let divDateOuter = document.getElementById('divDateOuter');
+        let divShare = document.getElementById('divShare');
         if (showDivLoading === true) {
             divLoading.style.display = 'grid';
             divData.style.display = 'none';
             divDateOuter.style.display = 'none';
-
+            divShare.style.display = 'none';
             return;
         }
         divLoading.style.display = 'none';
         divData.style.display = 'grid';
         divDateOuter.style.display = 'grid';
+        if (showDivShare == true) {
+            divShare.style.display = 'grid';
+            divShare.scrollIntoView({ behavior: 'smooth' });
+        }
     };
 
     checkResponse(response) {
@@ -198,5 +203,43 @@ class ResultLog {
             divOuter.appendChild(childElement);
         }
         return divOuter;
+    };
+
+    handleShareButton(submission) {
+        let link = 'https://baotrungso.com/receipt?submission=' + submission;
+        document.getElementById('divShareFB').onclick = function () {
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + link,
+                'popup', 'width=300,height=300');
+            return false;
+        };
+
+        document.getElementById('divShareTwitter').onclick = function () {
+            window.open('https://twitter.com/intent/tweet?url=' + link,
+                'popup', 'width=300,height=300');
+            return false;
+        };
+
+        let parent = this;
+        document.getElementById('divCopyLink').onclick = function () {
+            Common.copyTextToClipboard(link, function () {
+                window.clearTimeout(parent.copyTimeoutId);
+                document.getElementById('divCopyLink').style.backgroundImage =
+                    'url(res/image/required/tick.png)';
+                parent.copyTimeoutId = window.setTimeout(function () {
+                    document.getElementById('divCopyLink').style.backgroundImage =
+                        'url(res/image/required/share_link.png)';
+                }, 1500);
+            });
+        };
+
+        document.getElementById('divShareEmail').onclick = function () {
+            let divInputShareEmail = document.getElementById('divInputShareEmail');
+            if (divInputShareEmail.style.display == 'none') {
+                divInputShareEmail.style.display = 'grid';
+                parent.inputEmail.input.focus();
+            } else {
+                divInputShareEmail.style.display = 'none';
+            }
+        };
     };
 };
