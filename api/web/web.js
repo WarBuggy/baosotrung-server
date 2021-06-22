@@ -487,33 +487,60 @@ module.exports = function (app) {
         let ticketType = String(request.body.ticketType);
         let dayOfWeek = String(request.body.dayOfWeek);
         let week = String(request.body.week);
+        let date = String(request.body.date);
         let dayOfWeekModified = false;
         let weekModified = false;
-
         let ticketTypeList = Object.keys(coreTicketData.type);
-        if (!ticketTypeList.includes(ticketType)) {
-            ticketType = ticketTypeList[0];
-        }
-        if (!['0', '1', '2', '3'].includes(week)) {
-            week = '0';
-            weekModified = true;
-        }
+        let secondTime = 0;
         let today = dayjs();
         let todayDayOfWeek = String(today.day());
-        if (!['0', '1', '2', '3', '4', '5', '6'].includes(dayOfWeek)) {
-            dayOfWeek = todayDayOfWeek;
-            dayOfWeekModified = true;
-        }
         let todayDateString = today.format(systemConfig.dayjsFormatDateOnly);
         let todayCrawlTimeString = todayDateString + ' ' + coreTicketData.type[ticketType].crawlTime;
-        let targetDate = findDateOf(week, dayOfWeek, today, todayDayOfWeek);
+        let targetDate = null;
+
+        if (date != null && date != 'null') {
+            if (!ticketTypeList.includes(ticketType)) {
+                let resJson = {
+                    success: true,
+                    result: 0,
+                    code: 3,
+                };
+                response.json(resJson);
+                common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+                return;
+            }
+            targetDate = dayjs(date);
+            if (!targetDate.isValid()) {
+                let resJson = {
+                    success: true,
+                    result: 0,
+                    code: 2,
+                };
+                response.json(resJson);
+                common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+                return;
+            }
+        } else {
+            if (!ticketTypeList.includes(ticketType)) {
+                ticketType = ticketTypeList[0];
+            }
+            if (!['0', '1', '2', '3'].includes(week)) {
+                week = '0';
+                weekModified = true;
+            }
+            if (!['0', '1', '2', '3', '4', '5', '6'].includes(dayOfWeek)) {
+                dayOfWeek = todayDayOfWeek;
+                dayOfWeekModified = true;
+            }
+            targetDate = findDateOf(week, dayOfWeek, today, todayDayOfWeek);
+        }
+
         let targetDateString = targetDate.format(systemConfig.dayjsFormatDateOnly);
         let vnDateString = targetDate.format(systemConfig.dayjsVNFormatDateOnly);
         let targetDateFullString = targetDate.format(systemConfig.dayjsFormatFull);
         let tomorrow = today.add(1, 'day');
         let tomorrowFullString = tomorrow.format(systemConfig.dayjsFormatDateOnly) +
             ' 00:00:00';
-        let secondTime = 0;
 
         let noResultYet = false;
         if (targetDateString == todayDateString &&
@@ -544,6 +571,7 @@ module.exports = function (app) {
                 ticketType,
                 week,
                 dayOfWeek,
+                targetDateString,
             };
             response.json(resJson);
             common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
@@ -563,6 +591,7 @@ module.exports = function (app) {
                 ticketType,
                 week,
                 dayOfWeek,
+                targetDateString,
             };
             response.json(resJson);
             common.consoleLogError('Error when ' + purpose + '. Error code ' + errorCode + '.');
@@ -588,6 +617,7 @@ module.exports = function (app) {
                 ticketType,
                 week,
                 dayOfWeek,
+                targetDateString,
             };
             response.json(resJson);
             common.consoleLogError('Error when ' + purpose + ' (second time). Error code ' + errorCode + '.');
@@ -604,6 +634,7 @@ module.exports = function (app) {
             ticketType,
             week,
             dayOfWeek,
+            targetDateString,
         };
         response.json(resJson);
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
