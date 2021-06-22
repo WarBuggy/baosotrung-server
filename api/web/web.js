@@ -526,7 +526,7 @@ module.exports = function (app) {
             let currentWeek = today.week();
             week = currentWeek - targetWeek;
             if (dayOfWeek == 0) {
-                week = week - 1;
+                week = week + 1;
             }
         } else {
             if (!ticketTypeList.includes(ticketType)) {
