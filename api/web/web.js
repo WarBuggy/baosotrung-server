@@ -8,6 +8,8 @@ const mailer = require('../../mailer/mailer.js');
 const dayjs = require('dayjs');
 const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(dayjsCustomParseFormat);
+let dayjsWeekOfYear = require('dayjs/plugin/weekOfYear');
+dayjs.extend(dayjsWeekOfYear);
 
 module.exports = function (app) {
     //#region /api/data/core 
@@ -520,6 +522,12 @@ module.exports = function (app) {
                 return;
             }
             dayOfWeek = targetDate.day();
+            let targetWeek = targetDate.week();
+            let currentWeek = today.week();
+            week = currentWeek - targetWeek;
+            if (dayOfWeek == 0) {
+                week = week - 1;
+            }
         } else {
             if (!ticketTypeList.includes(ticketType)) {
                 ticketType = ticketTypeList[0];
