@@ -497,6 +497,7 @@ module.exports = function (app) {
         let todayDateString = today.format(systemConfig.dayjsFormatDateOnly);
         let targetDate = null;
 
+        console.log(date);
         if (date != null && date != 'null') {
             if (!ticketTypeList.includes(ticketType)) {
                 let resJson = {
