@@ -247,7 +247,7 @@ class ResultLog {
     };
 
     buildLink() {
-        let link = window.FRONTEND_URL + '/sodo/html';
+        let link = window.FRONTEND_URL + '/sodo.html';
         link = link + '?type=' + this.data.ticketType + '&date=' +
             this.currentDateString;
         return link;
