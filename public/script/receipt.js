@@ -97,7 +97,7 @@ class Receipt {
         this.inputEmail.div.style.marginTop = '8px';
         this.inputEmail.div.style.alignSelf = 'center';
         this.inputEmail.input.addEventListener('keydown', function (event) {
-            if (event.keyCode == 13) {
+            if (event.key === 'Enter') {
                 parent.onButtonShareEmailClicked(submission);
             };
         });
