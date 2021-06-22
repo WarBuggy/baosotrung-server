@@ -124,6 +124,7 @@ div.result-log-data {
   margin-bottom: 8px;
   user-select: text;
 }
+
 div.result-log-message {
   font-weight: 700;
   font-size: 12pt;
@@ -164,12 +165,17 @@ div.grid-container {
   width: 100%;
   height: 100%;
   grid-template-columns: 1fr;
+  box-sizing: border-box;
 }
 
 .result-log-series.alternate-color {
   color: #00a1f1;
 }
 
-.special-color {
+.result-log-special-color {
   color: #ea4335;
+}
+
+div.result-log-share {
+  grid-template-columns: auto auto auto;
 }

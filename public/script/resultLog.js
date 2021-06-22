@@ -6,19 +6,20 @@ window.addEventListener('load', function () {
 
 class ResultLog {
     constructor() {
-        this.paramNameType = 'type';
-        this.paramNameWeek = 'week';
-        this.paramNameDayOfWeek = 'dow';
         this.data = {
             ticketType: null,
             dayOfWeek: null,
             week: null,
+            date: null,
         };
+        this.currentDateString = null;
         this.addEventListener();
-        let handleResult = this.handleAllURLParam();
-        if (handleResult == true) {
-            this.getData();
+        if (document.location.search.length > 0) {
+            this.handleURLParamType();
+            this.handleURLParamDate();
         }
+        this.handleShareButton();
+        this.getData();
     };
 
     addEventListener() {
@@ -30,37 +31,30 @@ class ResultLog {
             'click', 'week', 'week');
     };
 
-    handleAllURLParam() {
-        let handleResultType = this.handleURLParam(this.paramNameType, 'ticketType', ['1',]);
-        let handleResultWeek = this.handleURLParam(this.paramNameWeek, 'week', ['0', '1', '2', '3']);
-        let handleResultDayOfWeek =
-            this.handleURLParam(this.paramNameDayOfWeek, 'dayOfWeek', ['1', '2', '3', '4', '5', '6', '0']);
-        console.log([handleResultType, handleResultWeek, handleResultDayOfWeek]);
-        if (!handleResultType || !handleResultWeek || !handleResultDayOfWeek) {
-            let divData = document.getElementById('divData');
-            divData.innerHTML = '';
-            let message = 'Dữ liệu nhận được không hợp lệ. Xin vui lòng kiểm tra lại';
-            divData.appendChild(this.createDivDataMessage(divData, message));
-            this.toggleDivLoading(false);
-            document.getElementById('divDateOuter').style.display = 'none';
-            return false;
+    handleURLParamDate() {
+        let date = String(Common.getURLParameter('date')).trim();
+        if (date == 'null' || date == 'undefined' || date == '') {
+            return;
         }
-        return true;
+        this.data.date = date;
+        return;
     };
 
-    handleURLParam(paramName, dataFieldName, possibleValueList) {
-        let param = String(Common.getURLParameter(paramName)).trim();
-        if (param == 'null' || param == 'undefined' || param == '') {
-            return true;
+    handleURLParamType() {
+        let type = String(Common.getURLParameter('type')).trim();
+        if (type == 'null' || type == 'undefined' || type == '') {
+            return;
         }
-        if (!possibleValueList.includes(param)) {
-            return false;
+        let possibleValueList = ['1',];
+        if (!possibleValueList.includes(type)) {
+            type = possibleValueList[0];
         }
-        this.data[dataFieldName] = param;
-        return true;
+        this.data.ticketType = type;
+        return;
     };
 
     async getData() {
+        console.log(this.data);
         let response = await Common.sendToBackend('/api/result-log/data', this.data);
         console.log(response);
         this.data.ticketType = response.ticketType;
@@ -78,6 +72,7 @@ class ResultLog {
             this.displayData(response.data);
         }
         this.toggleDivLoading(false, checkResult);
+        this.currentDateString = response.targetDateString;
     };
 
     displayClick(divList, div, clickClass) {
@@ -94,6 +89,7 @@ class ResultLog {
         for (let i = 0; i < divList.length; i++) {
             let aDiv = divList[i];
             aDiv.addEventListener('click', function () {
+                parent.data.date = null;
                 parent.toggleDivLoading(true);
                 parent.displayClick(divList, this, clickClassName);
                 let attribute = this.getAttribute(attributeName);
@@ -104,16 +100,14 @@ class ResultLog {
     };
 
     matchDisplayClickWithData(className, clickClassName, attributeName, parentAttributeName) {
-        let targetDiv = null;
         let divList = document.getElementsByClassName(className);
         for (let i = 0; i < divList.length; i++) {
             let aDiv = divList[i];
             aDiv.classList.remove(clickClassName);
             if (aDiv.getAttribute(attributeName) == this.data[parentAttributeName]) {
-                targetDiv = aDiv;
+                aDiv.classList.add(clickClassName);
             }
         }
-        targetDiv.classList.add(clickClassName);
     };
 
     toggleDivLoading(showDivLoading, showDivShare) {
@@ -143,6 +137,16 @@ class ResultLog {
         let code = response.code;
         if (code == 1) {
             let message = 'Chưa có kết quả xổ số cho ngày này. Xin quý khách vui lòng kiểm lại sau!';
+            divData.appendChild(this.createDivDataMessage(divData, message));
+            return false;
+        }
+        if (code == 2) {
+            let message = 'Tham số ngày không hợp lệ. Xin quý khách vui lòng kiểm lại đường link!';
+            divData.appendChild(this.createDivDataMessage(divData, message));
+            return false;
+        }
+        if (code == 3) {
+            let message = 'Tham số loại vé không hợp lệ. Xin quý khách vui lòng kiểm lại đường link!';
             divData.appendChild(this.createDivDataMessage(divData, message));
             return false;
         }
@@ -201,8 +205,8 @@ class ResultLog {
                     divSeries.innerText = aSerial;
                     divSeriesOuter.appendChild(divSeries);
                     if (i == 0 || i == data.prizeList.length - 1) {
-                        divSeries.classList.add('special-color');
-                        divPrizeResultLogName.classList.add('special-color');
+                        divSeries.classList.add('result-log-special-color');
+                        divPrizeResultLogName.classList.add('result-log-special-color');
                     } else {
                         let tempRowIndex = rowIndex + k;
                         if (tempRowIndex % 2 == 0) {
@@ -243,32 +247,30 @@ class ResultLog {
     };
 
     buildLink() {
-        let link = window.FRONTEND_URL + '/sodo';
-        if (this.data.week == null || this.data.dayOfWeek == null || this.data.ticketType == null) {
-            return link;
-        }
-        link = link + '.html?' + this.paramNameType + '=' + this.data.ticketType + '&' +
-            this.paramNameWeek + '=' + this.data.week + '&' +
-            this.paramNameDayOfWeek + '=' + this.data.dayOfWeek;
+        let link = window.FRONTEND_URL + '/sodo/html';
+        link = link + '?type=' + this.data.ticketType + '&date=' +
+            this.currentDateString;
         return link;
     };
 
     handleShareButton() {
-        let link = this.buildLink();
+        let parent = this;
         document.getElementById('divShareFB').onclick = function () {
+            let link = parent.buildLink();
             window.open('https://www.facebook.com/sharer/sharer.php?u=' + link,
                 'popup', 'width=300,height=300');
             return false;
         };
 
         document.getElementById('divShareTwitter').onclick = function () {
+            let link = parent.buildLink();
             window.open('https://twitter.com/intent/tweet?url=' + link,
                 'popup', 'width=300,height=300');
             return false;
         };
 
-        let parent = this;
         document.getElementById('divCopyLink').onclick = function () {
+            let link = parent.buildLink();
             Common.copyTextToClipboard(link, function () {
                 window.clearTimeout(parent.copyTimeoutId);
                 document.getElementById('divCopyLink').style.backgroundImage =
@@ -280,14 +282,14 @@ class ResultLog {
             });
         };
 
-        document.getElementById('divShareEmail').onclick = function () {
-            let divInputShareEmail = document.getElementById('divInputShareEmail');
-            if (divInputShareEmail.style.display == 'none') {
-                divInputShareEmail.style.display = 'grid';
-                parent.inputEmail.input.focus();
-            } else {
-                divInputShareEmail.style.display = 'none';
-            }
-        };
+        // document.getElementById('divShareEmail').onclick = function () {
+        //     let divInputShareEmail = document.getElementById('divInputShareEmail');
+        //     if (divInputShareEmail.style.display == 'none') {
+        //         divInputShareEmail.style.display = 'grid';
+        //         parent.inputEmail.input.focus();
+        //     } else {
+        //         divInputShareEmail.style.display = 'none';
+        //     }
+        // };
     };
 };
