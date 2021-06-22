@@ -498,7 +498,8 @@ module.exports = function (app) {
         let targetDate = null;
 
         console.log(date);
-        if (date != null && date != 'null') {
+        console.log(typeof (date));
+        if (date != null && date != 'null' && date != undefined && date != 'undefined') {
             if (!ticketTypeList.includes(ticketType)) {
                 let resJson = {
                     success: true,
