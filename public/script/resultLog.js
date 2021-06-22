@@ -6,13 +6,19 @@ window.addEventListener('load', function () {
 
 class ResultLog {
     constructor() {
+        this.paramNameType = 'type';
+        this.paramNameWeek = 'week';
+        this.paramNameDayOfWeek = 'dow';
         this.data = {
             ticketType: null,
             dayOfWeek: null,
             week: null,
         };
         this.addEventListener();
-        this.getData();
+        let handleResult = this.handleAllURLParam();
+        if (handleResult == true) {
+            this.getData();
+        }
     };
 
     addEventListener() {
@@ -22,6 +28,36 @@ class ResultLog {
             'click', 'day-of-week', 'dayOfWeek');
         this.addClickEventListener('result-log-week-item',
             'click', 'week', 'week');
+    };
+
+    handleAllURLParam() {
+        let handleResultType = this.handleURLParam(this.paramNameType, 'ticketType', ['1',]);
+        let handleResultWeek = this.handleURLParam(this.paramNameWeek, 'week', ['0', '1', '2', '3']);
+        let handleResultDayOfWeek =
+            this.handleURLParam(this.paramNameDayOfWeek, 'dayOfWeek', ['1', '2', '3', '4', '5', '6', '0']);
+        console.log([handleResultType, handleResultWeek, handleResultDayOfWeek]);
+        if (!handleResultType || !handleResultWeek || !handleResultDayOfWeek) {
+            let divData = document.getElementById('divData');
+            divData.innerHTML = '';
+            let message = 'Dữ liệu nhận được không hợp lệ. Xin vui lòng kiểm tra lại';
+            divData.appendChild(this.createDivDataMessage(divData, message));
+            this.toggleDivLoading(false);
+            document.getElementById('divDateOuter').style.display = 'none';
+            return false;
+        }
+        return true;
+    };
+
+    handleURLParam(paramName, dataFieldName, possibleValueList) {
+        let param = String(Common.getURLParameter(paramName)).trim();
+        if (param == 'null' || param == 'undefined' || param == '') {
+            return true;
+        }
+        if (!possibleValueList.includes(param)) {
+            return false;
+        }
+        this.data[dataFieldName] = param;
+        return true;
     };
 
     async getData() {
@@ -125,6 +161,7 @@ class ResultLog {
         return true;
     };
 
+
     createDivDataMessage(divData, message) {
         let div = document.createElement('div');
         div.classList.add('result-log-message');
@@ -205,8 +242,19 @@ class ResultLog {
         return divOuter;
     };
 
-    handleShareButton(submission) {
-        let link = 'https://baotrungso.com/receipt?submission=' + submission;
+    buildLink() {
+        let link = window.FRONTEND_URL + '/sodo';
+        if (this.data.week == null || this.data.dayOfWeek == null || this.data.ticketType == null) {
+            return link;
+        }
+        link = link + '.html?' + this.paramNameType + '=' + this.data.ticketType + '&' +
+            this.paramNameWeek + '=' + this.data.week + '&' +
+            this.paramNameDayOfWeek + '=' + this.data.dayOfWeek;
+        return link;
+    };
+
+    handleShareButton() {
+        let link = this.buildLink();
         document.getElementById('divShareFB').onclick = function () {
             window.open('https://www.facebook.com/sharer/sharer.php?u=' + link,
                 'popup', 'width=300,height=300');

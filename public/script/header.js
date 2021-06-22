@@ -24,7 +24,7 @@ class Header {
         divMainTop.appendChild(divMainTopMenu);
 
         let aHomepage = document.createElement('a');
-        aHomepage.href = 'https://baotrungso.com';
+        aHomepage.href = window.FRONTEND_URL;
         divMainTop.appendChild(aHomepage);
 
         let divMainBanner = document.createElement('div');

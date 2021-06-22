@@ -51,7 +51,7 @@ class Receipt {
     };
 
     handleShareButton(submission) {
-        let link = 'https://baotrungso.com/receipt?submission=' + submission;
+        let link = window.FRONTEND_URL + '/receipt?submission=' + submission;
         document.getElementById('divShareFB').onclick = function () {
             window.open('https://www.facebook.com/sharer/sharer.php?u=' + link,
                 'popup', 'width=300,height=300');
