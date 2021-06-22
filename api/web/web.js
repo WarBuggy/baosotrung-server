@@ -519,6 +519,7 @@ module.exports = function (app) {
                 common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
                 return;
             }
+            dayOfWeek = targetDate.day();
         } else {
             if (!ticketTypeList.includes(ticketType)) {
                 ticketType = ticketTypeList[0];
