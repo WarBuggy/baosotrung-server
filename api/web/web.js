@@ -495,7 +495,6 @@ module.exports = function (app) {
         let today = dayjs();
         let todayDayOfWeek = String(today.day());
         let todayDateString = today.format(systemConfig.dayjsFormatDateOnly);
-        let todayCrawlTimeString = todayDateString + ' ' + coreTicketData.type[ticketType].crawlTime;
         let targetDate = null;
 
         if (date != null && date != 'null') {
@@ -535,6 +534,8 @@ module.exports = function (app) {
             targetDate = findDateOf(week, dayOfWeek, today, todayDayOfWeek);
         }
 
+        let todayCrawlTimeString = todayDateString + ' ' +
+            coreTicketData.type[ticketType].crawlTime;
         let targetDateString = targetDate.format(systemConfig.dayjsFormatDateOnly);
         let vnDateString = targetDate.format(systemConfig.dayjsVNFormatDateOnly);
         let targetDateFullString = targetDate.format(systemConfig.dayjsFormatFull);
