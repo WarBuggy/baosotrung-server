@@ -57,64 +57,37 @@ div.validate {
   margin-bottom: 8px;
 }
 
-div.share-fb {
+div.general-button-share {
   width: 60px;
   height: 60px;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.general-button-share:hover{
+  background-color: lightgray;
+}
+
+.general-button-share.fb {
   background-image: url(../res/image/required/share_fb.png);
-  background-size: 100px 100px;
-  background-repeat: no-repeat;
-  background-position: center;
-  border-radius: 50%;
-  cursor: pointer;
+  background-size: 110px 110px;
 }
 
-.share-fb:hover {
-  background-color: lightgray;
-}
-
-div.share-twitter {
-  width: 60px;
-  height: 60px;
+.general-button-share.twitter {
   background-image: url(../res/image/required/share_twitter.png);
-  background-size: 75px 75px;
-  background-repeat: no-repeat;
-  background-position: center;
-  border-radius: 50%;
-  cursor: pointer;
+  background-size: 80px 80px;
 }
 
-.share-twitter:hover {
-  background-color: lightgray;
-}
-
-div.share-link {
-  width: 60px;
-  height: 60px;
+.general-button-share.link {
   background-image: url(../res/image/required/share_link.png);
   background-size: 65%;
-  background-repeat: no-repeat;
-  background-position: center;
-  border-radius: 50%;
-  cursor: pointer;
 }
 
-.share-link:hover {
-  background-color: lightgray;
-}
-
-div.share-email {
-  width: 60px;
-  height: 60px;
-  background-image: url(../res/image/required/share_email.svg);
+.general-button-share.email {
+background-image: url(../res/image/required/share_email.svg);
   background-size: 65%;
-  background-repeat: no-repeat;
-  background-position: center;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.share-email:hover {
-  background-color: lightgray;
 }
 
 div.general-share {
