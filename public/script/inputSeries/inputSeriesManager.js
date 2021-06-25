@@ -255,7 +255,8 @@ class InputSeriesManager {
         };
         try {
             let response = await Common.sendToBackend('/api/submission/create', sendData);
-            window.location.href = '/tomtatbaotrungso.html?submission=' + response.submission;
+            window.location.href = window.FRONTEND_URL +
+                '/tomtatbaotrungso.html?submission=' + response.submission;
         } catch (error) {
         }
     };

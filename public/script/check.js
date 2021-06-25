@@ -61,7 +61,9 @@ class Check {
         if (!validateResult) {
             return;
         }
-        console.log('all ok');
+        let data = this.getData();
+        console.log(data);
+        this.redirectToResultCheck(data);
     };
 
     validate() {
@@ -84,23 +86,31 @@ class Check {
                 invalidSerialCount = invalidSerialCount + 1;
                 continue;
             }
-            for (let j = 0; j < serial.length; j++) {
-                let aChar = serial[j];
-                if (!['0123456789'].includes(aChar)) {
-                    this.onInvalidInputSerial(anObject, invalidSerialError);
-                    invalidSerialCount = invalidSerialCount + 1;
-                    continue;
-                }
+
+            if (!this.checkNumberOnly(serial)) {
+                this.onInvalidInputSerial(anObject, invalidSerialError);
+                invalidSerialCount = invalidSerialCount + 1;
+                continue;
             }
             this.onValidOrEmptyInputSerial(anObject);
             anObject.serial = serial;
             validCount = validCount + 1;
         }
         this.handleEmptyInputSerial(validCount, invalidSerialCount, noSerialCount);
-        if (invalidSerialCount == 0) {
-            return true;
+        if (invalidSerialCount != 0) {
+            return false;
         }
-        return false;
+        return true;
+    };
+
+    checkNumberOnly(input) {
+        for (let i = 0; i < input.length; i++) {
+            let aChar = String(input[i]);
+            if (!'0123456789'.includes(aChar)) {
+                return false;
+            }
+        }
+        return true;
     };
 
     onInvalidInputSerial(anObject, message) {
@@ -146,5 +156,26 @@ class Check {
                 break;
             }
         }
+    };
+
+    getData() {
+        let result = {
+            date: String((new Date).valueOf()),
+            series: [],
+        };
+        for (let i = 0; i < this.inputSerialObjectList.length; i++) {
+            let anObject = this.inputSerialObjectList[i];
+            if (anObject.serial == null || anObject.serial == '') {
+                continue;
+            }
+            result.series.push(anObject.serial);
+        }
+        return result;
+    };
+
+    redirectToResultCheck(data) {
+        let link = window.FRONTEND_URL + '/ketquadoveso.html?date=' + data.date +
+            '&series=' + data.series.join(',');
+        window.location.href = link;
     };
 };

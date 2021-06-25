@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <!-- Link preview -->
+    <meta name="description"
+        content="Kết quả dò của các vé bạn đã gửi. Vé được so sánh với kết qủa xổ số của 30 ngày gần nhất.">
+    <meta name="keywords" content="xổ số kiến thiết,vé số,dò số,trúng số">
+    <meta property="og:image" content="https://baotrungso.com/res/image/required/favicon/android-chrome-192x192.png" />
+    <link rel="image_src" href="res/image/required/favicon/android-chrome-192x192.png" />
+    <!-- View port meta-->
+    <meta name="viewport"
+        content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="full-screen" content="yes" />
+    <meta name="screen-orientation" content="landscape" />
+    <!-- favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="res/image/required/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="res/image/required/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="res/image/required/favicon/favicon-16x16.png">
+    <link rel="manifest" href="res/image/required/favicon/site.webmanifest">
+    <title>Kết quả dò vé</title>
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="css/button.css" />
+    <link rel="stylesheet" type="text/css" href="css/general.css" />
+    <link rel="stylesheet" type="text/css" href="css/receipt.css" />
+    <!-- COMMON SCRIPT -->
+    <script src="script/common/backendURL.js?version=1.0"></script>
+    <script src="script/common/common.js?version=1.0"></script>
+    <script src="script/common/inputText.js?version=1.0"></script>
+    <script src="script/common/button.js?version=0.1"></script>
+    <!-- SCRIPT -->
+    <script src="script/header.js?version=0.1"></script>
+    <script src="script/share/formatReceiptCheck.js?version=0.1"></script>
+    <script src="script/resultCheck.js?version=0.1"></script>
+</head>
+
+<body>
+    <div class='content-root'>
+        <div id='divIntroText' class='receipt-intro-text'></div>
+        <div id='divLoading' class='receipt-loading-outer'>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class='receipt-loading'
+                viewBox='0 0 100 100' preserveAspectRatio="xMidYMid">
+                <g>
+                    <path d="M50 15A35 35 0 1 0 74.74873734152916 25.251262658470843" fill="none" stroke="#ff0011"
+                        stroke-width="12"></path>
+                    <path d="M49 3L49 27L61 15L49 3" fill="#ff0011"></path>
+                    <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s"
+                        values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
+                </g>
+            </svg>
+        </div>
+        <div id='divSummary' class='receipt-summary'></div>
+        <div id='divShare' class='general-share'>
+            <div id='divShareFB' class='general-button-share fb' style='justify-self: start;'></div>
+            <div id='divShareTwitter' class='general-button-share twitter'></div>
+            <div id='divCopyLink' class='general-button-share link'></div>
+            <div id='divShareEmail' class='general-button-share email' style='justify-self: end;'></div>
+        </div>
+        <div id='divInputShareEmail' class='general-input-share-email'></div>
+        <div id='divInputShareEmailValidate' class='validate general-validate-share-email'></div>
+    </div>
+</body>
+
+</html>
