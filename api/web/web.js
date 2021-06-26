@@ -730,7 +730,7 @@ module.exports = function (app) {
         let requestIp = common.getReadableIP(request);
         let purpose = '30 days result check';
         common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
-        let dateString = String(request.body.date);
+        let dateString = request.body.date;
         let seriesString = String(request.body.series);
 
         let checkDayStringResult = checkResultCheckDateString(dateString);
@@ -802,7 +802,7 @@ module.exports = function (app) {
     });
 
     function checkResultCheckDateString(dateString) {
-        let date = dayjs(dateString);
+        let date = dayjs(parseInt(dateString));
         if (!date.isValid()) {
             return {
                 success: false,
