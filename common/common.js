@@ -100,6 +100,15 @@ module.exports = {
             /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(input).toLowerCase());
     },
+
+    checkNumericString: function (input) {
+        for (let i = 0; i < input.length; i++) {
+            if (!'0123456789'.includes(input[i])) {
+                return false;
+            }
+        }
+        return true;
+    },
 };
 
 function firstPartToWord(parts, firstPart) {

@@ -9,6 +9,7 @@ const dayjs = require('dayjs');
 const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(dayjsCustomParseFormat);
 let dayjsWeekOfYear = require('dayjs/plugin/weekOfYear');
+const { checkTodayAsCrawlDate } = require('../../rss/crawler/config.js');
 dayjs.extend(dayjsWeekOfYear);
 
 module.exports = function (app) {
@@ -243,14 +244,12 @@ module.exports = function (app) {
                     errorMessage: 'Invalid serial length (' + aSeriesData + ').',
                 };
             }
-            for (let j = 0; j < serial.length; j++) {
-                if (!'0123456789'.includes(serial[j])) {
-                    return {
-                        result: false,
-                        errorCode: 7,
-                        errorMessage: 'Invalid serial (' + aSeriesData + ').',
-                    };
-                }
+            if (!common.checkNumericString(serial)) {
+                return {
+                    result: false,
+                    errorCode: 7,
+                    errorMessage: 'Invalid serial (' + aSeriesData + ').',
+                };
             }
         }
         return { result: true };
@@ -724,5 +723,144 @@ module.exports = function (app) {
         prizeList.sort(prizeData.sortPrize);
         result.prizeList = prizeList;
     }
+    //#endregion
+
+    //#region /api/result/check
+    app.post('/api/result/check', async function (request, response) {
+        let requestIp = common.getReadableIP(request);
+        let purpose = '30 days result check';
+        common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
+        let dateString = String(request.body.date);
+        let seriesString = String(request.body.series);
+
+        let checkDayStringResult = checkResultCheckDateString(dateString);
+        if (!checkDayStringResult.success) {
+            let resJson = {
+                success: true,
+                result: 0,
+                code: checkDayStringResult.code,
+            };
+            response.json(resJson);
+            common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+            return;
+        }
+        let checkSeriesResult = checkResultCheckSeriesString(seriesString);
+        if (!checkSeriesResult.success) {
+            let resJson = {
+                success: true,
+                result: 0,
+                code: 10 + checkSeriesResult.code,
+            };
+            response.json(resJson);
+            common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+            return;
+        }
+        let lastDate = checkDayStringResult.date;
+        let firstDate = lastDate.add(-30, 'day');
+        let rawSeries = checkSeriesResult.series;
+        let series = processRawSeries(rawSeries);
+
+        let params = [
+            requestIp,
+            series.join(','),
+            firstDate.format(systemConfig.dayjsFormatDateOnly),
+            lastDate.format(systemConfig.dayjsFormatDateOnly),
+        ];
+        let logInfo = {
+            username: '',
+            source: '`baosotrung_data`.`SP_FIND_RESULT_WITHIN_DATE_RANGE`',
+            userIP: requestIp,
+        };
+        let result = await db.query(params, logInfo);
+        if (result.resultCode != 0) {
+            let errorCode = result.resultCode;
+            common.consoleLogError('Database error when ' + purpose + '. Error code ' + errorCode + '.');
+            response.status(errorCode);
+            response.json({ success: false, });
+            return;
+        }
+
+        let dateCount = result.sqlResults[1][0].dateCount;
+        if (dateCount != 30 && dateCount != 31) {
+            let errorCode = 800;
+            common.consoleLogError('Database error when ' + purpose + '. Error code ' + errorCode + '.');
+            response.status(errorCode);
+            response.json({ success: false, });
+            return;
+        }
+
+        let data = result.sqlResults[2];
+        let resJson = {
+            success: true,
+            result: 0,
+            data,
+            queryHour: lastDate.format('HH:mm:ss'),
+            queryDate: lastDate.format(systemConfig.dayjsVNFormatDateOnly),
+        };
+        response.json(resJson);
+        common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+    });
+
+    function checkResultCheckDateString(dateString) {
+        let date = dayjs(dateString);
+        if (!date.isValid()) {
+            return {
+                success: false,
+                code: 1,
+            };
+        }
+        let minDate = '2021-06-01 00:00:00';
+        if (date.isBefore(minDate)) {
+            return {
+                success: false,
+                code: 2,
+            };
+        }
+        return {
+            success: true,
+            date,
+        };
+    };
+
+    function checkResultCheckSeriesString(seriesString) {
+        let result = [];
+        let parts = seriesString.split(',');
+        for (let i = 0; i < parts.length; i++) {
+            let aPart = String(parts[i]).trim();
+            if (aPart == '') {
+                continue;
+            }
+            if (aPart.length != 6) {
+                return {
+                    success: false,
+                    code: 1,
+                };
+            }
+            if (!common.checkNumericString(aPart)) {
+                return {
+                    success: false,
+                    code: 2,
+                };
+            }
+            result.push(aPart);
+        }
+        return {
+            success: true,
+            series: result,
+        }
+    };
+
+    function processRawSeries(rawSeries) {
+        let result = [];
+        for (let i = 0; i < rawSeries.length; i++) {
+            let aRawSerial = rawSeries[i];
+            result.push('"' + aRawSerial + '"');
+            result.push('"' + aRawSerial.slice(-2) + '"');
+            result.push('"' + aRawSerial.slice(-3) + '"');
+            result.push('"' + aRawSerial.slice(-4) + '"');
+            result.push('"' + aRawSerial.slice(-5) + '"');
+        }
+        return result;
+    };
     //#endregion
 };
