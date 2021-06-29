@@ -967,7 +967,7 @@ module.exports = function (app) {
         for (let i = 0; i < seriesList.length; i++) {
             let aSerial = seriesList[i];
             let combinationList = seriesData[aSerial];
-            if (combinationList.includes(winningSerial)) {
+            if (combinationList.includes('"' + winningSerial + '"')) {
                 matchingSeries.push(aSerial);
             }
         }
