@@ -758,11 +758,11 @@ module.exports = function (app) {
         let lastDate = checkDayStringResult.date;
         let firstDate = lastDate.add(-30, 'day');
         let rawSeries = checkSeriesResult.series;
-        let series = processRawSeries(rawSeries);
+        let seriesData = processResultCheckRawSeries(rawSeries);
 
         let params = [
             requestIp,
-            series.join(','),
+            seriesData.series.join(','),
             firstDate.format(systemConfig.dayjsFormatDateOnly),
             lastDate.format(systemConfig.dayjsFormatDateOnly),
         ];
@@ -783,13 +783,16 @@ module.exports = function (app) {
         let dateCount = result.sqlResults[1][0].dateCount;
         if (dateCount != 30 && dateCount != 31) {
             let errorCode = 800;
-            common.consoleLogError('Database error when ' + purpose + '. Error code ' + errorCode + '.');
+            common.consoleLogError('Database error when ' + purpose +
+                '. Error code ' + errorCode + '.');
             response.status(errorCode);
             response.json({ success: false, });
             return;
         }
+        let rawData = result.sqlResults[2];
+        delete seriesData.series;
+        let data = processResultCheckRawData(rawData, seriesData);
 
-        let data = result.sqlResults[2];
         let resJson = {
             success: true,
             result: 0,
@@ -850,17 +853,125 @@ module.exports = function (app) {
         }
     };
 
-    function processRawSeries(rawSeries) {
-        let result = [];
+    function processResultCheckRawSeries(rawSeries) {
+        let result = {
+            series: [],
+        };
         for (let i = 0; i < rawSeries.length; i++) {
             let aRawSerial = rawSeries[i];
-            result.push('"' + aRawSerial + '"');
-            result.push('"' + aRawSerial.slice(-2) + '"');
-            result.push('"' + aRawSerial.slice(-3) + '"');
-            result.push('"' + aRawSerial.slice(-4) + '"');
-            result.push('"' + aRawSerial.slice(-5) + '"');
+            let variantList = [];
+            variantList.push('"' + aRawSerial + '"');
+            variantList.push('"' + aRawSerial.slice(-2) + '"');
+            variantList.push('"' + aRawSerial.slice(-3) + '"');
+            variantList.push('"' + aRawSerial.slice(-4) + '"');
+            variantList.push('"' + aRawSerial.slice(-5) + '"');
+            result[aRawSerial] = variantList;
+            result.series = result.series.concat(variantList);
         }
         return result;
+    };
+
+    function processResultCheckRawData(rawData, seriesData) {
+        let seriesList = Object.keys(seriesData);
+        let result = {};
+        for (let i = 0; i < rawData.length; i++) {
+            let aRow = rawData[i];
+
+            let serial = aRow.serial;
+            let winningSeries = findResultCheckSerial(seriesData, seriesList, serial);
+            if (winningSeries.length < 1) {
+                return {
+                    success: false,
+                    code: 1,
+                    detail: serial,
+                };
+            }
+
+            let date = aRow.date;
+            let publisher = aRow.publisher;
+            let ticketType = aRow.ticket_type;
+            let prizeFormat = aRow.prizeFormat;
+            let prize = aRow.prize;
+
+            let coreTypeData = coreTicketData.type[ticketType];
+            if (coreTypeData == null) {
+                return {
+                    success: false,
+                    code: 2,
+                    detail: ticketType,
+                };
+            }
+            let ticketTypeName = coreTypeData.name;
+            let ticketTypeData = result[ticketTypeName];
+            if (ticketTypeData == null) {
+                ticketTypeData = {};
+                result[ticketTypeName] = ticketTypeData;
+            }
+            let dateData = ticketTypeData[date];
+            if (dateData == null) {
+                dateData = {};
+                ticketTypeData[date] = dateData;
+            }
+
+            let corePublisherData = coreTicketData.publisher[publisher];
+            if (corePublisherData == null) {
+                return {
+                    success: false,
+                    code: 3,
+                    detail: publisher,
+                };
+            }
+            let corePrizeFormatData = prizeData[prizeFormat];
+            if (corePrizeFormatData == null) {
+                return {
+                    success: false,
+                    code: 4,
+                    detail: prizeFormat,
+                };
+            }
+            let corePrizeData = corePrizeFormatData[prize];
+            if (corePrizeData == null) {
+                return {
+                    success: false,
+                    code: 5,
+                    detail: prize,
+                };
+            }
+
+            let publisherName = corePublisherData.name;
+            let publisherData = dateData[publisherName];
+            if (publisherData == null) {
+                publisherData = {};
+                dateData[publisherName] = publisherData;
+            }
+            let prizeDetail = {
+                name: corePrizeData.resultLogName,
+                money: corePrizeData.prizeMoney,
+                smsMoney: corePrizeData.smsPrizeMoney,
+            };
+            for (let j = 0; j < winningSeries.length; j++) {
+                let aWinningSeries = winningSeries[j];
+                let serialData = publisherData[aWinningSeries];
+                if (serialData == null) {
+                    serialData = [];
+                    publisherData[aWinningSeries] = serialData;
+                }
+                serialData.push(prizeDetail);
+            }
+        }
+        return result;
+    };
+
+    function findResultCheckSerial(seriesData, seriesList, winningSerial) {
+        let matchingSeries = [];
+        for (let i = 0; i < seriesList.length; i++) {
+            let aSerial = seriesList[i];
+            let combinationList = seriesData[aSerial];
+            if (combinationList.includes(winningSerial)) {
+                matchingSeries.push(aSerial);
+            }
+        }
+        return matchingSeries;
     };
     //#endregion
 };
