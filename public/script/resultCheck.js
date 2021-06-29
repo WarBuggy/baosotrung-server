@@ -26,5 +26,6 @@ class ResultCheck {
 
     async sendData(data) {
         let response = await Common.sendToBackend('/api/result/check', data);
+        console.log(response);
     };
 }

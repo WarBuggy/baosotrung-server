@@ -877,7 +877,7 @@ module.exports = function (app) {
         for (let i = 0; i < rawData.length; i++) {
             let aRow = rawData[i];
 
-            let serial = aRow.serial;
+            let serial = aRow.series;
             let winningSeries = findResultCheckSerial(seriesData, seriesList, serial);
             if (winningSeries.length < 1) {
                 return {
