@@ -890,7 +890,7 @@ module.exports = function (app) {
             let date = aRow.date;
             let publisher = aRow.publisher;
             let ticketType = aRow.ticket_type;
-            let prizeFormat = aRow.prizeFormat;
+            let prizeFormat = aRow.prize_format;
             let prize = aRow.prize;
 
             let coreTypeData = coreTicketData.type[ticketType];
