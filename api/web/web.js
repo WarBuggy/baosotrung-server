@@ -1012,8 +1012,8 @@ module.exports = function (app) {
                     return a.publisher - b.publisher;
                 });
             }
-            for (let k = 0; k < aDate.data.length; k++) {
-                let aPublisherData = aDate.data[k];
+            for (let k = 0; k < aDateData.data.length; k++) {
+                let aPublisherData = aDateData.data[k];
                 aPublisherData.data = Object.values(aPublisherData.data);
                 aPublisherData.data.sort(function (a, b) {
                     if (a.serial > b.serial) {
