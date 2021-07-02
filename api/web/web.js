@@ -889,6 +889,7 @@ module.exports = function (app) {
             }
 
             let date = aRow.date;
+            let oDate = aRow.o_date;
             let publisher = aRow.publisher;
             let ticketType = aRow.ticket_type;
             let prizeFormat = aRow.prize_format;
@@ -916,6 +917,7 @@ module.exports = function (app) {
             if (dateData == null) {
                 dateData = {
                     date: date,
+                    oDate: oDate,
                     data: {},
                 };
                 ticketTypeData.data[date] = dateData;
@@ -998,9 +1000,9 @@ module.exports = function (app) {
             let aTicketTypeData = result[i];
             aTicketTypeData.data = Object.values(aTicketTypeData.data);
             aTicketTypeData.data.sort(function (a, b) {
-                if (a.date > b.date) {
+                if (a.oDate > b.oDate) {
                     return -1;
-                } else if (a.date < b.date) {
+                } else if (a.oDate < b.oDate) {
                     return 1;
                 }
                 return 0;
