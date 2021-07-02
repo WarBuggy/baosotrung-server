@@ -1031,7 +1031,7 @@ module.exports = function (app) {
                 }
             }
         }
-        return;
+        return result;
     };
     //#endregion
 };
