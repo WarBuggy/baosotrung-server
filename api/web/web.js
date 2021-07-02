@@ -1008,9 +1008,9 @@ module.exports = function (app) {
             for (let j = 0; j < aTicketTypeData.data.length; j++) {
                 let aDateData = aTicketTypeData.data[j];
                 aDateData.data = Object.values(aDateData.data);
-                aDate.data.sort(function (a, b) {
+                aDateData.data.sort(function (a, b) {
                     return a.publisher - b.publisher;
-                })
+                });
             }
             for (let k = 0; k < aDate.data.length; k++) {
                 let aPublisherData = aDate.data[k];
