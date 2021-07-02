@@ -1011,23 +1011,23 @@ module.exports = function (app) {
                 aDateData.data.sort(function (a, b) {
                     return a.publisher - b.publisher;
                 });
-            }
-            for (let k = 0; k < aDateData.data.length; k++) {
-                let aPublisherData = aDateData.data[k];
-                aPublisherData.data = Object.values(aPublisherData.data);
-                aPublisherData.data.sort(function (a, b) {
-                    if (a.serial > b.serial) {
-                        return 1;
-                    } else if (a.serial < b.serial) {
-                        return -1;
-                    }
-                    return 0;
-                });
-                for (let l = 0; l < aPublisherData.data.length; l++) {
-                    let serialData = aPublisherData.data[l];
-                    serialData.data.sort(function (a, b) {
-                        return b.money - a.money;
+                for (let k = 0; k < aDateData.data.length; k++) {
+                    let aPublisherData = aDateData.data[k];
+                    aPublisherData.data = Object.values(aPublisherData.data);
+                    aPublisherData.data.sort(function (a, b) {
+                        if (a.serial > b.serial) {
+                            return 1;
+                        } else if (a.serial < b.serial) {
+                            return -1;
+                        }
+                        return 0;
                     });
+                    for (let l = 0; l < aPublisherData.data.length; l++) {
+                        let serialData = aPublisherData.data[l];
+                        serialData.data.sort(function (a, b) {
+                            return b.money - a.money;
+                        });
+                    }
                 }
             }
         }
