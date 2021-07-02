@@ -791,7 +791,8 @@ module.exports = function (app) {
         }
         let rawData = result.sqlResults[2];
         delete seriesData.series;
-        let data = processResultCheckRawData(rawData, seriesData);
+        let dataObject = processResultCheckRawData(rawData, seriesData);
+        let data = sortResultCheck(dataObject);
 
         let resJson = {
             success: true,
@@ -904,13 +905,20 @@ module.exports = function (app) {
             let ticketTypeName = coreTypeData.name;
             let ticketTypeData = result[ticketTypeName];
             if (ticketTypeData == null) {
-                ticketTypeData = {};
+                ticketTypeData = {
+                    name: ticketTypeName,
+                    type: ticketType,
+                    data: {},
+                };
                 result[ticketTypeName] = ticketTypeData;
             }
-            let dateData = ticketTypeData[date];
+            let dateData = ticketTypeData.data[date];
             if (dateData == null) {
-                dateData = {};
-                ticketTypeData[date] = dateData;
+                dateData = {
+                    date: date,
+                    data: {},
+                };
+                ticketTypeData.data[date] = dateData;
             }
 
             let corePublisherData = coreTicketData.publisher[publisher];
@@ -939,10 +947,14 @@ module.exports = function (app) {
             }
 
             let publisherName = corePublisherData.name;
-            let publisherData = dateData[publisherName];
+            let publisherData = dateData.data[publisherName];
             if (publisherData == null) {
-                publisherData = {};
-                dateData[publisherName] = publisherData;
+                publisherData = {
+                    name: publisherName,
+                    publisher: publisher,
+                    data: {},
+                };
+                dateData.data[publisherName] = publisherData;
             }
             let prizeDetail = {
                 name: corePrizeData.resultLogName,
@@ -951,12 +963,15 @@ module.exports = function (app) {
             };
             for (let j = 0; j < winningSeries.length; j++) {
                 let aWinningSeries = winningSeries[j];
-                let serialData = publisherData[aWinningSeries];
+                let serialData = publisherData.data[aWinningSeries];
                 if (serialData == null) {
-                    serialData = [];
-                    publisherData[aWinningSeries] = serialData;
+                    serialData = {
+                        serial: aWinningSeries,
+                        data: [],
+                    };
+                    publisherData.data[aWinningSeries] = serialData;
                 }
-                serialData.push(prizeDetail);
+                serialData.data.push(prizeDetail);
             }
         }
         return result;
@@ -972,6 +987,51 @@ module.exports = function (app) {
             }
         }
         return matchingSeries;
+    };
+
+    function sortResultCheck(object) {
+        let result = Object.values(object);
+        result.sort(function (a, b) {
+            return a.type - b.type;
+        });
+        for (let i = 0; i < result.length; i++) {
+            let aTicketTypeData = result[i];
+            aTicketTypeData.data = Object.values(aTicketTypeData);
+            aTicketTypeData.data.sort(function (a, b) {
+                if (a.date > b.date) {
+                    return 1;
+                } else if (a.date < b.date) {
+                    return -1;
+                }
+                return 0;
+            });
+            for (let j = 0; j < aTicketTypeData.data.length; j++) {
+                let aDateData = aTicketTypeData.data[j];
+                aDateData.data = Object.values(aDateData.data);
+                aDate.data.sort(function (a, b) {
+                    return a.publisher - b.publisher;
+                })
+            }
+            for (let k = 0; k < aDate.data.length; k++) {
+                let aPublisherData = aDate.data[k];
+                aPublisherData.data = Object.values(aPublisherData.data);
+                aPublisherData.data.sort(function (a, b) {
+                    if (a.serial > b.serial) {
+                        return 1;
+                    } else if (a.serial < b.serial) {
+                        return -1;
+                    }
+                    return 0;
+                });
+                for (let l = 0; l < aPublisherData.data.length; l++) {
+                    let serialData = aPublisherData.data[l];
+                    serialData.data.sort(function (a, b) {
+                        return b.money - a.money;
+                    });
+                }
+            }
+        }
+        return;
     };
     //#endregion
 };
