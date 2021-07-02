@@ -821,6 +821,7 @@ module.exports = function (app) {
             queryHour,
             queryDate,
             serials: rawSeries,
+            code: 0,
         };
         response.json(resJson);
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
