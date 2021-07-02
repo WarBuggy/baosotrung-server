@@ -996,12 +996,12 @@ module.exports = function (app) {
         });
         for (let i = 0; i < result.length; i++) {
             let aTicketTypeData = result[i];
-            aTicketTypeData.data = Object.values(aTicketTypeData);
+            aTicketTypeData.data = Object.values(aTicketTypeData.data);
             aTicketTypeData.data.sort(function (a, b) {
                 if (a.date > b.date) {
-                    return 1;
-                } else if (a.date < b.date) {
                     return -1;
+                } else if (a.date < b.date) {
+                    return 1;
                 }
                 return 0;
             });
