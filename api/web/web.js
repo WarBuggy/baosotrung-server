@@ -744,19 +744,26 @@ module.exports = function (app) {
             common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
             return;
         }
+        let lastDate = checkDayStringResult.date;
+        let firstDate = lastDate.add(-30, 'day');
+        let queryHour = lastDate.format('HH:mm:ss');
+        let queryDate = lastDate.format(systemConfig.dayjsVNFormatDateOnly);
+
         let checkSeriesResult = checkResultCheckSeriesString(seriesString);
         if (!checkSeriesResult.success) {
             let resJson = {
                 success: true,
                 result: 0,
                 code: 10 + checkSeriesResult.code,
+                detail: checkSeriesResult.detail,
+                queryHour,
+                queryDate,
             };
             response.json(resJson);
             common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
             return;
         }
-        let lastDate = checkDayStringResult.date;
-        let firstDate = lastDate.add(-30, 'day');
+
         let rawSeries = checkSeriesResult.series;
         let seriesData = processResultCheckRawSeries(rawSeries);
 
@@ -791,15 +798,29 @@ module.exports = function (app) {
         }
         let rawData = result.sqlResults[2];
         delete seriesData.series;
-        let dataObject = processResultCheckRawData(rawData, seriesData);
-        let data = sortResultCheck(dataObject);
-
+        let processResult = processResultCheckRawData(rawData, seriesData);
+        if (!processResult.success) {
+            let resJson = {
+                success: true,
+                result: 0,
+                code: 20 + processResult.code,
+                detail: processResult.detail,
+                queryHour,
+                queryDate,
+                serials: rawSeries,
+            };
+            response.json(resJson);
+            common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+            return;
+        }
+        let data = sortResultCheck(processResult.data);
         let resJson = {
             success: true,
             result: 0,
             data,
-            queryHour: lastDate.format('HH:mm:ss'),
-            queryDate: lastDate.format(systemConfig.dayjsVNFormatDateOnly),
+            queryHour,
+            queryDate,
+            serials: rawSeries,
         };
         response.json(resJson);
         common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
@@ -834,16 +855,21 @@ module.exports = function (app) {
             if (aPart == '') {
                 continue;
             }
+            if (result.includes(aPart)) {
+                continue;
+            }
             if (aPart.length != 6) {
                 return {
                     success: false,
                     code: 1,
+                    detail: aPart,
                 };
             }
             if (!common.checkNumericString(aPart)) {
                 return {
                     success: false,
                     code: 2,
+                    detail: aPart,
                 };
             }
             result.push(aPart);
@@ -976,7 +1002,10 @@ module.exports = function (app) {
                 serialData.data.push(prizeDetail);
             }
         }
-        return result;
+        return {
+            success: true,
+            data: result,
+        };
     };
 
     function findResultCheckSerial(seriesData, seriesList, winningSerial) {
