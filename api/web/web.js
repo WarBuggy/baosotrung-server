@@ -748,6 +748,7 @@ module.exports = function (app) {
         let firstDate = lastDate.add(-30, 'day');
         let queryHour = lastDate.format('HH:mm:ss');
         let queryDate = lastDate.format(systemConfig.dayjsVNFormatDateOnly);
+        let firstDateVN = lastDate.format(systemConfig.dayjsVNFormatDateOnly);
 
         let checkSeriesResult = checkResultCheckSeriesString(seriesString);
         if (!checkSeriesResult.success) {
@@ -758,6 +759,7 @@ module.exports = function (app) {
                 detail: checkSeriesResult.detail,
                 queryHour,
                 queryDate,
+                firstDateVN,
             };
             response.json(resJson);
             common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
@@ -789,11 +791,17 @@ module.exports = function (app) {
 
         let dateCount = result.sqlResults[1][0].dateCount;
         if (dateCount != 30 && dateCount != 31) {
-            let errorCode = 800;
-            common.consoleLogError('Database error when ' + purpose +
-                '. Error code ' + errorCode + '.');
-            response.status(errorCode);
-            response.json({ success: false, });
+            let resJson = {
+                success: true,
+                result: 0,
+                code: 20,
+                detail: dateCount,
+                queryHour,
+                queryDate,
+                firstDateVN,
+            };
+            response.json(resJson);
+            common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
             return;
         }
         let rawData = result.sqlResults[2];
@@ -803,10 +811,11 @@ module.exports = function (app) {
             let resJson = {
                 success: true,
                 result: 0,
-                code: 20 + processResult.code,
+                code: 30 + processResult.code,
                 detail: processResult.detail,
                 queryHour,
                 queryDate,
+                firstDateVN,
                 serials: rawSeries,
             };
             response.json(resJson);
@@ -820,6 +829,7 @@ module.exports = function (app) {
             data,
             queryHour,
             queryDate,
+            firstDateVN,
             serials: rawSeries,
             code: 0,
         };
