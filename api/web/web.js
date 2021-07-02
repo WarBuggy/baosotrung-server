@@ -989,6 +989,8 @@ module.exports = function (app) {
                 name: corePrizeData.resultLogName,
                 money: corePrizeData.prizeMoney,
                 smsMoney: corePrizeData.smsPrizeMoney,
+                prize,
+                prizeFormat,
             };
             for (let j = 0; j < winningSeries.length; j++) {
                 let aWinningSeries = winningSeries[j];
