@@ -1,0 +1,116 @@
+div.result-check-loading-outer {
+    width: 100%;
+    height: 200px;
+    display: grid;
+    grid-template-columns: 1fr;
+}
+  
+svg.result-check-loading {
+    display: block;
+    align-self: center;
+    justify-self: center;
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+div.result-check-intro-text {
+    color: red;
+    font-size: 12pt;
+    font-family: Quicksand;
+    padding: 8px;
+    display: none;
+}
+  
+div.result-check-summary {
+    font-size: 12pt;
+    font-family: Quicksand;
+    display: none;
+    grid-template-columns: auto 1fr;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+}
+
+div.result-check-summary-cell {
+    padding: 4px 8px 4px 8px;
+    display: none;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.result-check-summary-cell.first-row {
+    grid-column: 1/span 2;
+    display: block;
+}
+
+.result-check-summary-cell.bold {
+    font-weight: bold;
+}
+
+div.result-check-detail{
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr;
+    margin-bottom: 16px;
+}
+
+div.result-check-date-outer {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+div.result-check-publisher-outer{
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+div.result-check-result-outer{
+    display: grid;
+    grid-template-columns: 30% 30% auto;
+    font-size: 12pt;
+    box-sizing: border-box;
+    margin-left: 60px;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+    margin-bottom: 4px;
+}
+
+div.result-check-result-cell {
+    padding: 4px;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+}
+
+div.result-check-bullet-outer {
+    display: grid;
+    cursor: pointer;
+    box-sizing: border-box;
+    grid-template-columns: 25px auto;  
+    margin-bottom: 4px;
+}
+
+.result-check-bullet-outer.ticket-type {
+    margin-left: 4px;
+}
+
+.result-check-bullet-outer.date {
+    margin-left: 20px;
+}
+
+.result-check-bullet-outer.publisher {
+    margin-left: 32px;
+}
+
+
+div.result-check-bullet {
+    font-size: 12pt;
+    padding: 4px;
+}
+
+div.result-check-bullet-label {
+    font-size: 12pt;
+    padding: 4px;
+}

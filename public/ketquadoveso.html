@@ -24,7 +24,7 @@
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="css/button.css" />
     <link rel="stylesheet" type="text/css" href="css/general.css" />
-    <link rel="stylesheet" type="text/css" href="css/receipt.css" />
+    <link rel="stylesheet" type="text/css" href="css/resultCheck.css" />
     <!-- COMMON SCRIPT -->
     <script src="script/common/backendURL.js?version=1.0"></script>
     <script src="script/common/common.js?version=1.0"></script>
@@ -32,16 +32,14 @@
     <script src="script/common/button.js?version=0.1"></script>
     <!-- SCRIPT -->
     <script src="script/header.js?version=0.1"></script>
-    <script src="script/share/formatReceiptCheck.js?version=0.1"></script>
     <script src="script/resultCheck.js?version=0.1"></script>
 </head>
 
 <body>
     <div class='content-root'>
-        <div id='divIntroText' class='receipt-intro-text'></div>
-        <div id='divLoading' class='receipt-loading-outer'>
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class='receipt-loading'
-                viewBox='0 0 100 100' preserveAspectRatio="xMidYMid">
+        <div id='divLoading' class='result-check-loading-outer'>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                class='result-check-loading' viewBox='0 0 100 100' preserveAspectRatio="xMidYMid">
                 <g>
                     <path d="M50 15A35 35 0 1 0 74.74873734152916 25.251262658470843" fill="none" stroke="#ff0011"
                         stroke-width="12"></path>
@@ -51,7 +49,23 @@
                 </g>
             </svg>
         </div>
-        <div id='divSummary' class='receipt-summary'></div>
+        <div id='divSummary' class='result-check-summary'>
+            <div class='result-check-summary-cell bold first-row'>Tóm tắt nội dung cần dò</div>
+            <div id='divSummaryLabelDateStart' class='result-check-summary-cell'>
+                Dò từ
+            </div>
+            <div id='divSummaryDateStart' class='result-check-summary-cell'></div>
+            <div id='divSummaryLabelDateEnd' class='result-check-summary-cell'>
+                Dò đến
+            </div>
+            <div id='divSummaryDateEnd' class='result-check-summary-cell'></div>
+            <div id='divSummaryLabelSeries' class='result-check-summary-cell'>
+                Số vé cần dò
+            </div>
+            <div id='divSummarySeries' class='result-check-summary-cell'></div>
+        </div>
+        <div id='divIntroText' class='result-check-intro-text'></div>
+        <div id='divDetail' class='result-check-detail'></div>
         <div id='divShare' class='general-share'>
             <div id='divShareFB' class='general-button-share fb' style='justify-self: start;'></div>
             <div id='divShareTwitter' class='general-button-share twitter'></div>
