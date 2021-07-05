@@ -117,3 +117,10 @@ div.general-scroll-to{
   width: 100%;
   height: 10px;
 }
+
+div.general-again{
+  padding: 4px 8px 4px 8px;
+  display: grid;
+  grid-template-columns: 100%;
+  margin-bottom: 32px;
+}

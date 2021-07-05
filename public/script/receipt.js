@@ -23,6 +23,7 @@ class Receipt {
         document.getElementById('divLoading').style.display = 'none';
         document.getElementById('divSummary').style.display = 'block';
         document.getElementById('divShare').style.display = 'grid';
+        this.createDivAgain();
     };
 
     onNoSubmissionFound() {
@@ -174,5 +175,15 @@ class Receipt {
             }, 1500);
         } catch (error) {
         }
+    };
+
+    createDivAgain() {
+        let buttonAgain = new Button('Đăng ký báo số khác', false, false, function () {
+            window.location.href = window.FRONTEND_URL + '/index.html';
+
+        });
+        buttonAgain.div.style.justifySelf = 'end';
+        buttonAgain.div.style.marginLeft = '12px';
+        document.getElementById('divButtonAgainOuter').appendChild(buttonAgain.div);
     };
 };

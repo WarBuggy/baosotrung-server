@@ -44,6 +44,11 @@ class ResultCheck {
         document.getElementById('divLoading').style.display = 'none';
         let divIntroText = document.getElementById('divIntroText');
         divIntroText.style.display = 'block';
+        if (code == 0) {
+            this.displayResultCheck(response.data, data.date, data.series);
+            return;
+        }
+        this.createDivAgain();
         if (code > 0 && code < 10) {
             divIntroText.innerText = 'Hệ thống gặp lỗi số ' + code + ' khi xử lý thời gian tìm kiếm.\n'
                 + 'Xin vui lòng liên hệ quản trị nếu quý khách cần biết thêm chi tiết!';
@@ -65,16 +70,13 @@ class ResultCheck {
                 + 'Xin vui lòng liên hệ quản trị nếu quý khách cần biết thêm chi tiết!';
             return;
         }
-        this.displayResultCheck(response.data, data.date, data.series);
     };
 
     displayResultCheck(data, date, series) {
         let divIntroText = document.getElementById('divIntroText');
         divIntroText.style.color = 'black';
         if (data == null || data.length < 1) {
-            divIntroText.innerHTML = '<div>Không tìm được số trúng giải cho các vé cần dò trong thời gian trên.</div>' +
-                '<div style="margin-top: 8px;">Quý khách có muốn thử <a href="' +
-                window.FRONTEND_URL + '/doveso.html">dò vé</a> khác?</div>';
+            divIntroText.innerHTML = 'Không tìm được số trúng giải cho các vé cần dò trong thời gian trên.';
             return;
         }
         divIntroText.innerHTML = 'Trong thời gian trên, các vé cần dò có thể trúng các giải sau: (nhấn để xem chi tiết)';
@@ -86,6 +88,7 @@ class ResultCheck {
         document.getElementById('divSummary').scrollIntoView({ behavior: 'smooth' });
         this.populateDivInputShareEmail(date, series);
         this.handleShareButton(date, series);
+        this.createDivAgain();
     };
 
     createSummaryGrid(response) {
@@ -424,5 +427,15 @@ class ResultCheck {
             }, 1500);
         } catch (error) {
         }
+    };
+
+    createDivAgain() {
+        let buttonAgain = new Button('Dò vé khác', false, false, function () {
+            window.location.href = window.FRONTEND_URL + '/doveso.html';
+
+        });
+        buttonAgain.div.style.justifySelf = 'end';
+        buttonAgain.div.style.marginLeft = '12px';
+        document.getElementById('divButtonAgainOuter').appendChild(buttonAgain.div);
     };
 }
