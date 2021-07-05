@@ -955,6 +955,7 @@ module.exports = function (app) {
                 dateData = {
                     date: date,
                     oDate: oDate,
+                    dayOfWeek: dayjs(oDate).day(),
                     data: {},
                 };
                 ticketTypeData.data[date] = dateData;
