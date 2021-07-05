@@ -65,10 +65,10 @@ class ResultCheck {
                 + 'Xin vui lòng liên hệ quản trị nếu quý khách cần biết thêm chi tiết!';
             return;
         }
-        this.displayResultCheck(response.data);
+        this.displayResultCheck(response.data, data.date, data.series);
     };
 
-    displayResultCheck(data) {
+    displayResultCheck(data, date, series) {
         let divIntroText = document.getElementById('divIntroText');
         divIntroText.style.color = 'black';
         if (data == null || data.length < 1) {
@@ -82,6 +82,10 @@ class ResultCheck {
             let ticketTypeData = data[i];
             this.createDisplayTicketType(ticketTypeData);
         }
+        document.getElementById('divShare').style.display = 'grid';
+        document.getElementById('divSummary').scrollIntoView({ behavior: 'smooth' });
+        this.populateDivInputShareEmail(date, series);
+        this.handleShareButton(date, series);
     };
 
     createSummaryGrid(response) {
@@ -284,6 +288,7 @@ class ResultCheck {
         currentDiv.children[0].innerText = bulletExpend;
         currentDiv.children[1].innerText = currentDiv.getAttribute(this.attrLabel);
         currentDiv.children[1].style.textDecoration = 'none';
+        divOuter.scrollIntoView({ behavior: 'smooth' });
     };
 
     collapseDiv(currentDiv, divOuter, bulletCollapse) {
@@ -293,5 +298,131 @@ class ResultCheck {
         currentDiv.children[1].innerText = currentDiv.getAttribute(this.attrLabel) +
             currentDiv.getAttribute(this.attrPrizeNumber);
         currentDiv.children[1].style.textDecoration = 'underline';
-    }
+    };
+
+    handleShareButton(date, series) {
+        let link = window.FRONTEND_URL + '/ketquadoveso.html?date=' + date +
+            '&series=' + series;
+        document.getElementById('divShareFB').onclick = function () {
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + link,
+                'popup', 'width=300,height=300');
+            return false;
+        };
+
+        document.getElementById('divShareTwitter').onclick = function () {
+            window.open('https://twitter.com/intent/tweet?url=' + link,
+                'popup', 'width=300,height=300');
+            return false;
+        };
+
+        let parent = this;
+        document.getElementById('divCopyLink').onclick = function () {
+            Common.copyTextToClipboard(link, function () {
+                window.clearTimeout(parent.copyTimeoutId);
+                document.getElementById('divCopyLink').style.backgroundImage =
+                    'url(res/image/required/tick.png)';
+                parent.copyTimeoutId = window.setTimeout(function () {
+                    document.getElementById('divCopyLink').style.backgroundImage =
+                        'url(res/image/required/share_link.png)';
+                }, 1500);
+            });
+        };
+
+        document.getElementById('divShareEmail').onclick = function () {
+            let divInputShareEmail = document.getElementById('divInputShareEmail');
+            if (divInputShareEmail.style.display == 'none') {
+                divInputShareEmail.style.display = 'grid';
+                parent.inputEmail.input.focus();
+                document.getElementById('divScrollToShareEmail').
+                    scrollIntoView({ behavior: 'smooth' });
+            } else {
+                divInputShareEmail.style.display = 'none';
+            }
+        };
+    };
+
+    populateDivInputShareEmail(date, series) {
+        let parent = this;
+
+        let divInputShareEmail = document.getElementById('divInputShareEmail');
+        divInputShareEmail.style.display = 'none';
+        this.inputEmail = new InputText(null, null, 'Email');
+        this.inputEmail.div.style.marginTop = '8px';
+        this.inputEmail.div.style.alignSelf = 'center';
+        this.inputEmail.input.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                parent.onButtonShareEmailClicked(date, series);
+            };
+        });
+        divInputShareEmail.appendChild(this.inputEmail.div);
+        let localStorageShareEmail = Common.loadFromStorage('resultCheck_shareEmail');
+        if (localStorageShareEmail != null) {
+            this.inputEmail.input.value = localStorageShareEmail;
+        }
+
+        let buttonShareEmail = new Button('Gửi', false, false, function () {
+            parent.onButtonShareEmailClicked(date, series);
+        });
+        buttonShareEmail.div.style.justifySelf = 'end';
+        buttonShareEmail.div.style.alignSelf = 'center';
+        buttonShareEmail.div.style.margin = '14px 6px 6px 6px';
+        divInputShareEmail.appendChild(buttonShareEmail.div);
+    };
+
+    onButtonShareEmailClicked(date, series) {
+        let checkResult = this.checkInputShareEmail();
+        if (checkResult.success == false) {
+            return;
+        }
+        Common.saveToStorage({
+            resultCheck_shareEmail: checkResult.email,
+        });
+        this.sendShareEmail(date, series, checkResult.email);
+    };
+
+    checkInputShareEmail() {
+        let inputEmail = String(this.inputEmail.input.value).trim();
+        let divInputEmailValidate = document.getElementById('divInputShareEmailValidate');
+        if (inputEmail == '' || inputEmail == 'null' || inputEmail == 'undefined') {
+            divInputEmailValidate.innerText = 'Xin nhập email để gửi kết quả trên!';
+            divInputEmailValidate.style.display = 'block';
+            return { success: false, };
+        }
+        let emailPart = inputEmail.split(',');
+        for (let i = 0; i < emailPart.length; i++) {
+            let anEmail = emailPart[i].trim();
+            let anEmailValidateResult = Common.validateEmail(anEmail);
+            if (anEmailValidateResult == false) {
+                divInputEmailValidate.innerText = 'Có ít nhất 1 email không đúng định dạng.';
+                divInputEmailValidate.style.display = 'block';
+                return { success: false, };
+            }
+            emailPart[i] = anEmail;
+        }
+        divInputEmailValidate.style.display = 'none';
+        return {
+            success: true,
+            email: emailPart.join(','),
+        };
+    };
+
+    async sendShareEmail(submission, email) {
+        let sendData = {
+            submission,
+            email,
+        };
+        try {
+            await Common.sendToBackend('/api/resultCheck/share/email', sendData);
+            this.inputEmail.input.value = '';
+            document.getElementById('divInputShareEmail').style.display = 'none';
+            window.clearTimeout(this.emailTimeoutId);
+            document.getElementById('divShareEmail').style.backgroundImage =
+                'url(res/image/required/tick.png)';
+            this.emailTimeoutId = window.setTimeout(function () {
+                document.getElementById('divShareEmail').style.backgroundImage =
+                    'url(res/image/required/share_email.svg)';
+            }, 1500);
+        } catch (error) {
+        }
+    };
 }

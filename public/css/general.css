@@ -104,10 +104,16 @@ div.general-input-share-email {
   grid-template-columns: 1fr auto;
   width: 100%;
   height: 65px;
+  margin-bottom: 16px;
 }
 
 div.general-validate-share-email {
   margin-top: 4px;
   margin-bottom: 32px;
   display: none;
+}
+
+div.general-scroll-to{
+  width: 100%;
+  height: 10px;
 }

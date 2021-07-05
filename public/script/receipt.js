@@ -81,7 +81,10 @@ class Receipt {
             let divInputShareEmail = document.getElementById('divInputShareEmail');
             if (divInputShareEmail.style.display == 'none') {
                 divInputShareEmail.style.display = 'grid';
+                divInputShareEmail.scrollIntoView({ behavior: 'smooth' });
                 parent.inputEmail.input.focus();
+                document.getElementById('divScrollToShareEmail').
+                    scrollIntoView({ behavior: 'smooth' });
             } else {
                 divInputShareEmail.style.display = 'none';
             }
