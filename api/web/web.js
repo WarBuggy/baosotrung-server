@@ -9,7 +9,6 @@ const dayjs = require('dayjs');
 const dayjsCustomParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(dayjsCustomParseFormat);
 let dayjsWeekOfYear = require('dayjs/plugin/weekOfYear');
-const { checkTodayAsCrawlDate } = require('../../rss/crawler/config.js');
 dayjs.extend(dayjsWeekOfYear);
 
 module.exports = function (app) {
@@ -1078,5 +1077,29 @@ module.exports = function (app) {
         }
         return result;
     };
+    //#endregion
+
+    //#region /api/cs/contact
+    // take care of capsulestudio.com.vn contact 
+    app.post('/apics/contact', async function (request, response) {
+        let requestIp = common.getReadableIP(request);
+        let purpose = 'handle capsulestudio.com.vn contact data via email';
+        common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
+        let name = request.body.name || '';
+        let contact = request.body.contact || '';
+        let message = request.body.message || '';
+        let contentEmail = 'Time: ' + dayjs().format(systemConfig.dayjsFormatFull) + '\n' +
+            'Name: ' + name + '\n' +
+            'Contact: ' + contact + '\n' +
+            'Message: ' + message;
+        mailer.sendMail(contentEmail, false, 'admin@capsulestudio.com.vn',
+            'Capsule Studio Contact', 'capsulestudio.com.vn contact');
+        let resJson = {
+            success: true,
+            result: 0,
+        };
+        response.json(resJson);
+        common.consoleLog('(' + requestIp + ') Request for ' + purpose + ' was successfully handled.');
+    });
     //#endregion
 };
