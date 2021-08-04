@@ -1081,7 +1081,7 @@ module.exports = function (app) {
 
     //#region /api/cs/contact
     // take care of capsulestudio.com.vn contact 
-    app.post('/apics/contact', async function (request, response) {
+    app.post('/cs_contact', async function (request, response) {
         let requestIp = common.getReadableIP(request);
         let purpose = 'handle capsulestudio.com.vn contact data via email';
         common.consoleLog('(' + requestIp + ') Received request for ' + purpose + '.');
