@@ -173,7 +173,7 @@ class Share {
             email,
         };
         try {
-            await Common.sendToBackend('/api/submission/share/email', sendData);
+            await Common.sendToBackend('baotrungso/api/submission/share/email', sendData);
             this.inputEmail.input.value = '';
             document.getElementById('divInputShareEmail').style.display = 'none';
             window.clearTimeout(this.emailTimeoutId);

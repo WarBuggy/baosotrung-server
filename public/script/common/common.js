@@ -190,6 +190,6 @@ class Common {
         let sendData = {
             pageId,
         };
-        Common.sendToBackend('/api/traffic/page/save', sendData);
+        Common.sendToBackend('baotrungso/api/traffic/page/save', sendData);
     };
 };

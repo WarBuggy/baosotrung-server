@@ -2,7 +2,7 @@ window.addEventListener('load', async function () {
     window.touchDevice = isTouchDevice();
     new Header();
     try {
-        let coreDataResult = await Common.sendToBackend('/api/data/core');
+        let coreDataResult = await Common.sendToBackend('baotrungso/api/data/core');
         window.coreTicketData = coreDataResult.data;
         window.inputSeriesManager = new InputSeriesManager();
         Common.savePageTraffic(1);

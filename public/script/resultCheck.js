@@ -37,7 +37,7 @@ class ResultCheck {
     };
 
     async sendData(data) {
-        let response = await Common.sendToBackend('/api/result/check', data);
+        let response = await Common.sendToBackend('baotrungso/api/result/check', data);
         let code = response.code;
         console.log(response);
         console.log(code);
@@ -415,7 +415,7 @@ class ResultCheck {
             email,
         };
         try {
-            await Common.sendToBackend('/api/resultCheck/share/email', sendData);
+            await Common.sendToBackend('baotrungso/api/resultCheck/share/email', sendData);
             this.inputEmail.input.value = '';
             document.getElementById('divInputShareEmail').style.display = 'none';
             window.clearTimeout(this.emailTimeoutId);

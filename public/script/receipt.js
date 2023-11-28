@@ -37,7 +37,7 @@ class Receipt {
             submission,
         };
         try {
-            let response = await Common.sendToBackend('/api/submission', sendData);
+            let response = await Common.sendToBackend('baotrungso/api/submission', sendData);
             let formatReceipt = new FormatReceipt(response.submissionDetail, response.submissionEmail);
             this.showIntroText(formatReceipt, response.submissionCreateDate, response.submissionCreateHour);
             this.showSummaryAndShare();
@@ -163,7 +163,7 @@ class Receipt {
             email,
         };
         try {
-            await Common.sendToBackend('/api/submission/share/email', sendData);
+            await Common.sendToBackend('baotrungso/api/submission/share/email', sendData);
             this.inputEmail.input.value = '';
             document.getElementById('divInputShareEmail').style.display = 'none';
             window.clearTimeout(this.emailTimeoutId);

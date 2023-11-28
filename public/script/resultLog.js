@@ -54,7 +54,7 @@ class ResultLog {
     };
 
     async getData() {
-        let response = await Common.sendToBackend('/api/result-log/data', this.data);
+        let response = await Common.sendToBackend('baotrungso/api/result-log/data', this.data);
         this.data.ticketType = response.ticketType;
         this.data.dayOfWeek = response.dayOfWeek;
         this.data.week = response.week;

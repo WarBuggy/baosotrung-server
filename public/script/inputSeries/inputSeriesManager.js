@@ -254,7 +254,7 @@ class InputSeriesManager {
             sms: this.submissionDetail.sms,
         };
         try {
-            let response = await Common.sendToBackend('/api/submission/create', sendData);
+            let response = await Common.sendToBackend('baotrungso/api/submission/create', sendData);
             window.location.href = window.FRONTEND_URL +
                 '/tomtatbaotrungso.html?submission=' + response.submission;
         } catch (error) {
